@@ -1,0 +1,89 @@
+				<li class="dropdown" role="menu">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						{{ 'File' | translate }}
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li ui-sref-active="active"><a ui-sref="menutest.newFile">New File</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.open">Open...</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.openRecent">Open Recent</a></li>
+						<li class="dropdown-submenu">
+							<a href="#" tabindex="-2">
+								Reopen with Encoding
+							</a>
+							<ul class="dropdown-menu">
+								<li ui-sref-active="active"><a ui-sref="menutest.utf8">UTF-8</a></li>
+								<li ui-sref-active="active"><a ui-sref="menutest.utf16le">UTF-16 LE</a></li>
+								<li ui-sref-active="active"><a ui-sref="menutest.utf16be">UTF-16 BE</a></li>
+							</ul>
+						</li>
+						<li ui-sref-active="active"><a ui-sref="menutest.newView">New View into File</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.save">Save</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.saveEncoding">Save with Encoding</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.saveAs">Save As...</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.saveAll">Save All</a></li>
+						<li class="divider"></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.newWindow">New Window</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.closeWindow">Close Window</a></li>
+						<li class="divider"></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.closeFile">Close File</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.revertFile">Revert File</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.closeAllFiles">Close All Files</a></li>
+					</ul>
+				</li>
+				<li class="dropdown" role="menu">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						Edit
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li ui-sref-active="active"><a ui-sref="menutest.undoCut">Undo Cut</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.repeatCut">Repeat Cut</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.undoSelection">Undo Selection</a></li>
+						<li class="divider"></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.copy">Copy</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.cut">Cut</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.paste">Paste</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.pasteAndIndent">Paste and Indent</a></li>
+						<li class="divider"></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.line">Line</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.comment">Comment</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.text">Text</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.tag">Tag</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.mark">Mark</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.codeFolding">Code Folding</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.convertCase">Convert Case</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.wrap">Wrap</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.showCompletions">Show Completions</a></li>
+						<li class="divider"></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.sortLines">Sort Lines</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.sortLinesCaseSensitive">Sort Lines (Case Sensitive)</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.permuteLines">Permute Lines</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.permuteSelections">Permute Selections</a></li>
+						<li class="divider"></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.specialCharacters">Special Characters...</a></li>
+					</ul>
+				</li>
+				<li class="dropdown" role="menu">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						Selection
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li ui-sref-active="active"><a ui-sref="menutest.splitIntoLines">Split into Lines</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.addPreviousLine">Add Previous Line</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.addNextLine">Add Next Line</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.singleSelection">Single Selection</a></li>
+						<li class="divider"></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.selectAll">Select All</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.expandSelectionLine">Expand Selection to Line</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.expandSelectionWord">Expand Selection to Word</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.expandSelectionParagraph">Expand Selection to Paragraph</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.expandSelectionScope">Expand Selection to Scope</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.expandSelectionBrackets">Expand Selection to Brackets</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.expandSelectionIndentation">Expand Selection to Indentation</a></li>
+						<li ui-sref-active="active"><a ui-sref="menutest.expandSelectionTag">Expand Selection to Tag</a></li>
+					</ul>
+				</li>
+
+			

@@ -1,0 +1,8 @@
+{
+	"AppName": "Time Tracking",
+	"ColDate": "Date",
+	"ColFrom": "From",
+	"ColTo": "To",
+	"ColType": "Type",
+	"ColComment": "Comment"
+}

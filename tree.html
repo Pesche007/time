@@ -1,0 +1,167 @@
+<div class="container-fluid"> 
+	<div class="row">
+		<div class="col-sm-12">    
+        	<h1 class="text-center">Selection</h1>
+        </div>
+	</div>       
+   	<div class="row">
+        <div class="col-sm-3"></div>    
+        <div class="col-md-6">
+        	<div class="form-inline">
+                <!-- Typehead-->
+                <input type="text" ng-model="PeopleSelect" typeahead="person as (person.firstname + ' ' + person.lastname) for person in people | filter:$viewValue" class="form-control">
+                <!--Cancel-->
+                <button type="button" ng-click="removePerson()" class="btn btn-default"><span class="fa fa-times"></span></button>
+                <!--Dropdown-->
+                <div class="btn-group" dropdown>
+                  <button type="button" class="btn btn-default dropdown-toggle">
+                    <span class="fa fa-user"></span> <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li ng-repeat="person in people"><a ng-click="selectPerson(person)" href="javascript:void(0)">{{person.firstname}} {{person.lastname}}</a></li>
+                  </ul>
+                </div> 
+                <a ng-click="logPerson()" class="btn btn-default"><span class="fa fa-save"> Save Log</span></a>                                          
+			</div>
+        </div>
+        <div class="col-sm-3"></div>        
+    </div>  
+	<div class="row">
+		<div class="col-sm-12">    
+        	<h1 class="text-center">Muliple Selection</h1>
+        </div>
+	</div>       
+   	<div class="row">
+        <div class="col-sm-3"></div>    
+        <div class="col-md-6">
+        	<div class="form-inline">
+                <!-- Typehead-->
+                <input type="text" ng-model="MultiPeopleSelect" typeahead-on-select="updatePeople($item)" typeahead="person as (person.firstname + ' ' + person.lastname) for person in people | filter:$viewValue" class="form-control">
+                <!--Cancel-->
+                <button type="button" ng-click="removeMultiPerson()" class="btn btn-default"><span class="fa fa-times"></span></button>
+                <!--Dropdown-->
+                <div class="btn-group" dropdown>
+                  <button type="button" class="btn btn-default dropdown-toggle">
+                    <span class="fa fa-user"></span> <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li ng-repeat="person in people"><a ng-click="selectMultiPerson(person)" href="javascript:void(0)">{{person.firstname}} {{person.lastname}}</a></li>
+                  </ul>
+                </div> 
+                <a ng-click="logMultiPerson()" class="btn btn-default"><span class="fa fa-save"> Save Log</span></a>  
+                <br />
+                <div>
+                	<ul>
+                    <li ng-repeat="person in MultiplePeople">{{person.firstname}} {{person.lastname}} 
+                    <button type="button" ng-click="removeMultiSinglePerson(person)" class="btn btn-default btn-xs"><span class="fa fa-times"></span></button></li>
+                    </ul>
+                </div>                                        
+			</div>
+        </div>
+        <div class="col-sm-3"></div>        
+    </div>   
+	<div class="row">
+		<div class="col-sm-12">    
+        	<h1 class="text-center">Input validation</h1>
+        </div>
+	</div>   
+   	<div class="row">
+        <div class="col-sm-3"></div>    
+        <div class="col-md-6">                                           
+			<form name="myform" class="form-inline"> 
+		    <input type="text" class="form-control" name="price_field" ng-model="price" ng-pattern="/(^\d{1,2}(?:\.\d{1})?$)|(^\d{4}(\-)\d{4})/">
+            <div class="alert alert-info" role="alert" ng-show="myform.price_field.$error.pattern">
+            	1. Time as hours (number)  <strong>1.5 | 2 | 4.7</strong> <span class="margin-left-L">2. Time as From-To  <strong>1000-1200 | 0815-1230</strong></span>
+            </div>
+            </form>
+        </div>
+        <div class="col-sm-3"></div>        
+    </div>             
+	<div class="row">
+		<div class="col-sm-12">    
+        	<h1 class="text-center">Dependency Select</h1>
+        </div>
+	</div>   
+   	<div class="row">
+        <div class="col-sm-3"></div>    
+        <div class="col-md-6">  
+        	<h2>Separate Json</h2>                                         
+			<select data-ng-model="option1" data-ng-options="option for option in options1" data-ng-change="getOptions2()"></select>
+		    <select data-ng-model="option2" data-ng-options="option for option in options2"></select>
+        	<br />
+        </div>
+        <div class="col-sm-3"></div>        
+    </div>     
+	<div class="row">
+		<div class="col-sm-12">    
+        	<h1 class="text-center">Treeview</h1>
+        </div>
+	</div>        
+	<div class="row">    
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3">
+		<script type="text/ng-template"  id="tree_item_renderer.html">            
+			<a ng-click="collapse(data)" ng-show="(data.nodes.length > 0)&&(data.expanded)" class="btn btn-default btn-xs"><span class="fa fa-chevron-down"></span></a>
+			<a ng-click="expand(data)" ng-show="(data.nodes.length > 0)&&(!data.expanded)" class="btn btn-default btn-xs"><span class="fa fa-chevron-right"></span></a>
+			{{data.name}}						
+			<a ng-click="add(data)" class="btn btn-default btn-xs"><span class="fa fa-plus"></span> Add</a>
+			<a ng-click="delete(data)" ng-show="data.nodes.length > 0" class="btn btn-default btn-xs"><span class="fa fa-minus"></span> Remove</a>
+			
+
+			<ul ng-show="data.expanded">
+				<li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer.html'"></li>
+			</ul>
+        </script>
+        
+            <div class="custom-tree">
+                <ul ng-app="Application" ng-controller="TreeCtrl">
+                    <li ng-repeat="data in tree" ng-include="'tree_item_renderer.html'"></li>
+                </ul>
+            </div>
+        </div>
+		<div class="col-sm-3">
+			<a ng-click="savelog()" class="btn btn-default btn-xs"><span class="fa fa-save"> Save</span></a>
+        </div>  
+        <div class="col-sm-3"></div>        
+	</div>              
+	<div class="row">
+		<div class="col-sm-12">    
+        	<h1 class="text-center">Row Entry</h1>
+        </div>
+	</div>       
+   	<div class="row">
+        <div class="col-sm-3"></div>    
+        <div class="col-md-6">
+        	 <button type="button" ng-click="addRow()" class="btn btn-success"><span class="fa fa-plus"></span> Add entry</button>
+             <button type="button" ng-click="logRow()" class="btn btn-default"><span class="fa fa-save"></span> Save Log</button>
+ 			<table class="table table-condensed">
+            	<thead>
+                	<tr>
+                		<th ng-repeat="colhead in tableValues.rows[0]">{{colhead.title}}</th>
+                   		<th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="row in tableValues.rows track by $index">
+                        <td ng-repeat="(i, item) in row">
+                        <input ng-if="item.type=='text'" type="text" class="form-control" ng-model="item.value">
+                        <input ng-if="item.type=='date'" type="text" class="form-control" datepicker-popup="dd.MM.yyyy" ng-model="item.value" ng-click="open($event, item.$$hashKey)" is-open="opened[item.$$hashKey]">
+	                    <form ng-if="item.type=='time'" name="myFormValidator">
+                        	<input type="text" name="myFieldValidator" class="form-control" ng-model="item.value" ng-pattern="/(^\d{1,2}(?:\.\d{1})?$)|(^\d{4}(\-)\d{4})/"> 
+                            <div class="alert alert-info" role="alert" ng-show="myFormValidator.myFieldValidator.$error.pattern">
+                                Hours <strong>1.5</strong><br />2. From-To <strong>1000-1200</strong>
+                            </div>                                                   
+                        </form>
+                        <input ng-if="item.type=='peopleselect'" type="text" ng-model="item.value" typeahead="person as (person.firstname + ' ' + person.lastname) for person in people | filter:$viewValue" class="form-control">
+                        </td>
+                        <td ng-if="row.length==4">
+                            <button type="button" ng-click="tableRemove($index)" class="btn btn-default"><span class="fa fa-times"></span></button>
+                            <button type="button" ng-click="tableCopy($index)" class="btn btn-default"><span class="fa fa-files-o"></span></button>
+                        </td>
+                    </tr>
+                </tbody>
+			</table>
+        </div>
+        <div class="col-sm-3"></div>        
+    </div>                   
+</div>        
