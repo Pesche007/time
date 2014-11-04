@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('time', [])
+angular.module('time', ['core'])
 .config(function ($stateProvider) {
 	$stateProvider
 	.state('time', {
