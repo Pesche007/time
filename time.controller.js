@@ -97,7 +97,9 @@ angular.module('time')
     $scope.add = function(data) {
         var post = data.nodes.length + 1;
         var newName = data.name + '-' + post;
+		console.log(data)
         data.nodes.push({name: newName, expanded:true, nodes: []});
+				console.log(data)
     };
     $scope.collapse = function(data) {
          data.expanded=false;   
@@ -107,8 +109,53 @@ angular.module('time')
     }
     $scope.tree = [{name: "Node", expanded:true, nodes: []}];
 	$scope.savelog = function(){
-		console.log($scope)
+		console.log($scope.data)
 		}
+	$scope.tree_addbranch = function(obj){
+		$scope.treeOPT.tmpobj=obj;
+		$scope.treeOPT.addedit_show=true;
+		$scope.treeOPT.treeitemAction=obj.title!==undefined ? "Add new element to " +obj.title : "Add new element to root"
+		$scope.treeOPT.newElement=true;
+		}
+	$scope.tree_editbranch = function(obj){
+		$scope.treeOPT.tmpobj=obj;
+		$scope.treeOPT.addedit_show=true;
+		$scope.treeOPT.catName=obj.title
+		$scope.treeOPT.treeitemAction="Change name for element "+obj.title;
+		$scope.treeOPT.newElement=false;
+		}
+	$scope.tree_removebranch = function(obj, index){
+		$scope.treeOPT.tmpobj=obj;
+		$scope.treeOPT.tmpindex=index;
+		var subtreeTXT=obj.categories[index].categories.length?" and all its subtrees":"";
+		$scope.treeOPT.treeitemAction="Confirm: Delete " + obj.categories[index].title + subtreeTXT + "?";
+		$scope.treeOPT.delete_show=true;
+		}
+	$scope.tree_addsave = function(catName){
+		if($scope.treeOPT.newElement) {
+			if($scope.treeOPT.tmpobj==="root") $scope.treeOPT.categories.unshift({title: catName, categories:[]});
+			else $scope.treeOPT.tmpobj.categories.unshift({title: catName, categories:[]});
+			}
+		else {
+			$scope.treeOPT.tmpobj.title=catName;
+			}
+		$scope.treeOPT.catName=""
+		$scope.treeOPT.addedit_show=false;
+		}
+	$scope.tree_delete = function (){
+		$scope.treeOPT.tmpobj.categories.splice($scope.treeOPT.tmpindex, 1);
+		$scope.treeOPT.delete_show=false;
+		}
+	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, catName: "", treeitemAction:"", newElement:false}
+	// ************************************* TREE 2 *****************************************
+	$scope.treeOPT.categories = [
+		{title: 'Computers', categories: [
+    		{title: 'Laptops', categories: [
+         		 {title: 'Ultrabooks', categories:[]}, {title: 'Macbooks', categories:[]}
+	    	 ]},
+	    ]},
+	  {title: 'Printers', categories:[]}
+	];
 
 	//*************************************** Dependency Select *****************************
 	var option1Options = ["UBS AG", "Credit Suisse AG", "Julius Bär AG"];

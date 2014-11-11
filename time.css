@@ -1,12 +1,8 @@
-.custom-tree ul {
-    list-style: circle;
-}
-.custom-tree li {
-    margin-left: 20px;
-	padding:5px;
-}
 .margin-left-L{margin-left:20px}
-tree {
-    margin-left: 20px;
-    display: block;
-	}
+
+/*TREE*/
+ul.tree, ul.tree ul { list-style-type: none; }
+ul.tree, ul.tree ul { list-style-type: none; background: url(images/vline.png) repeat-y; margin: 0; padding: 0; } 
+ul.tree ul { margin-left: 10px; } 
+ul.tree li { margin: 0; padding: 0 12px; line-height: 20px; background: url(images/node.png) no-repeat; color: #369; font-weight: bold; }
+ul.tree li:last-child {background: #fff url(images/lastnode.png) no-repeat; }
