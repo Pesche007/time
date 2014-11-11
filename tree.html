@@ -100,65 +100,39 @@
 	<div class="row">    
         <div class="col-sm-3"></div>
         <div class="col-sm-3">
-		<script type="text/ng-template"  id="tree_item_renderer.html">            
-			<a ng-click="collapse(data)" ng-show="(data.nodes.length > 0)&&(data.expanded)" class="btn btn-default btn-xs"><span class="fa fa-chevron-down"></span></a>
-			<a ng-click="expand(data)" ng-show="(data.nodes.length > 0)&&(!data.expanded)" class="btn btn-default btn-xs"><span class="fa fa-chevron-right"></span></a>
-			{{data.name}}						
-			<a ng-click="add(data)" class="btn btn-default btn-xs"><span class="fa fa-plus"></span> Add</a>
-			<a ng-click="delete(data)" ng-show="data.nodes.length > 0" class="btn btn-default btn-xs"><span class="fa fa-minus"></span> Remove</a>
-			
-
-			<ul ng-show="data.expanded">
-				<li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer.html'"></li>
-			</ul>
-        </script>
-        
-            <div class="custom-tree">
-                <ul ng-app="Application" ng-controller="TreeCtrl">
-                    <li ng-repeat="data in tree" ng-include="'tree_item_renderer.html'"></li>
-                </ul>
-            </div>
-            <hr />
-        </div>
-		<div class="col-sm-3">
-			<a ng-click="savelog()" class="btn btn-default btn-xs"><span class="fa fa-save"> Save</span></a>
-        </div>  
-        <div class="col-sm-3"></div>        
-	</div> 
-	<div class="row">    
-        <div class="col-sm-3"></div>
-        <div class="col-sm-3">
 			<script type="text/ng-template" id="categoryTree">
-               <span> 
-				   {{ category.title }} 
-					<a href="javascript:void(0)" ng-click="tree_removebranch(parentOBJ, $index)" class="text-danger"><span class="fa fa-times"></span></a>
-					<a href="javascript:void(0)" ng-click="tree_editbranch(category)"><span class="fa fa-pencil"></span></a>
-				</span>
+               <div> 
+					<span class="treefolder fa" ng-class="category.folder"></span> {{ category.title }}
+					<a href="javascript:void(0)" ng-click="tree_action(category, 0, 'add')" class="text-success"><span class="fa fa-plus"></span></a>
+					<a href="javascript:void(0)" ng-click="tree_action(parentOBJ, $index, 'delete')" class="text-danger"><span class="fa fa-times"></span></a>
+					<a href="javascript:void(0)" ng-click="tree_action(category, 0, 'edit')"><span class="fa fa-pencil"></span></a>
+				</div>				
                 <ul ng-if="category.categories">
-                    <li><a href="javascript:void(0)" ng-click="tree_addbranch(category)" class="text-success"><span class="fa fa-plus"></span></a></li>
 					<li ng-repeat="category in category.categories" ng-include="'categoryTree'" ng-init="parentOBJ=$parent.category"></li>
                 </ul>
             </script>
-            <div class="alert alert-info" role="alert" ng-show="treeOPT.delete_show">
-            	{{treeOPT.treeitemAction}}<br /><br />
-   	            <button type="button" ng-click="tree_delete()" class="btn btn-success"><span class="fa fa-trash-o"></span> Delete</button>
-      	        <button type="button" ng-click="treeOPT.delete_show=false" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
-            </div>
-            <div class="alert alert-info" role="alert" ng-show="treeOPT.addedit_show">
-               {{ treeOPT.treeitemAction }}<br /><br />
-                <form class="form-inline" role="form">
-                    <div class="form-group">
-	                    <input type="text" ng-model="treeOPT.catName" class="form-control" placeholder="Enter Name">
-                    </div>
-    	            <button type="button" ng-click="tree_addsave(treeOPT.catName)" class="btn btn-success"><span class="fa fa-save"></span> Save</button>
-        	        <button type="button" ng-click="treeOPT.catName='';treeOPT.addedit_show=false" class="btn btn-danger"><span class="fa fa-times"></span></button>
-                </form>                        	
-            </div>
-            <ul class="tree">
-                <li><a href="javascript:void(0)" ng-click="tree_addbranch('root')" class="text-success"><span class="fa fa-plus"></span></a></li>
-                <li ng-repeat="category in treeOPT.categories" ng-include="'categoryTree'" ng-init="parentOBJ=treeOPT"></li>
-            </ul> 
-
+            <div class="treewrapper">
+                <button type="button" ng-click="" class="btn btn-success"><span class="fa fa-save"></span> Save Tree</button><hr />
+                <div class="alert alert-info" role="alert" ng-show="treeOPT.delete_show">
+                    {{treeOPT.treeitemDesc}}<br /><br />
+                    <button type="button" ng-click="tree_actionExec()" class="btn btn-success"><span class="fa fa-trash-o"></span> Delete</button>
+                    <button type="button" ng-click="treeOPT.delete_show=false" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
+                </div>
+                <div class="alert alert-info" role="alert" ng-show="treeOPT.addedit_show">
+                   {{ treeOPT.treeitemDesc }}<br /><br />
+                    <form class="form-inline" role="form">
+                        <div class="form-group">
+                            <input type="text" ng-model="treeOPT.catName" class="form-control" placeholder="Enter Name">
+                        </div>
+                        <button type="button" ng-click="tree_actionExec()" class="btn btn-success"><span class="fa fa-save"></span> Save</button>
+                        <button type="button" ng-click="tree_removeAllShow();set_modalInput('')" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
+                    </form>                        	
+                </div>
+                <ul class="tree">
+                    <li><a href="javascript:void(0)" ng-click="tree_action('root', 0, 'add')" class="text-success"><span class="fa fa-plus"></span></a></li>
+                    <li ng-repeat="category in treeOPT.categories" ng-include="'categoryTree'" ng-init="parentOBJ=treeOPT"></li>
+                </ul> 
+			</div>
         </div>
         <div class="col-sm-3"><pre class="code">{{ treeOPT.categories | json }}</pre></div>        
         <div class="col-sm-3"></div>        

@@ -91,70 +91,76 @@ angular.module('time')
 		}
 						
 	//************************************** Tree **************************************
-    $scope.delete = function(data) {
-        data.nodes = [];
-    };
-    $scope.add = function(data) {
-        var post = data.nodes.length + 1;
-        var newName = data.name + '-' + post;
-		console.log(data)
-        data.nodes.push({name: newName, expanded:true, nodes: []});
-				console.log(data)
-    };
-    $scope.collapse = function(data) {
-         data.expanded=false;   
-    }
-    $scope.expand = function(data) {
-         data.expanded=true;   
-    }
-    $scope.tree = [{name: "Node", expanded:true, nodes: []}];
-	$scope.savelog = function(){
-		console.log($scope.data)
-		}
-	$scope.tree_addbranch = function(obj){
-		$scope.treeOPT.tmpobj=obj;
-		$scope.treeOPT.addedit_show=true;
-		$scope.treeOPT.treeitemAction=obj.title!==undefined ? "Add new element to " +obj.title : "Add new element to root"
-		$scope.treeOPT.newElement=true;
-		}
-	$scope.tree_editbranch = function(obj){
-		$scope.treeOPT.tmpobj=obj;
-		$scope.treeOPT.addedit_show=true;
-		$scope.treeOPT.catName=obj.title
-		$scope.treeOPT.treeitemAction="Change name for element "+obj.title;
-		$scope.treeOPT.newElement=false;
-		}
-	$scope.tree_removebranch = function(obj, index){
-		$scope.treeOPT.tmpobj=obj;
-		$scope.treeOPT.tmpindex=index;
-		var subtreeTXT=obj.categories[index].categories.length?" and all its subtrees":"";
-		$scope.treeOPT.treeitemAction="Confirm: Delete " + obj.categories[index].title + subtreeTXT + "?";
-		$scope.treeOPT.delete_show=true;
-		}
-	$scope.tree_addsave = function(catName){
-		if($scope.treeOPT.newElement) {
-			if($scope.treeOPT.tmpobj==="root") $scope.treeOPT.categories.unshift({title: catName, categories:[]});
-			else $scope.treeOPT.tmpobj.categories.unshift({title: catName, categories:[]});
-			}
-		else {
-			$scope.treeOPT.tmpobj.title=catName;
-			}
-		$scope.treeOPT.catName=""
+	$scope.tree_removeAllShow = function(){
 		$scope.treeOPT.addedit_show=false;
-		}
-	$scope.tree_delete = function (){
-		$scope.treeOPT.tmpobj.categories.splice($scope.treeOPT.tmpindex, 1);
 		$scope.treeOPT.delete_show=false;
 		}
-	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, catName: "", treeitemAction:"", newElement:false}
-	// ************************************* TREE 2 *****************************************
+	$scope.tree_show = function(show){
+		$scope.treeOPT[show]=true;
+		}
+	$scope.tree_addtoTMP = function(obj, i){
+		$scope.treeOPT.tmpobj=obj;
+		$scope.treeOPT.tmpindex=i;		
+		}
+	$scope.set_treeaction = function(action){
+		$scope.treeOPT.treeAction=action;
+		}
+	$scope.set_treeDescription = function(txt){
+		$scope.treeOPT.treeitemDesc=txt;
+		}
+	$scope.set_modalInput = function(txt) {
+		$scope.treeOPT.catName=txt;
+		}
+	$scope.tree_action = function(obj, index, action){
+		$scope.tree_removeAllShow();
+		$scope.tree_addtoTMP(obj, index);
+		$scope.set_treeaction(action);
+		if(action==="add") {
+			$scope.tree_show("addedit_show")
+			var txt=obj.title!==undefined ? "Add new element to " +obj.title : "Add new element to root"
+			}
+		else if(action==="edit") {
+			$scope.tree_show("addedit_show")
+			var txt="Change name for element "+obj.title;
+			$scope.set_modalInput(obj.title)
+			}
+		else if(action==="delete") {
+			$scope.tree_show("delete_show")
+			var subtreeTXT=obj.categories[index].categories.length?" and all its subtrees":"";
+			var txt="Confirm: Delete " + obj.categories[index].title + subtreeTXT + "?";			
+			}
+		else {
+			return false;
+			}			
+		$scope.set_treeDescription(txt);
+		}
+	$scope.tree_actionExec = function() {
+		if($scope.treeOPT.treeAction==="add") {
+			if($scope.treeOPT.tmpobj==="root") $scope.treeOPT.categories.unshift({title: $scope.treeOPT.catName, categories:[]});
+			else $scope.treeOPT.tmpobj.categories.unshift({title: $scope.treeOPT.catName, categories:[]});	
+	
+			}
+		else if($scope.treeOPT.treeAction==="edit") {
+			$scope.treeOPT.tmpobj.title=$scope.treeOPT.catName;
+			}
+		else if($scope.treeOPT.treeAction==="delete") {
+			$scope.treeOPT.tmpobj.categories.splice($scope.treeOPT.tmpindex, 1);
+			}
+		else {
+			return false;
+			}
+		$scope.set_modalInput("");
+		$scope.tree_removeAllShow();
+		}
+
+	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, catName: "", treeitemDesc:"", treeAction:""}
 	$scope.treeOPT.categories = [
-		{title: 'Computers', categories: [
-    		{title: 'Laptops', categories: [
-         		 {title: 'Ultrabooks', categories:[]}, {title: 'Macbooks', categories:[]}
+		{title: 'Computers', folder:"fa-folder-o", categories: [
+    		{title: 'Laptops', folder:"fa-folder-o", categories: [
+         		 {title: 'Ultrabooks', folder:"fa-folder-o", categories:[]}, {title: 'Macbooks', folder:"fa-folder-o", categories:[]}
 	    	 ]},
 	    ]},
-	  {title: 'Printers', categories:[]}
+	  {title: 'Printers', folder:"fa-folder-o", categories:[]}
 	];
 
 	//*************************************** Dependency Select *****************************
