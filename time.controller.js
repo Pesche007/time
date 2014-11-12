@@ -4,7 +4,7 @@ angular.module('time')
   .controller('TreeCtrl', function ($scope, AppConfig) {
 	AppConfig.setCurrentApp('Time', 'fa-tumblr', 'time', 'app/time/menu.html');
 	
-	$scope.people = [{'firstname':'Peter', 'lastname':'Windemann', 'id':'007'}, {'firstname':'Bruno', 'lastname':'Kaiser', 'id':'001alpha'}, {'firstname':'Thomas', 'lastname':'Huber', 'id':'123-KK'}];
+	$scope.people = [{'id':'007', 'firstname':'Peter', 'lastname':'Windemann'}, {'id':'001alpha', 'firstname':'Bruno', 'lastname':'Kaiser'}, {'id':'123-KK', 'firstname':'Thomas', 'lastname':'Huber'}];
 	$scope.client = [{'companyname':'UBS AG', 'id':'007'}, {'companyname':'Credit Suisse AG', 'id':'001alpha'}, {'companyname':'Julius Bär AG', 'id':'123-KK'}];		
 	 $scope.opened=[];
   $scope.open = function($event, openid) {
@@ -44,47 +44,47 @@ angular.module('time')
 		$scope.tableValues.rows.push(rowConfig)
 		}
 	//************************************** Single Select ****************************************
-	$scope.selectPerson = function(data){
-		$scope.PeopleSelect=data;
+	$scope.selectPerson = function(data, model){
+		scopeModel=string2model(model);
+		scopeModel=data;
 		}
 	$scope.removePerson = function() {$scope.PeopleSelect=undefined}	
 
 	$scope.logPerson = function(){
 		console.log($scope.PeopleSelect)
 		}
-
 	//************************************** Select Multiple **************************************
-	$scope.MultiplePeople=[]
-	$scope.removeMultiPerson = function() {$scope.MultiplePeople=[]}
-	$scope.removeMultiSinglePerson = function(data){
-		$scope.deleteExistingMulti(data);
+	//$scope.MultiplePeople=[]
+	//$scope.removeMultiPerson = function() {$scope.MultiplePeople=[]}
+	$scope.removeMultiSinglePerson = function(data, model){
+		$scope.deleteExistingMulti(data, model);
 		}
 	//delete element from array of objects
-	$scope.deleteExistingMulti = function(data) {
-		for (var i = 0, len = $scope.MultiplePeople.length; i < len; i++) {
-			if ($scope.MultiplePeople[i]["id"]== data.id) {
-				$scope.MultiplePeople.splice(i, 1);
+	$scope.deleteExistingMulti = function(data, model) {
+		for (var i = 0, len = model.length; i < len; i++) {
+			if (model[i]["id"]== data.id) {
+				model.splice(i, 1);
 				break;
 				}
 			}	
 		}
 	//check if element exists in array of objects
-	$scope.checkExistingMulti = function(data) {
+	$scope.checkExistingMulti = function(data, model) {
 		var checkVar=true;
-		for (var i = 0, len = $scope.MultiplePeople.length; i < len; i++) {
-			if ($scope.MultiplePeople[i]["id"]== data.id) {
+		for (var i = 0, len = model.length; i < len; i++) {
+			if (model[i]["id"]== data.id) {
 				checkVar=false;
 				break;
 				}
 			}	
 		return checkVar; 		
 		}
-	$scope.updatePeople = function (data){
-		if($scope.checkExistingMulti(data)) $scope.MultiplePeople.push(data)
-		$scope.MultiPeopleSelect=undefined;
+	$scope.updatePeople = function (data, model, selector){
+		if($scope.checkExistingMulti(data, model)) model.push(data)
+		$scope.treeOPT[selector]=[]
 		}	
-	$scope.selectMultiPerson = function(data){
-		if($scope.checkExistingMulti(data)) $scope.MultiplePeople.push(data)
+	$scope.selectMultiPerson = function(data, model){
+		if($scope.checkExistingMulti(data, model)) model.push(data)
 		}		
 	$scope.logMultiPerson = function(){
 		console.log($scope.MultiplePeople)
@@ -94,6 +94,7 @@ angular.module('time')
 	$scope.tree_removeAllShow = function(){
 		$scope.treeOPT.addedit_show=false;
 		$scope.treeOPT.delete_show=false;
+		$scope.treeOPT.assign_person_show=false;
 		}
 	$scope.tree_show = function(show){
 		$scope.treeOPT[show]=true;
@@ -111,6 +112,19 @@ angular.module('time')
 	$scope.set_modalInput = function(txt) {
 		$scope.treeOPT.catName=txt;
 		}
+	$scope.set_peopleInput = function(obj) {
+		if(obj==="") $scope.treeOPT.tmppeople=[];
+		else $scope.treeOPT.catName=txt;
+		}	
+	$scope.tree_cleartmp = function(){
+		$scope.tree_removeAllShow();
+		$scope.treeOPT.tmpobj="";
+		$scope.treeOPT.tmpindex=0;
+		$scope.treeOPT.catName="";
+		$scope.treeOPT.treeitemDesc="";
+		$scope.treeOPT.treeAction="";
+		$scope.treeOPT.tmppeople=[];
+		}	
 	$scope.tree_action = function(obj, index, action){
 		$scope.tree_removeAllShow();
 		$scope.tree_addtoTMP(obj, index);
@@ -118,6 +132,14 @@ angular.module('time')
 		if(action==="add") {
 			$scope.tree_show("addedit_show")
 			var txt=obj.title!==undefined ? "Add new element to " +obj.title : "Add new element to root"
+			}			
+		else if(action==="assign_person") {
+			$scope.tree_show("assign_person_show")
+			var txt="Select person to assign to "+obj.title;			
+			//Assign values but don't link
+			angular.forEach(obj.people, function(item) {
+				$scope.treeOPT.tmppeople.push(item)		
+				})
 			}
 		else if(action==="edit") {
 			$scope.tree_show("addedit_show")
@@ -138,7 +160,9 @@ angular.module('time')
 		if($scope.treeOPT.treeAction==="add") {
 			if($scope.treeOPT.tmpobj==="root") $scope.treeOPT.categories.unshift({title: $scope.treeOPT.catName, categories:[]});
 			else $scope.treeOPT.tmpobj.categories.unshift({title: $scope.treeOPT.catName, categories:[]});	
-	
+			}
+		else if($scope.treeOPT.treeAction==="assign_person") {
+			$scope.treeOPT.tmpobj["people"]=$scope.treeOPT.tmppeople
 			}
 		else if($scope.treeOPT.treeAction==="edit") {
 			$scope.treeOPT.tmpobj.title=$scope.treeOPT.catName;
@@ -149,18 +173,17 @@ angular.module('time')
 		else {
 			return false;
 			}
-		$scope.set_modalInput("");
-		$scope.tree_removeAllShow();
+		$scope.tree_cleartmp();
 		}
 
-	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, catName: "", treeitemDesc:"", treeAction:""}
+	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, tmppeople:[], peopleselect:[], catName: "", treeitemDesc:"", treeAction:""}
 	$scope.treeOPT.categories = [
-		{title: 'Computers', folder:"fa-folder-o", categories: [
-    		{title: 'Laptops', folder:"fa-folder-o", categories: [
-         		 {title: 'Ultrabooks', folder:"fa-folder-o", categories:[]}, {title: 'Macbooks', folder:"fa-folder-o", categories:[]}
+		{title: 'Computers', categories: [
+    		{title: 'Laptops', categories: [
+         		 {title: 'Ultrabooks', categories:[]}, {title: 'Macbooks', categories:[]}
 	    	 ]},
 	    ]},
-	  {title: 'Printers', folder:"fa-folder-o", categories:[]}
+	  {title: 'Printers', categories:[], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
 	];
 
 	//*************************************** Dependency Select *****************************

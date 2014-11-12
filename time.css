@@ -2,10 +2,10 @@
 
 /*TREE*/
 .treewrapper{width:100%;border:1px solid #CCC;background:#F7F7F7;border-radius:3px;padding:10px}
-ul.tree, ul.tree ul { list-style-type: none; }
-ul.tree, ul.tree ul { list-style-type: none; background: url(images/vline.png) repeat-y; margin: 0; padding: 0; } 
-ul.tree ul { margin-left: 10px; } 
-ul.tree li { margin: 0; padding: 0 12px; line-height: 20px; background: url(images/node.png) no-repeat;}
-ul.tree li:last-child {background: #F7F7F7 url(images/lastnode.png) no-repeat; }
-.treefolder{color:#999;}
-ul.tree div a{margin-left:4px}
+.tree, .tree ul.tree {margin:0;padding:0;list-style:none;}
+.tree ul.tree {  margin-left:1em;  position:relative;}
+.tree ul.tree ul.tree {margin-left:.5em} 
+.tree ul.tree:before { content:"";  display:block;  width:0;  position:absolute;  top:0;  bottom:0;  left:0;  border-left:1px dotted #AAA;}
+.tree > li { margin:0;  padding:0 1.5em; line-height:2em;   position:relative;}
+.tree ul.tree > li:before {  content:"";  display:block;  width:10px; height:0;border-top:1px dotted #AAA; margin-top:-1px;  position:absolute;top:1em; left:0;}
+.tree ul.tree > li:last-child:before { background:#F7F7F7;  height:auto;  top:1em;  bottom:0;}
