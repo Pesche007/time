@@ -4,14 +4,34 @@ angular.module('time')
   .controller('TreeCtrl', function ($scope, AppConfig) {
 	AppConfig.setCurrentApp('Time', 'fa-tumblr', 'time', 'app/time/menu.html');
 	
-	$scope.people = [{'id':'007', 'firstname':'Peter', 'lastname':'Windemann'}, {'id':'001alpha', 'firstname':'Bruno', 'lastname':'Kaiser'}, {'id':'123-KK', 'firstname':'Thomas', 'lastname':'Huber'}];
-	$scope.client = [{'companyname':'UBS AG', 'id':'007'}, {'companyname':'Credit Suisse AG', 'id':'001alpha'}, {'companyname':'Julius Bär AG', 'id':'123-KK'}];		
-	 $scope.opened=[];
-  $scope.open = function($event, openid) {
-    $event.preventDefault();
-    $event.stopPropagation();
-    $scope.opened[openid] = true;
-  };
+	//API
+	$scope.get_people = function(){
+		return [{'id':'007', 'firstname':'Peter', 'lastname':'Windemann'}, {'id':'001alpha', 'firstname':'Bruno', 'lastname':'Kaiser'}, {'id':'123-KK', 'firstname':'Thomas', 'lastname':'Huber'}];	
+		}
+	
+	$scope.get_client = function (){
+		return [{'companyname':'UBS AG', 'id':'007'}, {'companyname':'Credit Suisse AG', 'id':'001alpha'}, {'companyname':'Julius Bär AG', 'id':'123-KK'}];		
+		}
+	
+	$scope.get_tree = function () {
+		return [{title: 'Computers', categories: [
+					{title: 'Laptops', categories: [
+						 {title: 'Ultrabooks', categories:[]}, {title: 'Macbooks', categories:[]}
+					 ]},
+				]},
+			  {title: 'Printers', categories:[], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
+			]
+		}
+	//Load config
+	$scope.people=$scope.get_people();	
+	$scope.client =$scope.get_client();
+	
+	$scope.opened=[];
+	$scope.open = function($event, openid) {
+    	$event.preventDefault();
+	    $event.stopPropagation();
+	    $scope.opened[openid] = true;
+	  };
 
 
 	//*********************** Table ********************	
@@ -91,31 +111,37 @@ angular.module('time')
 		}
 						
 	//************************************** Tree **************************************
+	//Options for tree - idea: save all actions and objects handleded as tmp saves and then act upon them (e.g. create subtree -> stores action "add", then enter name and save -> tmp action "add" execute
+	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, tmppeople:[], peopleselect:[], catName: "", treeitemDesc:"", treeAction:"", items:$scope.get_tree()}
+	
+	//remove all input modal divs
 	$scope.tree_removeAllShow = function(){
 		$scope.treeOPT.addedit_show=false;
 		$scope.treeOPT.delete_show=false;
 		$scope.treeOPT.assign_person_show=false;
 		}
+	//show manage/add/edit modal div -> show=action
 	$scope.tree_show = function(show){
 		$scope.treeOPT[show]=true;
 		}
+	//add selected object (obj) and index in array (i) to tmp
 	$scope.tree_addtoTMP = function(obj, i){
 		$scope.treeOPT.tmpobj=obj;
 		$scope.treeOPT.tmpindex=i;		
 		}
+	//save selected action to tmp for further use
 	$scope.set_treeaction = function(action){
 		$scope.treeOPT.treeAction=action;
 		}
+	//set description on modal div to txt
 	$scope.set_treeDescription = function(txt){
 		$scope.treeOPT.treeitemDesc=txt;
 		}
+	//set value of input field of modal edit div
 	$scope.set_modalInput = function(txt) {
 		$scope.treeOPT.catName=txt;
 		}
-	$scope.set_peopleInput = function(obj) {
-		if(obj==="") $scope.treeOPT.tmppeople=[];
-		else $scope.treeOPT.catName=txt;
-		}	
+	//through cleanup off all tmp saves
 	$scope.tree_cleartmp = function(){
 		$scope.tree_removeAllShow();
 		$scope.treeOPT.tmpobj="";
@@ -125,6 +151,7 @@ angular.module('time')
 		$scope.treeOPT.treeAction="";
 		$scope.treeOPT.tmppeople=[];
 		}	
+	//Record tree action 
 	$scope.tree_action = function(obj, index, action){
 		$scope.tree_removeAllShow();
 		$scope.tree_addtoTMP(obj, index);
@@ -136,7 +163,7 @@ angular.module('time')
 		else if(action==="assign_person") {
 			$scope.tree_show("assign_person_show")
 			var txt="Select person to assign to "+obj.title;			
-			//Assign values but don't link
+			//Assign values but don't link $scope.treeOPT.tmppeople=obj => links it to scope
 			angular.forEach(obj.people, function(item) {
 				$scope.treeOPT.tmppeople.push(item)		
 				})
@@ -152,10 +179,12 @@ angular.module('time')
 			var txt="Confirm: Delete " + obj.categories[index].title + subtreeTXT + "?";			
 			}
 		else {
+			//proper error handling
 			return false;
 			}			
 		$scope.set_treeDescription(txt);
 		}
+	//Executes saved tmp action on click on "Save" button
 	$scope.tree_actionExec = function() {
 		if($scope.treeOPT.treeAction==="add") {
 			if($scope.treeOPT.tmpobj==="root") $scope.treeOPT.categories.unshift({title: $scope.treeOPT.catName, categories:[]});
@@ -171,20 +200,11 @@ angular.module('time')
 			$scope.treeOPT.tmpobj.categories.splice($scope.treeOPT.tmpindex, 1);
 			}
 		else {
+			//proper error handling
 			return false;
 			}
 		$scope.tree_cleartmp();
 		}
-
-	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, tmppeople:[], peopleselect:[], catName: "", treeitemDesc:"", treeAction:""}
-	$scope.treeOPT.categories = [
-		{title: 'Computers', categories: [
-    		{title: 'Laptops', categories: [
-         		 {title: 'Ultrabooks', categories:[]}, {title: 'Macbooks', categories:[]}
-	    	 ]},
-	    ]},
-	  {title: 'Printers', categories:[], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
-	];
 
 	//*************************************** Dependency Select *****************************
 	var option1Options = ["UBS AG", "Credit Suisse AG", "Julius Bär AG"];

@@ -124,7 +124,8 @@
                 </ul>
             </script>
             <div class="treewrapper">
-                <button type="button" ng-click="" class="btn btn-success"><span class="fa fa-save"></span> Save Tree</button><hr />
+                <button type="button" ng-click="" class="btn btn-success"><span class="fa fa-save"></span> Save</button> 
+                <button type="button" ng-click="" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button><hr />
                 <div class="alert alert-info" role="alert" ng-show="treeOPT.delete_show">
                     {{treeOPT.treeitemDesc}}<br /><br />
                     <button type="button" ng-click="tree_actionExec()" class="btn btn-success"><span class="fa fa-trash-o"></span> Delete</button>
@@ -169,11 +170,11 @@
                 </div>
                 <ul class="tree">
                     <li><a href="javascript:void(0)" ng-click="tree_action('root', 0, 'add')" class="text-success"><span class="fa fa-plus"></span></a></li>
-                    <li ng-repeat="category in treeOPT.categories" ng-include="'categoryTree'" ng-init="parentOBJ=treeOPT"></li>
+                    <li ng-repeat="category in treeOPT.items" ng-include="'categoryTree'" ng-init="parentOBJ=treeOPT"></li>
                 </ul> 
 			</div>
         </div>
-        <div class="col-sm-3"><pre class="code">{{ treeOPT.categories | json }}</pre></div>        
+        <div class="col-sm-3"><pre class="code">{{ treeOPT.items | json }}</pre></div>        
         <div class="col-sm-3"><pre class="code">{{ treeOPT | json }}</pre></div>        
     </div>                             
 	<div class="row">
