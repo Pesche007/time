@@ -112,8 +112,7 @@ angular.module('time')
 						
 	//************************************** Tree **************************************
 	//Options for tree - idea: save all actions and objects handleded as tmp saves and then act upon them (e.g. create subtree -> stores action "add", then enter name and save -> tmp action "add" execute
-	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, tmppeople:[], peopleselect:[], catName: "", treeitemDesc:"", treeAction:"", items:$scope.get_tree()}
-	
+	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, tmppeople:[], peopleselect:[], catName: "", treeitemDesc:"", treeAction:"", treePeopleView:0, items:$scope.get_tree()}
 	//remove all input modal divs
 	$scope.tree_removeAllShow = function(){
 		$scope.treeOPT.addedit_show=false;

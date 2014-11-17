@@ -109,14 +109,14 @@
 						</button>
 					<ul class="dropdown-menu" role="menu">
 						<li role="presentation" class="dropdown-header">{{ category.title }}</li>
-						<li><a href="javascript:void(0)" ng-click="tree_action(category, 0, 'assign_person')"><span class="text-primary fa fa-user"></span>  Manage people</a></li>
+						<li ng-if="treeOpt.treePeopleView"><a href="javascript:void(0)" ng-click="tree_action(category, 0, 'assign_person')"><span class="text-primary fa fa-user"></span>  Manage people</a></li>
 						<li><a href="javascript:void(0)" ng-click="tree_action(category, 0, 'add')"><span class="text-success fa fa-plus"></span>  Add sub-element</a></li>
 						<li><a href="javascript:void(0)" ng-click="tree_action(category, 0, 'edit')"><span class="fa fa-pencil"></span> Edit</a></li>
 						<li><a href="javascript:void(0)" ng-click="tree_action(parentOBJ, $index, 'delete')"><span class="text-danger fa fa-times"></span> Delete</a></li>						
 					</ul>
 					</div> 
 				</div>				
-                <ul class="tree" ng-if="category.people">
+                <ul class="tree" ng-if="category.people && treeOpt.treePeopleView">
 					<li ng-repeat="person in category.people"><span class="treefolder fa fa-user"></span> {{person.firstname}} {{person.lastname}}</li>
                 </ul>
                 <ul class="tree" ng-if="category.categories">
@@ -125,7 +125,9 @@
             </script>
             <div class="treewrapper">
                 <button type="button" ng-click="" class="btn btn-success"><span class="fa fa-save"></span> Save</button> 
-                <button type="button" ng-click="" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button><hr />
+                <button type="button" ng-click="" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
+                <button type="button" class="btn btn-default pull-right" ng-model="treeOpt.treePeopleView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">Personen</button>
+                <hr />
                 <div class="alert alert-info" role="alert" ng-show="treeOPT.delete_show">
                     {{treeOPT.treeitemDesc}}<br /><br />
                     <button type="button" ng-click="tree_actionExec()" class="btn btn-success"><span class="fa fa-trash-o"></span> Delete</button>
