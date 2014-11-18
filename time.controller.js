@@ -14,12 +14,12 @@ angular.module('time')
 		}
 	
 	$scope.get_tree = function () {
-		return [{title: 'Computers', categories: [
-					{title: 'Laptops', categories: [
-						 {title: 'Ultrabooks', categories:[]}, {title: 'Macbooks', categories:[]}
+		return [{title: 'Company A', type:'company', categories: [
+					{title: 'Project A1', type:'project', categories: [
+						 {title: 'Sub-Project A11', type:'project', categories:[]}, {title: 'Sub-Project A12', type:'project', categories:[], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
 					 ]},
 				]},
-			  {title: 'Printers', categories:[], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
+			  {title: 'Company B', type:'company', categories:[]}
 			]
 		}
 	//Load config
@@ -139,6 +139,18 @@ angular.module('time')
 	//set value of input field of modal edit div
 	$scope.set_modalInput = function(txt) {
 		$scope.treeOPT.catName=txt;
+		}
+	//Open/hide tree
+	$scope.tree_toggleChildren = function(obj) {		
+		obj.childrenVisible = !obj.childrenVisible;
+		}
+	//Toggle expand/collapse all
+	$scope.tree_toggleChildrenAll = function(dir, obj) {
+		if(obj==="root") obj=$scope.treeOPT.items
+		angular.forEach(obj, function(value, key) {
+			value.childrenVisible=dir;
+			if(value.categories) $scope.tree_toggleChildrenAll(dir, value.categories)			
+			});		
 		}
 	//through cleanup off all tmp saves
 	$scope.tree_cleartmp = function(){
