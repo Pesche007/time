@@ -14,13 +14,23 @@ angular.module('time')
 		}
 	
 	$scope.get_tree = function () {
-		return [{title: 'Company A', type:'company', categories: [
-					{title: 'Project A1', type:'project', categories: [
-						 {title: 'Sub-Project A11', type:'project', categories:[]}, {title: 'Sub-Project A12', type:'project', categories:[], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
+		return [{id: 'CmpA', title: 'Company A', type:'company', categories: [
+					{id: 'PjtA1', title: 'Project A1', type:'project', categories: [
+						 {id: 'SPjtA11', title: 'Sub-Project A11', type:'project', categories:[
+						 	{id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', categories: [], people:[]}
+						], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}, 
+						 {id: 'SPjtA12', title: 'Sub-Project A12', type:'project', categories:[
+						 {id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', categories: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
+						 ], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
 					 ]},
 				]},
-			  {title: 'Company B', type:'company', categories:[]}
+			  {id: 'CmpB', title: 'Company B', type:'company', categories:[
+			 	 {id: 'PjtB1', title: 'Project B1', type:'project', categories: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
+			  ]}
 			]
+		}
+	$scope.get_treetableinput = function (){
+		return $scope.treeOPT.items;
 		}
 	//Load config
 	$scope.people=$scope.get_people();	
@@ -109,7 +119,38 @@ angular.module('time')
 	$scope.logMultiPerson = function(){
 		console.log($scope.MultiplePeople)
 		}
-						
+	//************************************** Tree Input**************************************
+	$scope.tree_table = [];
+	$scope.tree_tablepplid="007";
+	$scope.tree_generateTable = function(obj, objdetails, level) {	
+		if(obj==="root") {
+			obj=$scope.get_treetableinput();
+			objdetails=[];
+			level=0;
+			}
+		angular.forEach(obj, function(value, key) {
+			if(value.type=="company") {
+				level=0;
+				objdetails=[];
+				}
+			objdetails[level]={id:value.id, title:value.title};
+			if(value.people) {
+				angular.forEach(value.people, function(val, k) {
+					if(val.id==$scope.tree_tablepplid) {
+						var objTMP=[];	
+						for(var i=0;i<level;i++){
+							objTMP.push(objdetails[i]);
+							}					
+						$scope.tree_table.push({level:level, id:value.id, title:value.title, path:objTMP})					
+						}
+					})
+				}
+			if(value.categories) {
+				$scope.tree_generateTable(value.categories, objdetails, level+1)						
+				}
+			})
+		}
+							
 	//************************************** Tree **************************************
 	//Options for tree - idea: save all actions and objects handleded as tmp saves and then act upon them (e.g. create subtree -> stores action "add", then enter name and save -> tmp action "add" execute
 	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, tmppeople:[], peopleselect:[], catName: "", treeitemDesc:"", treeAction:"", treePeopleView:0, items:$scope.get_tree()}

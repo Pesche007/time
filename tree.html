@@ -93,18 +93,51 @@
         <div class="col-sm-3"></div>        
     </div>     
 	<div class="row">
+	    <div class="col-sm-3"></div>
+		<div class="col-sm-6">    
+        	<h1 class="text-center">Treeview-Input</h1>
+            <br />
+            <button type="button" ng-click="tree_generateTable('root', '')" class="btn btn-default">Generate Table</button> 
+            <table class="table table-condensed table-striped">
+			<thead>
+            	<tr><th>Company</th><th>Projects</th><th>Hours</th><th>Comments</th></tr>
+            </thead>
+            <tbody>
+            	 <tr ng-repeat="obj in tree_table">
+                	<td><span class="label label-primary">{{obj.path[0].title}}</span></td>
+                    <td>
+                    <span class="label label-default margin-right-M" ng-repeat="item in obj.path" ng-show="!$first">{{item.title}}</span><span class="label label-default">{{obj.title}}</span></td>
+                    <td>
+                    <form name="myform" class="form-inline"> 
+	                    <input type="text" class="form-control input-sm" name="price_field" ng-model="price" ng-pattern="/(^\d{1,2}(?:\.\d{1})?$)|(^\d{4}(\-)\d{4})/" placeholder="time">
+    	                <div class="alert alert-info" role="alert" ng-show="myform.price_field.$error.pattern">
+        	    	        1. Time as hours (number)  <strong>1.5 | 2 | 4.7</strong><br />2. Time as From-To  <strong>1000-1200 | 0815-1230</strong></span>
+            	        </div>
+                    </form>
+                    </td>
+                    <td>
+                    <input type="text" class="form-control input-sm" placeholder="Comment"/>
+                    </td>
+                </tr>
+            </tbody>
+			</table>
+            
+        </div>
+        <div class="col-sm-3"></div>
+	</div>  
+	<div class="row">
 		<div class="col-sm-12">    
         	<h1 class="text-center">Treeview</h1>
         </div>
 	</div>        
 	<div class="row">    
         <div class="col-sm-3"></div>
-        <div class="col-sm-3">
+        <div class="col-sm-6">
 			<script type="text/ng-template" id="categoryTree">
                <div> 
 					<div class="pull-left pointer margin-right-M" ng-click="tree_toggleChildren(category)">
 						<span class="treefolder fa" ng-class="{'fa-caret-down' : category.childrenVisible, 'fa-caret-right' : !category.childrenVisible}"></span> 
-						<span class="fa" ng-class="{'fa-building-o' : category.type=='company', 'fa-folder-o' : category.type=='project'}"></span> {{ category.title }}
+						<span class="fa" ng-class="{'fa-building-o' : category.type=='company', 'fa-file-text-o' : category.type=='project'}"></span> {{ category.title }}
 					</div>
 					<div class="btn-group" dropdown>
 						<button type="button" class="btn btn-default btn-xs dropdown-toggle">
@@ -184,8 +217,7 @@
                 </ul> 
 			</div>
         </div>
-        <div class="col-sm-3"><pre class="code">{{ treeOPT.items | json }}</pre></div>        
-        <div class="col-sm-3"><pre class="code">{{ treeOPT | json }}</pre></div>        
+        <div class="col-sm-3"><pre class="code">{{ treeOPT.items | json }}</pre></div>               
     </div>                             
 	<div class="row">
 		<div class="col-sm-12">    
