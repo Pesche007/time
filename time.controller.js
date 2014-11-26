@@ -87,12 +87,12 @@ angular.module('time')
 	//$scope.MultiplePeople=[]
 	//$scope.removeMultiPerson = function() {$scope.MultiplePeople=[]}
 	$scope.removeMultiSinglePerson = function(data, model){
-		$scope.deleteExistingMulti(data, model);
+		$scope.deleteExistingMulti(data, model, "id");
 		}
 	//delete element from array of objects
-	$scope.deleteExistingMulti = function(data, model) {
+	$scope.deleteExistingMulti = function(data, model, selector) {
 		for (var i = 0, len = model.length; i < len; i++) {
-			if (model[i]["id"]== data.id) {
+			if (model[i][selector]== data[selector]) {
 				model.splice(i, 1);
 				break;
 				}
@@ -124,6 +124,7 @@ angular.module('time')
 	$scope.tree_tablepplid="007";
 	$scope.tree_generateTable = function(obj, objdetails, level) {	
 		if(obj==="root") {
+			$scope.tree_table = [];
 			obj=$scope.get_treetableinput();
 			objdetails=[];
 			level=0;
