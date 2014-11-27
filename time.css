@@ -1,3 +1,5 @@
+/*General classes*/
+.ul-unstyled{list-style:none}
 .margin-left-L{margin-left:20px}
 .margin-left-M{margin-left:10px}
 .margin-right-M{margin-right:10px}
@@ -6,6 +8,28 @@
 .inv_table td{padding-right:5px}
 .pointer{cursor:pointer}
 .clear{clear:both}
+.box{padding:10px}
+.height600{max-height:600px;overflow:auto}
+/*Bootstrap Callouts*/
+.bs-callout {   padding: 20px;    margin: 0px 0px 20px 0px;    border: 1px solid #eee;    border-left-width: 5px;    border-radius: 3px;}
+.bs-callout h4 {    margin-top: 0;    margin-bottom: 5px;}
+.bs-callout p:last-child {    margin-bottom: 0;}
+.bs-callout code {    border-radius: 3px;}
+.bs-callout+.bs-callout {    margin-top: -5px;}
+.bs-callout-default {    border-left-color: #777;}
+.bs-callout-default h4 {    color: #777;}
+.bs-callout-primary {    border-left-color: #428bca;}
+.bs-callout-primary h4 {    color: #428bca;}
+.bs-callout-success {    border-left-color: #5cb85c;}
+.bs-callout-success h4 {    color: #5cb85c;}
+.bs-callout-danger {    border-left-color: #d9534f;}
+.bs-callout-danger h4 {    color: #d9534f;}
+.bs-callout-warning {    border-left-color: #f0ad4e;}
+.bs-callout-warning h4 {    color: #f0ad4e;}
+.bs-callout-info {    border-left-color: #5bc0de;}
+.bs-callout-info h4 {    color: #5bc0de;}
+
+
 /*TREE*/
 .treewrapper{width:100%;border:1px solid #CCC;background:#F7F7F7;border-radius:3px;padding:10px}
 .tree, .tree ul.tree {margin:0;padding:0;list-style:none;}
@@ -19,3 +43,5 @@
 
 /*Calendar*/
 .calendar-wrapper{}
+.calendar-projects-wrapper{max-height:500px;overflow:auto;margin-top:10px;background:#F7F7F7;border:1px solid #DDD;border-radius:3px;padding:0px 10px 10px 10px}
+.calendar-projects{list-style:none;margin:5px 0px 5px 10px}

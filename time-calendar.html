@@ -1,56 +1,113 @@
 <div class="container-fluid"> 
 	<div class="row">
 		<div class="col-sm-2">
-        	<div class='btn btn-primary' data-drag='true' data-jqyoui-options='{revert: false, helper: "clone"}' jqyoui-draggable data-options='{"title":"Project 1", "id":"ABC123", "color":"#336699"}'>Project 1</div>
-			<div class='btn btn-primary' data-drag='true' data-jqyoui-options='{revert: false, helper: "clone"}' jqyoui-draggable data-options='{"title":"Project 2", "id":"ABC124", "color":"#FF9900"}'>Project 2</div>
-            <div class='btn btn-primary' data-drag='true' data-jqyoui-options='{revert: false, helper: "clone"}' jqyoui-draggable data-options='{"title":"Project 3", "id":"ABC125", "color":"#6699CC"}'>Project 3</div>
-        </div>
-        <div class="col-sm-4">                       
-            <div ui-calendar="uiConfig.calendar" ng-model="eventSources" class="calendar-wrapper" calendar="myCalendar"></div> 
-            <br /> 
-            <button type="button" ng-click="calendarsave()" class="btn btn-success"><span class="fa fa-save"></span> Save</button>  
-        </div>
-        <div class="col-sm-4">        
-            <div ng-if="eventfocus.visible" class="alert alert-info">
-	            <a href="javascript:void(0)" ng-click="eventdetailscancel()" class="pull-right"><span class="fa fa-times fa-lg"></span></a>
-                <table class="inv_table">
-                <tr><td><strong>Project</strong></td><td>{{eventfocus.title}}</td></tr>
-                <tr><td><strong>Start</strong></td>
-                <td>
-                    <form name="CalendarViewTimeFrom" class="form-inline" role="form">
-                	    <div class="form-group">
-	    	                <p class="form-control-static">{{eventfocus.start | date:'dd.MM.yyyy'}}</p>
-    	                </div>
-    	                <div class="form-group">
-		                    <input type="text" name="CalendarViewTimeFromInput" ng-model="eventfocus.startTMP" class="form-control input-sm" ng-pattern="/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/"/>
-                            <div class="form-group alert alert-danger" role="alert" ng-show="CalendarViewTimeFrom.CalendarViewTimeFromInput.$error.pattern">
-                                <p class="form-control-static">Time in 24h-format (18:00)</p>
-                            </div>                            
-        	            </div>
-                    </form>
-                 </td></tr>
-                <tr><td><strong>End</strong></td>
-                <td>       
-                   <form name="CalendarViewTimeTo" class="form-inline" role="form">
-                	    <div class="form-group">
-	    	                <p class="form-control-static">{{eventfocus.end | date:'dd.MM.yyyy'}}</p>
-    	                </div>
-    	                <div class="form-group">
-		                    <input type="text" name="CalendarViewTimeToInput" ng-model="eventfocus.endTMP" class="form-control input-sm" ng-pattern="/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/"/>
-                            <div class="form-group alert alert-danger" role="alert" ng-show="CalendarViewTimeTo.CalendarViewTimeToInput.$error.pattern">
-                                <p class="form-control-static">Time in 24h-format (18:00)</p>
-                            </div>                             
-        	            </div>
-                    </form>
-                </td></tr>
-                </table>
-                <strong>Comment</strong>:<br />
-               	<textarea class="form-control" rows="3" ng-model="eventfocus.comment"></textarea><br />
-                <div class="alert alert-danger" ng-if="eventfocus.error">{{eventfocus.error}}</div>
-                <button type="button" ng-click="eventdetailssave()" class="btn btn-success"><span class="fa fa-save"></span> Save</button>
-                <button type="button" ng-click="eventdetailsdelete()" class="btn btn-danger"><span class="fa fa-times"></span> Delete</button>
+        	<script type="text/ng-template" id="calendarProjects">
+				<h4 ng-if="field.type=='company'">{{field.title}}</h4>
+				<div ng-if="field.type=='project' && checkAssignedOnly(field)" class='btn btn-primary btn-xs' 
+				data-drag='true' data-jqyoui-options='{revert: false, helper: "clone"}' jqyoui-draggable data-options='{"title":"{{field.title}}", "id":"{{field.id}}", "color":"#336699"}'>{{field.title}}</div>
+				<ul class="calendar-projects" ng-if="field.categories">
+					<li ng-repeat="field in field.categories" ng-include="'calendarProjects'">
+					</li>
+				</ul>				
+			</script>        
+            <div class="panel panel-default">
+                <div class="panel-heading height600">
+                	<h3 class="panel-title">Clients/Projects</h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form-inline" role="form">
+                        <div class="form-group">
+                            <input type="text" placeholder="Filter clients" ng-model="searchClientProjects" class="form-control"> 
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-default pull-right" ng-model="eventOPT.showmine" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"><span class="fa fa-user"></span></button> 
+                        </div> 
+                    </form>                                                           
+
+                    <ul class="calendar-projects">
+                        <li ng-repeat="field in clientprojects | filter:searchClientProjects" ng-include="'calendarProjects'"></li>            
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="col-sm-2"></div>        
-	</div>                         
+        <div class="col-sm-6"> 
+            <div class="panel panel-default height600">
+                <div class="panel-heading">
+                	<h3 class="panel-title">Calendar view</h3>
+                </div>
+                <div class="panel-body">
+                   	<div ui-calendar="uiConfig.calendar" ng-model="eventSources" class="calendar-wrapper" calendar="myCalendar"></div>             		
+                </div>
+            </div>  
+        </div>
+        <div class="col-sm-2">  
+            <div class="panel panel-default height600">
+                <div class="panel-heading">
+                	<h3 class="panel-title">Entry detail</h3>
+                </div>
+                <div class="panel-body">
+                    <div ng-if="eventfocus.visible">
+                        <a href="javascript:void(0)" ng-click="eventdetailscancel()" class="pull-right"><span class="fa fa-times fa-lg"></span></a>
+                        <strong>{{eventfocus.title}}</strong>                 
+                        <form name="CalendarViewTimeFrom" class="form-inline" role="form">
+                            <div class="form-group">
+                                {{eventfocus.start | date:'dd.MM.yyyy'}}
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="CalendarViewTimeFromInput" ng-model="eventfocus.startTMP" class="form-control input-sm" ng-pattern="/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/"/>
+                                <div class="form-group alert alert-danger" role="alert" ng-show="CalendarViewTimeFrom.CalendarViewTimeFromInput.$error.pattern">
+                                    24h-format (18:00)
+                                </div>                            
+                            </div>
+                        </form>     
+                       <form name="CalendarViewTimeTo" class="form-inline" role="form">
+                            <div class="form-group">
+                                {{eventfocus.end | date:'dd.MM.yyyy'}}
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="CalendarViewTimeToInput" ng-model="eventfocus.endTMP" class="form-control input-sm" ng-pattern="/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/"/>
+                                <div class="form-group alert alert-danger" role="alert" ng-show="CalendarViewTimeTo.CalendarViewTimeToInput.$error.pattern">
+                                   24h-format (18:00)
+                                </div>                             
+                            </div>
+                        </form>
+                        <strong>Comment</strong>:<br />
+                        <textarea class="form-control" rows="3" ng-model="eventfocus.comment"></textarea><br />
+                        <div class="alert alert-danger" ng-if="eventfocus.error">{{eventfocus.error}}</div>
+                        <button type="button" ng-click="eventdetailssave()" class="btn btn-success"><span class="fa fa-save"></span> Save</button>
+                        <button type="button" ng-click="eventdetailsdelete()" class="btn btn-danger"><span class="fa fa-trash-o"></span> Delete</button>
+                    </div>                
+                </div>
+            </div>            
+        </div>
+        <div class="col-sm-2">
+            <div class="panel panel-default height600">
+                <div class="panel-heading">
+                	<h3 class="panel-title">Entry list</h3>
+                </div>
+                <div class="panel-body">
+	                <input type="text" placeholder="Filter entries" ng-model="searchExistingEvents" class="form-control">
+                    <ul class="ul-unstyled">
+                        <li ng-repeat="event in events | filter:{title:searchExistingEvents} | orderBy:'start'">                        	
+                            <div class="box">
+                            <a href="javascript:void(0)" ng-click="eventdetailsdeletedirect(event)" class="pull-right"><span class="fa fa-trash-o fa-lg"></span></a>
+                            <a href="javascript:void(0)" ng-click="eventdetailsset(event)" class="pull-right margin-right-M"><span class="fa fa-pencil fa-lg"></span></a>
+                            <strong>{{event.title}}</strong><br />
+                            {{event.start | date:"dd.MM HH:mm"}} - {{event.end | date:"dd.MM HH:mm"}}
+                            <div ng-if="event.comment!=''">{{event.comment}}</div>
+                            </div>
+                        </li>
+                    </ul>                
+                </div>
+            </div>
+        </div>        
+	</div> 
+	<div class="row">
+	    <div class="col-sm-12">
+        	<div class="box">
+                <button type="button" ng-click="calendarsave()" class="btn btn-success"><span class="fa fa-save"></span> Save Calendar</button>
+                <button type="button" class="btn btn-warning"><span class="fa fa-save"></span> Cancel</button>
+            </div>
+        </div>
+    </div>                            
 </div>        
