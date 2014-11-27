@@ -88,6 +88,7 @@
                 <div class="panel-body">
 	                <input type="text" placeholder="Filter entries" ng-model="searchExistingEvents" class="form-control">
                     <ul class="ul-unstyled">
+                    	<!-- filter:searchExistingEvents generates error, so filter only titles-->
                         <li ng-repeat="event in events | filter:{title:searchExistingEvents} | orderBy:'start'">                        	
                             <div class="box">
                             <a href="javascript:void(0)" ng-click="eventdetailsdeletedirect(event)" class="pull-right"><span class="fa fa-trash-o fa-lg"></span></a>

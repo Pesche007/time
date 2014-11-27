@@ -26,21 +26,12 @@ angular.module('time')
 			  ]}
 			]
 		}
-		
+	//Sets details for event in focus
 	$scope.eventfocus={"visible": false, "title":"", "start":"", "end":"", "comment":"", "startTMP":"", "endTMP":"", "error":false, "calEvent":{}}
+	//Options, like if projects should be shown for mapped people only
 	$scope.eventOPT={showmine:false, showid:"007"};
 	$scope.clientprojects = $scope.get_tree();
-	$scope.checkAssignedOnly = function(field){
-		if($scope.eventOPT.showmine==false) return true
-		else{
-			if(field.people) {
-				var checkPerson=field.people.some(function(entry) {
-					return entry.id==$scope.eventOPT.showid;
-					});
-				return checkPerson;
-				}
-			}
-		}
+
     $scope.uiConfig = {
       calendar:{
         height: 500,
@@ -86,11 +77,13 @@ angular.module('time')
 			}
      	}
     };
+	//Set event detail window through -> eventfocus
 	$scope.eventdetailsset = function(calEvent){
 		var startVal=$scope.formatAddLeadingZero(calEvent.start.getHours()) + ":" + $scope.formatAddLeadingZero(calEvent.start.getMinutes());
 		var endVal=$scope.formatAddLeadingZero(calEvent.end.getHours()) + ":" + $scope.formatAddLeadingZero(calEvent.end.getMinutes());		
 		$scope.eventfocus={"visible": true, "title":calEvent.title, "start":calEvent.start, "end":calEvent.end, "comment":calEvent.comment, "startTMP":startVal, "endTMP":endVal, "calEvent":calEvent}		
 		}
+	//Save changes in entry details - check hours:minutes and save in OBJ
 	$scope.eventdetailssave = function(){
 		$scope.eventfocus.calEvent.comment = $scope.eventfocus.comment;
 		if($scope.checktimeHoursMinutes($scope.eventfocus.startTMP) && $scope.checktimeHoursMinutes($scope.eventfocus.endTMP)) {
@@ -109,18 +102,21 @@ angular.module('time')
 	$scope.eventdetailscancel = function(){
 		$scope.cleareventfocus();
 		}	
+	//Delete event from entry detail view, event is saved in eventfocus
 	$scope.eventdetailsdelete = function() {
 		$scope.deleteExistingMulti($scope.eventfocus.calEvent, $scope.events, "_id");
 		$scope.cleareventfocus();
 		}
+	//Delete event from list, event as variable
 	$scope.eventdetailsdeletedirect = function(evt) {
 		$scope.deleteExistingMulti(evt, $scope.events, "_id");
 		$scope.cleareventfocus();
-		}		
+		}	
+	//clear the entry details window	
 	$scope.cleareventfocus = function(){
 		$scope.eventfocus={"visible": false, "title":"", "start":"", "end":"", "comment":"", "startTMP":"", "endTMP":"", "error":false, "calEvent":{}}
 		}	
-	
+	//adds event, "eid" because "id" makes events double (i.e. resizing one resizes the other)	
    $scope.addEvent = function(date, eventoptions, showdetails) {
 		var newEvent = {
 			eid: eventoptions.id,
@@ -133,15 +129,24 @@ angular.module('time')
 			}
       $scope.events.push(newEvent);
 	  if(showdetails) $scope.eventdetailsset(newEvent)
-    };	
-   $scope.removeEvent = function(index) {
-      $scope.events.splice(index,1);
-	  $scope.cleareventfocus();
-    };	
+    };
+	//Filter -> check if field has people with same id	
+	$scope.checkAssignedOnly = function(field){
+		if($scope.eventOPT.showmine==false) return true
+		else{
+			if(field.people) {
+				var checkPerson=field.people.some(function(entry) {
+					return entry.id==$scope.eventOPT.showid;
+					});
+				return checkPerson;
+				}
+			}
+		}
 	$scope.calendarsave = function(){
 		console.log($scope.events)
 		}
-	
+		
+	//event sources
 	$scope.eventSources = [$scope.events]
 
 
