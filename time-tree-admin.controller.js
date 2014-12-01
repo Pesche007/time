@@ -1,18 +1,10 @@
 'use strict';
 
 angular.module('time')
-  .controller('TreeCtrl', function ($scope, AppConfig) {
+  .controller('TreeAdminCtrl', function ($scope, AppConfig) {
 	AppConfig.setCurrentApp('Time', 'fa-tumblr', 'time', 'app/time/menu.html');
 	
 	//API
-	$scope.get_people = function(){
-		return [{'id':'007', 'firstname':'Peter', 'lastname':'Windemann'}, {'id':'001alpha', 'firstname':'Bruno', 'lastname':'Kaiser'}, {'id':'123-KK', 'firstname':'Thomas', 'lastname':'Huber'}];	
-		}
-	
-	$scope.get_client = function (){
-		return [{'companyname':'UBS AG', 'id':'007'}, {'companyname':'Credit Suisse AG', 'id':'001alpha'}, {'companyname':'Julius Bär AG', 'id':'123-KK'}];		
-		}
-	
 	$scope.get_tree = function () {
 		return [{id: 'CmpA', title: 'Company A', type:'company', categories: [
 					{id: 'PjtA1', title: 'Project A1', type:'project', categories: [
@@ -29,62 +21,15 @@ angular.module('time')
 			  ]}
 			]
 		}
-	$scope.get_treetableinput = function (){
-		return $scope.treeOPT.items;
+
+	$scope.get_people = function(){
+		return [{'id':'007', 'firstname':'Peter', 'lastname':'Windemann'}, {'id':'001alpha', 'firstname':'Bruno', 'lastname':'Kaiser'}, {'id':'123-KK', 'firstname':'Thomas', 'lastname':'Huber'}];	
 		}
+
 	//Load config
-	$scope.people=$scope.get_people();	
-	$scope.client =$scope.get_client();
-	
-	$scope.opened=[];
-	$scope.open = function($event, openid) {
-    	$event.preventDefault();
-	    $event.stopPropagation();
-	    $scope.opened[openid] = true;
-	  };
-
-
-	//*********************** Table ********************	
-	$scope.getConfig=function(){
-		var rowConfig = [
-			{"title":"Date", "type":"date", "value":""},
-			{"title":"Hours", "type":"time", "value":""},
-			{"title":"Person", "type":"peopleselect", "value":""},
-			{"title":"Comment", "type":"text", "value":""}
-			]
-		return rowConfig;		
-		}
-	$scope.tableValues={"rows":[]};
-	$scope.tableValues.rows.push($scope.getConfig())
-	$scope.logRow=function(){
-		console.log($scope.tableValues)
-		}
-	$scope.addRow=function(){
-		$scope.tableValues.rows.push($scope.getConfig())
-		}
-	$scope.tableRemove=function(row){
-		delete $scope.tableValues.rows[row]
-		}
-	$scope.tableCopy=function(row){
-		var rowConfig=$scope.getConfig();
-		for (var i = 0, len = rowConfig.length; i < len; i++) {
-				rowConfig[i].value=$scope.tableValues.rows[row][i].value;
-			}			
-		$scope.tableValues.rows.push(rowConfig)
-		}
-	//************************************** Single Select ****************************************
-	$scope.selectPerson = function(data, model){
-		scopeModel=string2model(model);
-		scopeModel=data;
-		}
-	$scope.removePerson = function() {$scope.PeopleSelect=undefined}	
-
-	$scope.logPerson = function(){
-		console.log($scope.PeopleSelect)
-		}
+	$scope.people=$scope.get_people();
+			
 	//************************************** Select Multiple **************************************
-	//$scope.MultiplePeople=[]
-	//$scope.removeMultiPerson = function() {$scope.MultiplePeople=[]}
 	$scope.removeMultiSinglePerson = function(data, model){
 		$scope.deleteExistingMulti(data, model, "id");
 		}
@@ -118,39 +63,7 @@ angular.module('time')
 	$scope.logMultiPerson = function(){
 		console.log($scope.MultiplePeople)
 		}
-	//************************************** Tree Input**************************************
-	$scope.tree_table = [];
-	$scope.tree_tablepplid="007";
-	$scope.tree_generateTable = function(obj, objdetails, level) {	
-		if(obj==="root") {
-			$scope.tree_table = [];
-			obj=$scope.get_treetableinput();
-			objdetails=[];
-			level=0;
-			}
-		angular.forEach(obj, function(value, key) {
-			if(value.type=="company") {
-				level=0;
-				objdetails=[];
-				}
-			objdetails[level]={id:value.id, title:value.title};
-			if(value.people) {
-				angular.forEach(value.people, function(val, k) {
-					if(val.id==$scope.tree_tablepplid) {
-						var objTMP=[];	
-						for(var i=0;i<level;i++){
-							objTMP.push(objdetails[i]);
-							}					
-						$scope.tree_table.push({level:level, id:value.id, title:value.title, path:objTMP})					
-						}
-					})
-				}
-			if(value.categories) {
-				$scope.tree_generateTable(value.categories, objdetails, level+1)						
-				}
-			})
-		}
-							
+					
 	//************************************** Tree **************************************
 	//Options for tree - idea: save all actions and objects handleded as tmp saves and then act upon them (e.g. create subtree -> stores action "add", then enter name and save -> tmp action "add" execute
 	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, tmppeople:[], peopleselect:[], catName: "", treeitemDesc:"", treeAction:"", treePeopleView:0, items:$scope.get_tree()}
@@ -239,8 +152,8 @@ angular.module('time')
 	//Executes saved tmp action on click on "Save" button
 	$scope.tree_actionExec = function() {
 		if($scope.treeOPT.treeAction==="add") {
-			if($scope.treeOPT.tmpobj==="root") $scope.treeOPT.items.unshift({"title": $scope.treeOPT.catName, "type":"company", categories:[]});
-			else $scope.treeOPT.tmpobj.categories.unshift({"title": $scope.treeOPT.catName, "type":"project", categories:[]});	
+			if($scope.treeOPT.tmpobj==="root") $scope.treeOPT.items.unshift({"title": $scope.treeOPT.catName, "type":"company", "childrenVisible": true, categories:[]});
+			else $scope.treeOPT.tmpobj.categories.unshift({"title": $scope.treeOPT.catName, "type":"project", "childrenVisible": true, categories:[]});	
 			}
 		else if($scope.treeOPT.treeAction==="assign_person") {
 			$scope.treeOPT.tmpobj["people"]=$scope.treeOPT.tmppeople
@@ -257,62 +170,4 @@ angular.module('time')
 			}
 		$scope.tree_cleartmp();
 		}
-
-	//*************************************** Dependency Select *****************************
-	var option1Options = ["UBS AG", "Credit Suisse AG", "Julius Bär AG"];
-	var option2Options = [
-		["Projekt UBS 1","Projekt UBS 2","Projekt UBS 3"], 
-		["Projekt Credit Suisse 1","Projekt Credit Suisse 2","Projekt Credit Suisse 3"], 
-		["Projekt Julius Bär 1","Projekt Julius Bär 1","Projekt Julius Bär 1"]
-		];
-	$scope.options1 = option1Options;
-	$scope.options2 = []; 
-	$scope.getOptions2 = function(){
-		var key = $scope.options1.indexOf($scope.option1);
-		var myNewOptions = option2Options[key];
-		$scope.options2 = myNewOptions;
-		};
-		
-	$scope.ClientProjects=[
-		{
-				"name":"UBS AG", 
-				"id":"1001", 
-				"projects":[
-					{
-						"name":"Project UBS AG 1", 
-						"id":"3001", 
-						"subprojects":[
-							{
-								"name":"Sub-Project UBS AG 1", 
-								"id":"5001"
-							},
-							{
-								"name":"Sub-Project UBS AG 2", 
-								"id":"5001a"
-							}
-						]
-					}
-				]
-			},
-		{
-				"name":"Credit Suisse AG", 
-				"id":"1002", 
-				"projects":[
-					{
-						"name":"Credit Suisse AG 1", 
-						"id":"3002", 
-						"subprojects":[
-							{
-								"name":"Sub-Project Credit Suisse AG 1", 
-								"id":"5002"
-							},
-							{
-								"name":"Sub-Project Credit Suisse AG 2", 
-								"id":"5002a"
-							}
-						]
-					}
-				]
-			}
-		]
   })
