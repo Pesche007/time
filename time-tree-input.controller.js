@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('time')
-  .controller('TreeInputCtrl', function ($scope, AppConfig) {
+  .controller('TreeInputCtrl', function ($scope, $filter, AppConfig) {
 	AppConfig.setCurrentApp('Time', 'fa-tumblr', 'time', 'app/time/menu.html');
 	
 	//API
+	//get companies, projects and people 
 	$scope.get_tree = function () {
 		return [{id: 'CmpA', title: 'Company A', type:'company', categories: [
 					{id: 'PjtA1', title: 'Project A1', type:'project', categories: [
@@ -21,10 +22,33 @@ angular.module('time')
 			  ]}
 			]
 		}
+	//get time entries for a specific date 
+	$scope.get_items = function(){
+		return [ {   "id": "SPjtA11",    "title": "Sub-Project A11",    "time": "1000-1200",    "comment": "Test1",    "level": 2,    "path": [
+	      {        "id": "CmpA",        "title": "Company A"      },      {        "id": "PjtA1",        "title": "Project A1"      }    ]  },
+		  {    "id": "SPjtA12",    "title": "Sub-Project A12",    "time": "1100-1200",    "comment": "Test2",    "level": 2,    "path": [
+	     {    "id": "CmpA",       "title": "Company A"    },   {     "id": "PjtA1",     "title": "Project A1"  } ] },
+		  {  "id": "SSPjtA12",    "title": "Sub-Sub-Project A112",    "time": "1200-1300",    "comment": "Test3",    "level": 3,    "path": [      {
+        "id": "CmpA",        "title": "Company A"      },      {        "id": "PjtA1",        "title": "Project A1"      },
+      {        "id": "SPjtA12",        "title": "Sub-Project A12"      }    ]  },
+	    {    "id": "PjtB1",    "title": "Project B1",    "time": "2.5",    "comment": "Test4",    "level": 1,    "path": [      {
+        "id": "CmpB",        "title": "Company B"      }    ]  }]
+		}
 	$scope.get_treetableinput = function (){
 		return $scope.treeOPT.items;
 		}
 
+	//Datepoicker
+	$scope.today = function() {
+		$scope.dt = $filter('date')(new Date(), 'yyyy-MM-dd');
+		};
+	$scope.today();	
+	$scope.opened=[];
+	$scope.open = function($event, openid) {
+		$event.preventDefault();
+		$event.stopPropagation();
+		$scope.opened[openid] = true;
+		};
 	//************************************** Tree Input**************************************
 	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, tmppeople:[], peopleselect:[], catName: "", treeitemDesc:"", treeAction:"", treePeopleView:0, items:$scope.get_tree()}
 	$scope.tree_table = [];
@@ -64,4 +88,15 @@ angular.module('time')
 	$scope.tree_input_tableRemove = function(index){
 		$scope.tree_table.splice(index, 1);
 		}
+	$scope.load_date = function(dir){
+		var currentdate = new Date($scope.dt)
+		if(dir==1) {
+			$scope.dt=currentdate.setDate(currentdate.getDate() + 1);
+			}
+		else {						
+			$scope.dt=currentdate.setDate(currentdate.getDate() - 1);
+			}
+		$scope.tree_table = $scope.get_items();
+		}
+	$scope.tree_generateTable('root', '');
   })
