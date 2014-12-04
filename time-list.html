@@ -36,7 +36,7 @@
                 	<td><span class="label label-primary">{{obj.cmptitle}}</span></td>
                     <td>
                     <span class="label label-default">{{obj.prjtitle}}</span></td>
-                    <td><input type="text" class="form-control" datepicker-popup="dd.MM.yyyy" ng-model="obj.date" ng-click="open($event, $index)" is-open="opened[$index]"></td>
+                    <td><input type="text" class="form-control" datepicker-popup="dd.MM.yyyy" ng-model="obj.date" ng-change="formatedate(obj)" ng-click="open($event, $index)" is-open="opened[$index]"></td>
                     <td>
                     <form name="myform" class="form-inline"> 
 	                    <input type="text" class="form-control input-sm" name="price_field" ng-model="obj.time" ng-pattern="/(^\d{1,2}(?:\.\d{1})?$)|(^\d{4}(\-)\d{4})/" placeholder="Time">

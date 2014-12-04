@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('time')
-  .controller('TimeListCtrl', function ($scope, AppConfig) {
+  .controller('TimeListCtrl', function ($scope, $filter, AppConfig) {
 	AppConfig.setCurrentApp('Time', 'fa-tumblr', 'time', 'app/time/menu.html');
 	
 	$scope.get_tree = function () {
@@ -30,13 +30,17 @@ angular.module('time')
 	$scope.tree_newentry = function (item) {
 		$scope.tree_new.push({"cmpid":$scope.time_company.id, "cmptitle":$scope.time_company.title, "prjid":item.id, "prjtitle":item.title, "date":[],"time":[], "comment":""})
 		}
-	//Date
+	//Datepicker
 	$scope.opened=[];
 	$scope.open = function($event, openid) {
 		$event.preventDefault();
 		$event.stopPropagation();
 		$scope.opened[openid] = true;
-		};			
+		};	
+	$scope.formatedate = function (obj){
+		//Callend whenever a date is selected. Because the date is stored unformatted, when performing a row-copy, the datepicker date gets rewritten with unformatted date. 
+		obj.date = $filter('date')(obj.date, 'dd.MM.yyyy');
+		}
 	//DUPLICAZE FORM TREE_INPUT		
 	$scope.tree_input_tableCopy = function(obj, index){
 		$scope.tree_new.splice(index, 0, angular.copy(obj)); //from http://stackoverflow.com/questions/19333023/ngmodel-reference-when-pushed-into-array
