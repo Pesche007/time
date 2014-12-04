@@ -6,18 +6,18 @@ angular.module('time')
 	
 	//API
 	$scope.get_tree = function () {
-		return [{id: 'CmpA', title: 'Company A', type:'company', categories: [
-					{id: 'PjtA1', title: 'Project A1', type:'project', categories: [
-						 {id: 'SPjtA11', title: 'Sub-Project A11', type:'project', categories:[
-						 	{id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', categories: [], people:[]}
+		return [{id: 'CmpA', title: 'Company A', type:'company', children: [
+					{id: 'PjtA1', title: 'Project A1', type:'project', children: [
+						 {id: 'SPjtA11', title: 'Sub-Project A11', type:'project', children:[
+						 	{id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', children: [], people:[]}
 						], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}, 
-						 {id: 'SPjtA12', title: 'Sub-Project A12', type:'project', categories:[
-						 {id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', categories: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
+						 {id: 'SPjtA12', title: 'Sub-Project A12', type:'project', children:[
+						 {id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', children: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
 						 ], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
 					 ]},
 				]},
-			  {id: 'CmpB', title: 'Company B', type:'company', categories:[
-			 	 {id: 'PjtB1', title: 'Project B1', type:'project', categories: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
+			  {id: 'CmpB', title: 'Company B', type:'company', children:[
+			 	 {id: 'PjtB1', title: 'Project B1', type:'project', children: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
 			  ]}
 			]
 		}
@@ -103,7 +103,7 @@ angular.module('time')
 		if(obj==="root") obj=$scope.treeOPT.items
 		angular.forEach(obj, function(value, key) {
 			value.childrenVisible=dir;
-			if(value.categories) $scope.tree_toggleChildrenAll(dir, value.categories)			
+			if(value.children) $scope.tree_toggleChildrenAll(dir, value.children)			
 			});		
 		}
 	//through cleanup off all tmp saves
@@ -140,8 +140,8 @@ angular.module('time')
 			}
 		else if(action==="delete") {
 			$scope.tree_show("delete_show")
-			var subtreeTXT=obj.categories[index].categories.length?" and all its subtrees":"";
-			var txt="Confirm: Delete " + obj.categories[index].title + subtreeTXT + "?";			
+			var subtreeTXT=obj.children[index].children.length?" and all its subtrees":"";
+			var txt="Confirm: Delete " + obj.children[index].title + subtreeTXT + "?";			
 			}
 		else {
 			//proper error handling
@@ -152,8 +152,8 @@ angular.module('time')
 	//Executes saved tmp action on click on "Save" button
 	$scope.tree_actionExec = function() {
 		if($scope.treeOPT.treeAction==="add") {
-			if($scope.treeOPT.tmpobj==="root") $scope.treeOPT.items.unshift({"title": $scope.treeOPT.catName, "type":"company", "childrenVisible": true, categories:[]});
-			else $scope.treeOPT.tmpobj.categories.unshift({"title": $scope.treeOPT.catName, "type":"project", "childrenVisible": true, categories:[]});	
+			if($scope.treeOPT.tmpobj==="root") $scope.treeOPT.items.unshift({"title": $scope.treeOPT.catName, "type":"company", "childrenVisible": true, children:[]});
+			else $scope.treeOPT.tmpobj.children.unshift({"title": $scope.treeOPT.catName, "type":"project", "childrenVisible": true, children:[]});	
 			}
 		else if($scope.treeOPT.treeAction==="assign_person") {
 			$scope.treeOPT.tmpobj["people"]=$scope.treeOPT.tmppeople
@@ -162,7 +162,7 @@ angular.module('time')
 			$scope.treeOPT.tmpobj.title=$scope.treeOPT.catName;
 			}
 		else if($scope.treeOPT.treeAction==="delete") {
-			$scope.treeOPT.tmpobj.categories.splice($scope.treeOPT.tmpindex, 1);
+			$scope.treeOPT.tmpobj.children.splice($scope.treeOPT.tmpindex, 1);
 			}
 		else {
 			//proper error handling

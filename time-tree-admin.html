@@ -4,31 +4,31 @@
         <div class="col-sm-6">
 			<script type="text/ng-template" id="categoryTree">
                <div> 
-					<div class="pull-left pointer margin-right-M" ng-click="tree_toggleChildren(category)">
-						<span class="treefolder fa" ng-class="{'fa-caret-down' : category.childrenVisible, 'fa-caret-right' : !category.childrenVisible}"></span> 
-						<span class="fa" ng-class="{'fa-building-o' : category.type=='company', 'fa-file-text-o' : category.type=='project'}"></span> {{ category.title }}
+					<div class="pull-left pointer margin-right-M" ng-click="tree_toggleChildren(obj)">
+						<span class="treefolder fa" ng-class="{'fa-caret-down' : obj.childrenVisible, 'fa-caret-right' : !obj.childrenVisible}"></span> 
+						<span class="fa" ng-class="{'fa-building-o' : obj.type=='company', 'fa-file-text-o' : chiobjldren.type=='project'}"></span> {{ obj.title }}
 					</div>
 					<div class="btn-group" dropdown>
 						<button type="button" class="btn btn-default btn-xs dropdown-toggle">
 							<span class="fa fa-gear"></span>
 						</button>
 					<ul class="dropdown-menu" role="menu">
-						<li role="presentation" class="dropdown-header">{{ category.title }}</li>
-						<li ng-if="treeOpt.treePeopleView && category.type=='project'">
-							<a href="javascript:void(0)" ng-click="tree_action(category, 0, 'assign_person')"><span class="text-primary fa fa-user"></span>  Manage people</a>
+						<li role="presentation" class="dropdown-header">{{ obj.title }}</li>
+						<li ng-if="treeOpt.treePeopleView && obj.type=='project'">
+							<a href="javascript:void(0)" ng-click="tree_action(obj, 0, 'assign_person')"><span class="text-primary fa fa-user"></span>  Manage people</a>
 						</li>
-						<li ng-if="category.type=='project'"><a href="javascript:void(0)" ng-click="tree_action(category, 0, 'add')"><span class="text-success fa fa-plus"></span>  Add sub-project</a></li>
-						<li ng-if="category.type=='company'"><a href="javascript:void(0)" ng-click="tree_action(category, 0, 'add')"><span class="text-success fa fa-plus"></span>  Add project</a></li>
-						<li><a href="javascript:void(0)" ng-click="tree_action(category, 0, 'edit')"><span class="fa fa-pencil"></span> Edit</a></li>
-						<li><a href="javascript:void(0)" ng-click="tree_action(parentOBJ, $index, 'delete')"><span class="text-danger fa fa-times"></span> Delete</a></li>						
+						<li ng-if="obj.type=='project'"><a href="javascript:void(0)" ng-click="tree_action(obj, 0, 'add')"><span class="text-success fa fa-plus"></span>  Add sub-project</a></li>
+						<li ng-if="obj.type=='company'"><a href="javascript:void(0)" ng-click="tree_action(obj, 0, 'add')"><span class="text-success fa fa-plus"></span>  Add project</a></li>
+						<li ng-if="obj.type=='project'"><a href="javascript:void(0)" ng-click="tree_action(obj, 0, 'edit')"><span class="fa fa-pencil"></span> Edit</a></li>
+						<li ng-if="obj.type=='project'"><a href="javascript:void(0)" ng-click="tree_action(parentOBJ, $index, 'delete')"><span class="text-danger fa fa-times"></span> Delete</a></li>						
 					</ul>
 					</div> 
 				</div>				
-                <ul class="tree" ng-if="category.people && treeOpt.treePeopleView && category.childrenVisible">
-					<li ng-repeat="person in category.people"><span class="treefolder fa fa-user"></span> {{person.firstname}} {{person.lastname}}</li>
+                <ul class="tree" ng-if="obj.people && treeOpt.treePeopleView && obj.childrenVisible">
+					<li ng-repeat="person in obj.people"><span class="treefolder fa fa-user"></span> {{person.firstname}} {{person.lastname}}</li>
                 </ul>
-                <ul class="tree" ng-if="category.categories && category.childrenVisible">
-					<li ng-repeat="category in category.categories" ng-include="'categoryTree'" ng-init="parentOBJ=$parent.category"></li>
+                <ul class="tree" ng-if="obj.children && obj.childrenVisible">
+					<li ng-repeat="obj in obj.children" ng-include="'categoryTree'" ng-init="parentOBJ=$parent.obj"></li>
                 </ul>
             </script>
             <div class="treewrapper">
@@ -81,8 +81,7 @@
                     </form>                        	
                 </div>
                 <ul class="tree">
-                    <li><a href="javascript:void(0)" ng-click="tree_action('root', 0, 'add')" class="text-success"><span class="fa fa-plus"></span></a></li>
-                    <li ng-repeat="category in treeOPT.items" ng-include="'categoryTree'" ng-init="parentOBJ=treeOPT"></li>
+                    <li ng-repeat="obj in treeOPT.items" ng-include="'categoryTree'" ng-init="parentOBJ=treeOPT"></li>
                 </ul> 
 			</div>
         </div>
