@@ -1,5 +1,5 @@
 <script type="text/ng-template" id="categoryTree">
-	<a href="javascript:void(0)" ng-click="tree_newentry(item)"><span class="label label-default">{{item.title}}</span></a>
+	<a href="javascript:void(0)" ng-click="tree_newentry(item)" ng-if="checkAssignedOnly(item)"><span class="label label-default">{{item.title}}</span></a>
 	<ul class="tree" ng-if="item.categories">
 		<li ng-repeat="item in item.categories" ng-include="'categoryTree'"></li>	
 	</ul>	
@@ -19,17 +19,25 @@
                   <ul class="dropdown-menu" role="menu">
                     <li ng-repeat="item in treeOPT.items"><a ng-click="time_update(item)" href="javascript:void(0)">{{item.title}}</a></li>
                   </ul>
-                </div>             
-                <button type="button" class="btn btn-default" ng-model="time_multiple" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                </div>   
+                
+                        
+                
+                <button type="button" class="btn btn-default margin-left-L" ng-model="time_timerOPT.time_multiple" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
                 	<span class="fa fa-forward"></span>
-                    <span ng-if="time_multiple==0">Mulitple Off</span>
-                    <span ng-if="time_multiple==1">Mulitple On</span>
+                    <span ng-if="time_timerOPT.time_multiple==0">Mulitple Off</span>
+                    <span ng-if="time_timerOPT.time_multiple==1">Mulitple On</span>
                 </button>
-                <button type="button" class="btn btn-default" ng-model="time_autosave" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                <button type="button" class="btn btn-default" ng-model="time_timerOPT.showmine" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                	<span class="fa fa-user"></span>
+                    <span ng-if="time_timerOPT.showmine==0">Assigned Off</span>
+                    <span ng-if="time_timerOPT.showmine==1">Assigned On</span>
+                </button>
+				<div class="pull-right">
                 	<span class="fa fa-save"></span>
-                    <span ng-if="time_autosave==0">Autosave Off</span>
-                    <span ng-if="time_autosave==1">Autosave On</span>
-                </button>                
+                    <span ng-if="time_timerOPT.time_autosave==0">Autosave Off</span>
+                    <span ng-if="time_timerOPT.time_autosave==1">Autosave On</span> 
+                </div>            
             </div>
             <div class="treewrapper margin-top-M" ng-if="tree_table.length">
                 <ul class="tree">

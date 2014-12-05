@@ -32,11 +32,7 @@ angular.module('time')
 			{"cmpid":$scope.time_company.id, "cmptitle":$scope.time_company.title, "prjid":item.id, "prjtitle":item.title, "timer":{"start":"","stop":"", "run":""}, "state":0, "time":"", "comment":""}
 			)
 		}
-
-	//Allow multiple time to run at once
-	$scope.time_multiple=0;
-	//Set Autosave
-	$scope.time_autosave=0;
+	$scope.time_timerOPT={"time_multiple":0, "time_autosave":0, "showmine":0, "showid":"007"};
 	//Callend whenever a date is selected. Because the date is stored unformatted, when performing a row-copy, the datepicker date gets rewritten with unformatted date. 		
 	$scope.formatedate = function (obj){
 		obj.date = $filter('date')(obj.date, 'dd.MM.yyyy');
@@ -138,10 +134,21 @@ angular.module('time')
 		var hrs = (s - mins) / 60;	
 		return Array(hrs, mins, secs);		
 		}	
-
+	//DUPLICATE FROM Calendar
+	$scope.checkAssignedOnly = function(field){
+		if($scope.time_timerOPT.showmine==false) return true
+		else{
+			if(field.people) {
+				var checkPerson=field.people.some(function(entry) {
+					return entry.id==$scope.time_timerOPT.showid;
+					});
+				return checkPerson;
+				}
+			}
+		}	
 	//AUTOSAVE AUTOLOAD
     angular.element(document).ready(function () {
-		if($scope.time_autosave) {
+		if($scope.time_timerOPT.time_autosave) {
 			//AutoSave
 			$scope.autosave = $interval(function(){
 				localStorage.setItem('TimeTimerCtrl', JSON.stringify($scope.tree_new));
