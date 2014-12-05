@@ -21,8 +21,8 @@ angular.module('time')
 			]
 		}
 	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, tmppeople:[], peopleselect:[], catName: "", treeitemDesc:"", treeAction:"", treePeopleView:0, items:$scope.get_tree()}
-	$scope.tree_company=[];
-	$scope.tree_new=[];
+	$scope.tree_company=[];	
+	$scope.tree_new=[];	
 	$scope.time_update = function(item){
 		$scope.time_company=item
 		$scope.tree_table = item.categories
@@ -32,8 +32,11 @@ angular.module('time')
 			{"cmpid":$scope.time_company.id, "cmptitle":$scope.time_company.title, "prjid":item.id, "prjtitle":item.title, "timer":{"start":"","stop":"", "run":""}, "state":0, "time":"", "comment":""}
 			)
 		}
+
 	//Allow multiple time to run at once
 	$scope.time_multiple=0;
+	//Set Autosave
+	$scope.time_autosave=0;
 	//Callend whenever a date is selected. Because the date is stored unformatted, when performing a row-copy, the datepicker date gets rewritten with unformatted date. 		
 	$scope.formatedate = function (obj){
 		obj.date = $filter('date')(obj.date, 'dd.MM.yyyy');
@@ -54,7 +57,7 @@ angular.module('time')
 			obj.timer["run"]=newDate;			
 			}
 		else {
-			var newStart = new Date(Math.abs(newDate - (obj.timer["stop"]-obj.timer["start"])))
+			var newStart = new Date(Math.abs(newDate - (new Date(obj.timer["stop"])-new Date(obj.timer["start"]))))
 			obj.timer["start"]=newStart;
 			obj.timer["stop"]="";
 			obj.timer["run"]=newDate;									
@@ -77,6 +80,9 @@ angular.module('time')
 		obj.state=3;
 		obj.time=$scope.msToHoursDecimal(Math.abs(obj.timer["stop"] - obj.timer["start"]));
 		}
+	$scope.item_remove = function(index){
+		$scope.tree_new.splice(index, 1);
+		}
 	//Trigger States of start/pause/stop buttons				
 	$scope.checktimer = function(obj, act){
 		if(obj.state==0) {
@@ -97,12 +103,13 @@ angular.module('time')
 	//Display difference in time
 	$scope.calctime = function(obj){
 		var sumtime=0;
-		if(obj.timer["run"]!="") {
+		if(obj.state==0) return "00:00:00";
+		else if(obj.timer["run"]!="") {
 			var diff = Math.abs(obj.timer["run"] - obj.timer["start"]);
 			var sumtime=parseInt(sumtime+diff);						
 			}
 		else {
-			var diff = Math.abs(obj.timer["stop"] - obj.timer["start"]);
+			var diff = Math.abs(new Date(obj.timer["stop"]) - new Date(obj.timer["start"]));
 			var sumtime=parseInt(sumtime+diff);				
 			}		
 		return $scope.msToTime(sumtime);
@@ -130,5 +137,31 @@ angular.module('time')
 		var mins = s % 60;
 		var hrs = (s - mins) / 60;	
 		return Array(hrs, mins, secs);		
-		}		
+		}	
+
+	//AUTOSAVE AUTOLOAD
+    angular.element(document).ready(function () {
+		if($scope.time_autosave) {
+			//AutoSave
+			$scope.autosave = $interval(function(){
+				localStorage.setItem('TimeTimerCtrl', JSON.stringify($scope.tree_new));
+				console.log("autosave");
+				},10000);
+			//AutoLoad
+			$scope.autoload = function() {
+				$scope.autosaveitem = localStorage.getItem("TimeTimerCtrl");
+				if ($scope.autosaveitem !== null) {			
+					$scope.tree_new=JSON.parse($scope.autosaveitem);
+					localStorage.removeItem('TimeTimerCtrl');
+					console.log("autoload")
+					angular.forEach($scope.tree_new, function(value, key) {
+						if(value.state==1) {
+							$scope.time_timerpause(value);
+							}
+						});			
+					}				
+				}
+			$scope.autoload();					
+		}
+    });	
   })

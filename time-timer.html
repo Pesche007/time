@@ -25,6 +25,11 @@
                     <span ng-if="time_multiple==0">Mulitple Off</span>
                     <span ng-if="time_multiple==1">Mulitple On</span>
                 </button>
+                <button type="button" class="btn btn-default" ng-model="time_autosave" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                	<span class="fa fa-save"></span>
+                    <span ng-if="time_autosave==0">Autosave Off</span>
+                    <span ng-if="time_autosave==1">Autosave On</span>
+                </button>                
             </div>
             <div class="treewrapper margin-top-M" ng-if="tree_table.length">
                 <ul class="tree">
@@ -43,6 +48,7 @@
                     <button ng-disabled="checktimer(obj, 'start')" type="button" ng-click="time_timerstart(obj)" class="btn btn-default">Start <span class="fa fa-caret-right"></span></button>
                     <button ng-disabled="checktimer(obj, 'pause')" type="button" ng-click="time_timerpause(obj)" class="btn btn-default">Pause <span class="fa fa-pause"></span></button>
                     <button ng-disabled="checktimer(obj, 'stop')" type="button" ng-click="time_timerstop(obj)" class="btn btn-default">Stop <span class="fa fa-stop"></span></button>
+                    <button ng-if="obj.state==3" type="button" ng-click="item_remove($index)" class="btn btn-default"><span class="fa fa-trash-o"></span></button>
                     </td>
                     <td>
                     <span ng-if="obj.state!=3">{{calctime(obj)}}</span>
