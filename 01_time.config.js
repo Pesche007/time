@@ -32,5 +32,11 @@ angular.module('time', ['core', 'ui.calendar', 'ngDragDrop'])
 		controller: 'TimeListCtrl',
 		templateUrl: 'app/time/time-list.html',
 		authenticate: true
-	})				
+	})	
+	.state('time-timer', {
+		url: '/time-timer',
+		controller: 'TimeTimerCtrl',
+		templateUrl: 'app/time/time-timer.html',
+		authenticate: true
+	})					
 });
