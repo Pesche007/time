@@ -32,7 +32,8 @@
                     <span class="label label-default margin-right-M" ng-repeat="item in obj.path" ng-show="!$first">{{item.title}}</span><span class="label label-default">{{obj.title}}</span></td>
                     <td>
                     <form name="myform" class="form-inline"> 
-                        <input type="text" class="form-control input-sm" name="price_field" ng-model="obj.time" ng-pattern="/(^\d{1,2}(?:\.\d{1})?$)|(^\d{4}(\-)\d{4})/" placeholder="Time" ng-blur="actionlog_updatefield('Time')">
+                        <input type="text" class="form-control input-sm" name="price_field" ng-model="obj.time" ng-pattern="/(^\d{1,2}(?:\.\d{1})?$)|(^\d{4}(\-)\d{4})/" placeholder="Time" 
+                        ng-change="actionlog_updatefield('Time')" ng-model-options="{updateOn: 'blur'}">
                         <div class="alert alert-info" role="alert" ng-show="myform.price_field.$error.pattern">
                             Valid times:<br />
                             1. Hours <strong>1.5</strong><br />2. From-To <strong>1000-1200</strong></span>
@@ -40,7 +41,7 @@
                     </form>
                     </td>
                     <td>
-                    <input type="text" class="form-control input-sm" ng-model="obj.comment" placeholder="Comment" ng-blur="actionlog_updatefield('Comment')"/>
+                    <input type="text" class="form-control input-sm" ng-model="obj.comment" placeholder="Comment" ng-change="actionlog_updatefield('Comment')" ng-model-options="{updateOn: 'blur'}"/>
                     </td>
                     <td>
                         <button type="button" ng-click="tree_input_tableRemove($index)" class="btn btn-default"><span class="fa fa-times"></span></button>
