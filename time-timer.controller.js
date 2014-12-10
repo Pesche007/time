@@ -29,7 +29,7 @@ angular.module('time')
 		}
 	$scope.tree_newentry = function (item) {
 		$scope.tree_new.push(
-			{"cmpid":$scope.time_company.id, "cmptitle":$scope.time_company.title, "prjid":item.id, "prjtitle":item.title, "timer":{"start":"","stop":"", "run":""}, "state":0, "time":"", "comment":""}
+			{"cmpid":$scope.time_company.id, "cmptitle":$scope.time_company.title, "prjid":item.id, "prjtitle":item.title, "timer":{"start":"","stop":"", "run":""}, "state":0, "date": $filter('date')(new Date(), 'dd.MM.yyyy'), "time":"", "comment":""}
 			)
 		}
 	$scope.time_timerOPT={"time_multiple":0, "time_autosave":0, "showmine":0, "showid":"007"};
@@ -40,7 +40,7 @@ angular.module('time')
 	//Timer		
 	$scope.time_timerstart = function(obj){
 		var newDate=new Date();		
-		if($scope.time_multiple==false) {
+		if($scope.time_timerOPT.time_multiple==false) {
 			angular.forEach($scope.tree_new, function(value, key) {
 				if(value.state==1) {
 					$scope.time_timerpause(value);

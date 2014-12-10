@@ -82,11 +82,15 @@ angular.module('time')
 				}
 			})
 		}
+	//Copy element
 	$scope.tree_input_tableCopy = function(obj, index){
 		$scope.tree_table.splice(index, 0, angular.copy(obj)); //from http://stackoverflow.com/questions/19333023/ngmodel-reference-when-pushed-into-array
+		$scope.addToLog("copy", $scope.tree_table);
 		}
+	//remove element
 	$scope.tree_input_tableRemove = function(index){
 		$scope.tree_table.splice(index, 1);
+		$scope.addToLog("delete", $scope.tree_table);
 		}
 	$scope.load_date = function(dir){
 		var currentdate = new Date($scope.dt)
@@ -98,5 +102,19 @@ angular.module('time')
 			}
 		$scope.tree_table = $scope.get_items();
 		}
-	$scope.tree_generateTable('root', '');
+	$scope.tree_generateTable('root', '');	
+	//Action log
+	$scope.actionlog=[];
+	$scope.actionlogcurrent=[];
+	$scope.addToLog = function(action, obj){
+		$scope.actionlog.push({"time":new Date(), "action":action, "obj":angular.copy(obj)})
+		}
+	$scope.actionlog_load = function(obj){
+		$scope.tree_table=obj.obj;
+		}
+	$scope.actionlog_updatefield = function(action){
+		$scope.addToLog("edit " + action, $scope.tree_table);
+		}
+	$scope.addToLog("init", $scope.tree_table);
+	$scope.isCollapsed = true;
   })
