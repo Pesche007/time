@@ -106,14 +106,25 @@ angular.module('time')
 	//Action log
 	$scope.actionlog=[];
 	$scope.actionlogcurrent=[];
+	$scope.compare_equals = function(obj) {
+		return angular.equals(obj, $scope.tree_table)
+		}
 	$scope.addToLog = function(action, obj){
 		$scope.actionlog.push({"time":new Date(), "action":action, "obj":angular.copy(obj)})
 		}
 	$scope.actionlog_load = function(obj){
 		$scope.tree_table=obj.obj;
 		}
-	$scope.actionlog_updatefield = function(action){
-		$scope.addToLog("edit " + action, $scope.tree_table);
+	$scope.actionlog_restore = function(obj){
+		$scope.tree_table=obj.obj;
+		$scope.actionlog_reset();
+		$scope.isCollapsed=true;
+		}
+	$scope.actionlog_reset = function(){
+		$scope.actionlog.splice(1, Number.MAX_VALUE);
+		}
+	$scope.actionlog_updatefield = function(action, obj){
+		$scope.addToLog("edit " + action + " -> " + obj, $scope.tree_table);
 		}
 	$scope.addToLog("init", $scope.tree_table);
 	$scope.isCollapsed = true;

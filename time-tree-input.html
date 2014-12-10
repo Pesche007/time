@@ -15,9 +15,9 @@
                         <tr><th>Time</th><th>Change</th><th>Actions</th></tr>
                     </thead>                
                     <tr ng-repeat="item in actionlog">
-                        <td>{{item.time | date:'HH:mm:ss'}} <span class="label label-default" ng-if="$last">Current</span></td>
+                        <td>{{item.time | date:'HH:mm:ss'}} <span class="label label-default" ng-if="compare_equals(item.obj)">Current View</span></td>
                         <td>{{item.action}}</td>
-                        <td><button class="btn btn-default btn-xs" ng-click="actionlog_load(item)">Load</button></td>
+                        <td><button class="btn btn-default btn-xs" ng-click="actionlog_load(item)">Load</button> <button class="btn btn-default btn-xs" ng-click="actionlog_restore(item)">Restore</button></td>
                     </tr>
                 </table>
             </div>            
@@ -33,7 +33,7 @@
                     <td>
                     <form name="myform" class="form-inline"> 
                         <input type="text" class="form-control input-sm" name="price_field" ng-model="obj.time" ng-pattern="/(^\d{1,2}(?:\.\d{1})?$)|(^\d{4}(\-)\d{4})/" placeholder="Time" 
-                        ng-change="actionlog_updatefield('Time')" ng-model-options="{updateOn: 'blur'}">
+                        ng-change="actionlog_updatefield('time', obj.time)" ng-model-options="{updateOn: 'blur'}">
                         <div class="alert alert-info" role="alert" ng-show="myform.price_field.$error.pattern">
                             Valid times:<br />
                             1. Hours <strong>1.5</strong><br />2. From-To <strong>1000-1200</strong></span>
@@ -41,7 +41,7 @@
                     </form>
                     </td>
                     <td>
-                    <input type="text" class="form-control input-sm" ng-model="obj.comment" placeholder="Comment" ng-change="actionlog_updatefield('Comment')" ng-model-options="{updateOn: 'blur'}"/>
+                    <input type="text" class="form-control input-sm" ng-model="obj.comment" placeholder="Comment" ng-change="actionlog_updatefield('comment', obj.comment)" ng-model-options="{updateOn: 'blur'}"/>
                     </td>
                     <td>
                         <button type="button" ng-click="tree_input_tableRemove($index)" class="btn btn-default"><span class="fa fa-times"></span></button>
