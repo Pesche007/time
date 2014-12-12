@@ -1,15 +1,35 @@
 'use strict';
 
 angular.module('time')
-  .controller('TimeCalendarCtrl', function ($scope, AppConfig, uiCalendarConfig) {
+  .controller('TimeCalendarCtrl', function ($scope, $filter, AppConfig, uiCalendarConfig) {
 	AppConfig.setCurrentApp('Time', 'fa-tumblr', 'time', 'app/time/menu.html');
 
 	//API 
-	$scope.events = [
-	  {"title": "Test", "start": new Date('2014/11/28 10:00'), "end": new Date('2014/11/28 12:00'), "allDay": false, "comment":"", "backgroundColor":"#996666"},
-	  {"title": "Best", "start": new Date('2014/11/28 13:00'), "end": new Date('2014/11/28 14:00'), "allDay": false, "comment":"", "backgroundColor":"#996666"},
-	  {"title": "Zest", "start": new Date('2014/11/29 10:00'), "end": new Date('2014/11/29 12:00'), "allDay": false, "comment":"", "backgroundColor":"#996666"}
-    ];
+	$scope.API_addelements = function(month){
+			console.log("Events added for month "+month)
+			var data = [
+			  {"title": "Test", "start": new Date('2014/'+month+'/10 10:00'), "end": new Date('2014/'+month+'/10 12:00'), "allDay": false, "comment":"", "backgroundColor":"#996666"},
+			  {"title": "Best", "start": new Date('2014/'+month+'/11 13:00'), "end": new Date('2014/'+month+'/11 14:00'), "allDay": false, "comment":"", "backgroundColor":"#996666"},
+			  {"title": "Zest", "start": new Date('2014/'+month+'/12 10:00'), "end": new Date('2014/'+month+'/12 12:00'), "allDay": false, "comment":"", "backgroundColor":"#996666"}
+			  ];
+			for(var i = 0; i < data.length; ++i) { $scope.events.push(data[i]); }
+		}
+
+	//Change in month -> load new month data
+	$scope.loadIntoView = function(start, end){		
+		$scope.eventOPT.viewfrom=start;
+		$scope.eventOPT.viewto=end;
+		var monthStart=$filter('date')(start, 'M');
+		var monthEnd=$filter('date')(end, 'M');
+		if($scope.eventOPT.months.indexOf(monthStart)==-1) {
+			$scope.API_addelements(monthStart);
+			$scope.eventOPT.months.push(monthStart);
+			}
+		if($scope.eventOPT.months.indexOf(monthEnd)==-1) {
+			$scope.API_addelements(monthEnd);
+			$scope.eventOPT.months.push(monthEnd);
+			}		
+		}
 	$scope.get_tree = function () {
 		return [{id: 'CmpA', title: 'UBS', type:'company', categories: [
 					{id: 'PjtA1', title: 'Project A1', type:'project', categories: [
@@ -26,12 +46,18 @@ angular.module('time')
 			  ]}
 			]
 		}
+	$scope.events=[];
+	$scope.eventSource=[$scope.events]
 	//Sets details for event in focus
 	$scope.eventfocus={"visible": false, "title":"", "start":"", "end":"", "comment":"", "startTMP":"", "endTMP":"", "error":false, "calEvent":{}}
 	//Options, like if projects should be shown for mapped people only
-	$scope.eventOPT={showmine:false, showid:"007"};
+	$scope.eventOPT={showmine:false, showid:"007", "months":[], "viewfrom":"", "viewto":""};
 	$scope.clientprojects = $scope.get_tree();
 
+	 $scope.daterangefilter = function (item) {
+        return (item.start >= $scope.eventOPT.viewfrom && item.end <= $scope.eventOPT.viewto);
+    };
+	
     $scope.uiConfig = {
       calendar:{
         height: 500,
@@ -74,6 +100,9 @@ angular.module('time')
 	    	},
 		eventResize: function(calEvent) {
 			$scope.eventdetailsset(calEvent);
+			},
+		viewRender: function(view, element) {		
+			$scope.loadIntoView(view.start, view.end);
 			}
      	}
     };
@@ -145,10 +174,6 @@ angular.module('time')
 	$scope.calendarsave = function(){
 		console.log($scope.events)
 		}
-		
-	//event sources
-	$scope.eventSources = [$scope.events]
-
 
 	//************ POSSIBLE FACTORIES ******************//
 	//Time functions

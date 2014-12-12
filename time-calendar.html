@@ -36,7 +36,7 @@
                 	<h3 class="panel-title">Calendar view</h3>
                 </div>
                 <div class="panel-body">
-                   	<div ui-calendar="uiConfig.calendar" ng-model="eventSources" class="calendar-wrapper" calendar="myCalendar"></div>             		
+                   	<div ui-calendar="uiConfig.calendar" ng-model="eventSource" class="calendar-wrapper" calendar="myCalendar"></div>             		
                 </div>
             </div>  
         </div>
@@ -89,7 +89,7 @@
 	                <input type="text" placeholder="Filter entries" ng-model="searchExistingEvents" class="form-control">
                     <ul class="ul-unstyled">
                     	<!-- filter:searchExistingEvents generates error, so filter only titles-->
-                        <li ng-repeat="event in events | filter:{title:searchExistingEvents} | orderBy:'start'">                        	
+                        <li ng-repeat="event in events | filter:daterangefilter | orderBy:'start'">                        	
                             <div class="box">
                             <a href="javascript:void(0)" ng-click="eventdetailsdeletedirect(event)" class="pull-right"><span class="fa fa-trash-o fa-lg"></span></a>
                             <a href="javascript:void(0)" ng-click="eventdetailsset(event)" class="pull-right margin-right-M"><span class="fa fa-pencil fa-lg"></span></a>
