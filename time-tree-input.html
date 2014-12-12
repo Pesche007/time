@@ -7,15 +7,15 @@
                 <input type="text" class="form-control" datepicker-popup="dd.MM.yyyy" ng-model="dt" ng-click="open($event, item.$$hashKey)" is-open="opened[item.$$hashKey]">
                 <button type="button" class="btn btn-default"  ng-click="load_date(1)"><span class="fa fa-caret-right"></span></button>
                 <input ng-model="tree_inputsearch" type="text" placeholder="Filter" class="form-control"> 
-                <button class="btn btn-default" ng-click="isCollapsed = !isCollapsed">Log <span class="badge">{{actionlog.length}}</span></button>
+	            <a href="javascript:void(0)" class="pull-right" ng-click="isCollapsed = !isCollapsed">Log <span class="badge">{{actionlog.length}}</span></a>
             </div>            
-            <div collapse="isCollapsed">
+            <div class="height200" collapse="isCollapsed">
                 <table class="table table-condensed table-striped">
                     <thead>
                         <tr><th>Time</th><th>Change</th><th>Actions</th></tr>
                     </thead>                
-                    <tr ng-repeat="item in actionlog">
-                        <td>{{item.time | date:'HH:mm:ss'}} <span class="label label-default" ng-if="compare_equals(item.obj)">Current View</span></td>
+                    <tr ng-repeat="item in actionlog.slice().reverse()">
+                        <td>{{item.time | date:'HH:mm:ss'}} <span class="label label-info" ng-if="compare_equals(item.obj)">Current View</span></td>
                         <td>{{item.action}}</td>
                         <td><button class="btn btn-default btn-xs" ng-click="actionlog_load(item)">Load</button> <button class="btn btn-default btn-xs" ng-click="actionlog_restore(item)">Restore</button></td>
                     </tr>
@@ -34,10 +34,10 @@
                     <form name="myform" class="form-inline"> 
                         <input type="text" class="form-control input-sm" name="price_field" ng-model="obj.time" ng-pattern="/(^\d{1,2}(?:\.\d{1})?$)|(^\d{4}(\-)\d{4})/" placeholder="Time" 
                         ng-change="actionlog_updatefield('time', obj.time)" ng-model-options="{updateOn: 'blur'}">
-                        <div class="alert alert-info" role="alert" ng-show="myform.price_field.$error.pattern">
+                        <p class="text-danger" ng-show="myform.price_field.$error.pattern">
                             Valid times:<br />
                             1. Hours <strong>1.5</strong><br />2. From-To <strong>1000-1200</strong></span>
-                        </div>
+                        </p>
                     </form>
                     </td>
                     <td>

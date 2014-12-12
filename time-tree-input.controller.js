@@ -23,7 +23,8 @@ angular.module('time')
 			]
 		}
 	//get time entries for a specific date 
-	$scope.get_items = function(){
+	$scope.API_getentries = function(){
+		console.log($scope.dt)
 		return [ {   "id": "SPjtA11",    "title": "Sub-Project A11",    "time": "1000-1200",    "comment": "Test1",    "level": 2,    "path": [
 	      {        "id": "CmpA",        "title": "Company A"      },      {        "id": "PjtA1",        "title": "Project A1"      }    ]  },
 		  {    "id": "SPjtA12",    "title": "Sub-Project A12",    "time": "1100-1200",    "comment": "Test2",    "level": 2,    "path": [
@@ -85,27 +86,27 @@ angular.module('time')
 	//Copy element
 	$scope.tree_input_tableCopy = function(obj, index){
 		$scope.tree_table.splice(index, 0, angular.copy(obj)); //from http://stackoverflow.com/questions/19333023/ngmodel-reference-when-pushed-into-array
-		$scope.addToLog("copy", $scope.tree_table);
+		$scope.addToLog("copy row", $scope.tree_table);
 		}
 	//remove element
 	$scope.tree_input_tableRemove = function(index){
 		$scope.tree_table.splice(index, 1);
-		$scope.addToLog("delete", $scope.tree_table);
+		$scope.addToLog("delete row", $scope.tree_table);
 		}
+	//Load new date
 	$scope.load_date = function(dir){
 		var currentdate = new Date($scope.dt)
 		if(dir==1) {
-			$scope.dt=currentdate.setDate(currentdate.getDate() + 1);
+			$scope.dt=currentdate.setDate(currentdate.getDate() + 1);			
 			}
 		else {						
 			$scope.dt=currentdate.setDate(currentdate.getDate() - 1);
 			}
-		$scope.tree_table = $scope.get_items();
+		$scope.tree_table = $scope.API_getentries($scope.dt);
 		}
 	$scope.tree_generateTable('root', '');	
 	//Action log
 	$scope.actionlog=[];
-	$scope.actionlogcurrent=[];
 	$scope.compare_equals = function(obj) {
 		return angular.equals(obj, $scope.tree_table)
 		}
@@ -124,7 +125,10 @@ angular.module('time')
 		$scope.actionlog.splice(1, Number.MAX_VALUE);
 		}
 	$scope.actionlog_updatefield = function(action, obj){
-		$scope.addToLog("edit " + action + " -> " + obj, $scope.tree_table);
+		if(obj!==undefined) {
+			obj=obj==""?"delete":obj;
+			$scope.addToLog("edit " + action + " -> " + obj, $scope.tree_table);
+			}
 		}
 	$scope.addToLog("init", $scope.tree_table);
 	$scope.isCollapsed = true;

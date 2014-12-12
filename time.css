@@ -11,6 +11,7 @@
 .clear{clear:both}
 .box{padding:10px}
 .height600{max-height:600px;overflow:auto}
+.height200{max-height:200px;overflow:auto}
 /*Bootstrap Callouts*/
 .bs-callout {   padding: 20px;    margin: 0px 0px 20px 0px;    border: 1px solid #eee;    border-left-width: 5px;    border-radius: 3px;}
 .bs-callout h4 {    margin-top: 0;    margin-bottom: 5px;}
