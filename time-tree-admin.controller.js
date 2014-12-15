@@ -13,7 +13,7 @@ angular.module('time')
 						], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}, 
 						 {id: 'SPjtA12', title: 'Sub-Project A12', type:'project', children:[
 						 {id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', children: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
-						 ], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
+						 ], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann", "rate": "000003"}]}
 					 ]},
 				]},
 			  {id: 'CmpB', title: 'Company B', type:'company', children:[
@@ -75,7 +75,7 @@ angular.module('time')
 					
 	//************************************** Tree **************************************
 	//Options for tree - idea: save all actions and objects handleded as tmp saves and then act upon them (e.g. create subtree -> stores action "add", then enter name and save -> tmp action "add" execute
-	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, tmppeople:[], peopleselect:[], catName: "", treeitemDesc:"", treeAction:"", treePeopleView:0, items:$scope.get_tree()}
+	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, tmppeople:[], peopleselect:[], catName: "", treeitemDesc:"", treeAction:"", treePeopleView:0, treeRatesView:0, items:$scope.get_tree()}
 	//remove all input modal divs
 	$scope.tree_removeAllShow = function(){
 		$scope.treeOPT.addedit_show=false;
@@ -109,12 +109,16 @@ angular.module('time')
 		}
 	//Toggle expand/collapse all
 	$scope.tree_toggleChildrenAll = function(dir, obj) {
-		if(obj==="root") obj=$scope.treeOPT.items
 		angular.forEach(obj, function(value, key) {
 			value.childrenVisible=dir;
 			if(value.children) $scope.tree_toggleChildrenAll(dir, value.children)			
 			});		
 		}
+	//Toggle expand/collapse one branch
+	$scope.tree_toggleBranchAll = function(obj) {
+		obj.childrenVisible=true;
+		$scope.tree_toggleChildrenAll(true, obj.children)
+		}		
 	//through cleanup off all tmp saves
 	$scope.tree_cleartmp = function(){
 		$scope.tree_removeAllShow();
