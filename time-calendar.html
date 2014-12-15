@@ -2,9 +2,13 @@
 	<div class="row">
 		<div class="col-sm-2">
         	<script type="text/ng-template" id="calendarProjects">
-				<h4 ng-if="field.type=='company'">{{field.title}}</h4>
-				<div ng-if="field.type=='project' && checkAssignedOnly(field)" class='btn btn-primary btn-xs' 
-				data-drag='true' data-jqyoui-options='{revert: false, helper: "clone"}' jqyoui-draggable data-options='{"title":"{{field.title}}", "id":"{{field.id}}", "color":"#336699"}'>{{field.title}}</div>
+				<div ng-if="field.type=='company'" ng-click="field.childrenVisible=!field.childrenVisible" class="pointer"> 									
+					<span ng-show="!field.childrenVisible" class="fa fa-caret-right"></span>
+					<span ng-show="field.childrenVisible" class="fa fa-caret-down"></span>
+					{{field.title}}
+				</div>
+				<div ng-if="field.type=='project' && checkAssignedOnly(field)" ng-show="parentOBJ.childrenVisible" class='btn btn-primary btn-xs' data-drag='true' 
+				data-jqyoui-options='{revert: false, helper: "clone"}' jqyoui-draggable data-options='{"title":"{{field.title}}", "id":"{{field.id}}", "color":"#336699"}'>{{field.title}}</div>
 				<ul class="calendar-projects" ng-if="field.categories">
 					<li ng-repeat="field in field.categories" ng-include="'calendarProjects'">
 					</li>
@@ -12,28 +16,50 @@
 			</script>        
             <div class="panel panel-default">
                 <div class="panel-heading maxheight600">
-                	<h3 class="panel-title">Clients/Projects</h3>
+                	<h3 class="panel-title">
+                    	Resources                        
+                        <a href="javascript:void(0)" class="nodecoration pull-right" ng-model="eventOPT.showmine" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                        	<span class="fa fa-user"></span>
+                            <span ng-if="!eventOPT.showmine" class="fa fa-toggle-off"></span>
+                            <span ng-if="eventOPT.showmine" class="fa fa-toggle-on"></span>                              
+                        </a>     
+                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendar_resourcestoggle(0)"><span class="fa fa-arrow-up"></span></a>
+                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendar_resourcestoggle(1)"><span class="fa fa-arrow-down"></span></a>                        
+                    </h3>
                 </div>
                 <div class="panel-body">
-                    <form class="form-inline" role="form">
-                        <div class="form-group">
-                            <input type="text" placeholder="Filter clients" ng-model="searchClientProjects" class="form-control"> 
-                        </div>
-                        <div class="form-group">
-                            <button type="button" class="btn btn-default pull-right" ng-model="eventOPT.showmine" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"><span class="fa fa-user"></span></button> 
-                        </div> 
-                    </form>                                                           
-
+                    <input type="text" placeholder="Filter" ng-model="searchClientProjects" class="form-control"> 
                     <ul class="calendar-projects">
-                        <li ng-repeat="field in clientprojects | filter:searchClientProjects" ng-include="'calendarProjects'"></li>            
+                        <li ng-repeat="field in clientprojects | filter:searchClientProjects" ng-include="'calendarProjects'" ng-init="parentOBJ=field"></li>            
                     </ul>
+                    <ul class="calendar-projects">
+                        <li ng-repeat="field in internal | filter:searchClientProjects">
+                            <div ng-click="field.childrenVisible=!field.childrenVisible" class="pointer"> 					
+                                <span ng-show="!field.childrenVisible" class="fa fa-caret-right"></span>
+                                <span ng-show="field.childrenVisible" class="fa fa-caret-down"></span>
+                                {{field.title}}
+                            </div>
+                          	<div ng-repeat='item in field.categories' class='btn btn-info btn-xs margin-right-S' ng-show="field.childrenVisible" data-drag='true' 
+                            data-jqyoui-options='{revert: false, helper: "clone"}' jqyoui-draggable data-options='{"title":"{{item.title}}", "id":"{{item.id}}", "color":"#5BC0DE"}'>{{item.title}}</div>
+                        </li>            
+                    </ul>                    
                 </div>
             </div>
         </div>
         <div class="col-sm-6"> 
             <div class="panel panel-default maxheight600">
                 <div class="panel-heading">
-                	<h3 class="panel-title">Calendar view</h3>
+                	<h3 class="panel-title">
+                    	Calendar
+                        <button type="button" class="btn btn-success btn-xs pull-right button-move-TR" ng-click=""><span class="fa fa-save"></span> Save</button>
+                        <div class="divider-vertical pull-right"></div>
+                        <a href="javascript:void(0)" class="nodecoration pull-right" ng-click="calendar_simplecontrol('next')"><span class="fa fa-chevron-circle-right"></span></a>
+                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendar_simplecontrol('prev')"><span class="fa fa-chevron-circle-left"></span></a>      
+                        <div class="divider-vertical pull-right"></div>                                          
+                        <a href="javascript:void(0)" class="nodecoration pull-right margin-left-L" ng-click="calendar_simplecontrol('today')"><span class="fa fa-dot-circle-o"></span></a>
+                        <a href="javascript:void(0)" class="nodecoration pull-right" ng-click="calendar_advancedcontrol('changeView', 'agendaDay')"><span class="fa fa-calendar-o"></span></a>
+                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendar_advancedcontrol('changeView', 'agendaWeek')"><span class="fa fa-columns"></span></a>      
+                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendar_advancedcontrol('changeView', 'month')"><span class="fa fa-calendar"></span></a>                    </h3>
                 </div>
                 <div class="panel-body">
                    	<div ui-calendar="uiConfig.calendar" ng-model="eventSource" class="calendar-wrapper" calendar="myCalendar"></div>             		
@@ -43,7 +69,7 @@
         <div class="col-sm-2">  
             <div class="panel panel-default maxheight600">
                 <div class="panel-heading">
-                	<h3 class="panel-title">Entry detail</h3>
+                	<h3 class="panel-title">Selected Entry</h3>
                 </div>
                 <div class="panel-body">
                     <div ng-if="eventfocus.visible">
@@ -86,7 +112,7 @@
                 	<h3 class="panel-title">Entries in view</h3>
                 </div>
                 <div class="panel-body">
-	                <input type="text" placeholder="Filter entries" ng-model="searchExistingEvents" class="form-control">
+	                <input type="text" placeholder="Filter" ng-model="searchExistingEvents" class="form-control">
                     <ul class="ul-unstyled">
                     	<!-- filter:searchExistingEvents generates error, so filter only titles-->
                         <li ng-repeat="event in events | filter:daterangefilter | orderBy:'start'">                        	
@@ -102,13 +128,5 @@
                 </div>
             </div>
         </div>        
-	</div> 
-	<div class="row">
-	    <div class="col-sm-12">
-        	<div class="box">
-                <button type="button" ng-click="calendarsave()" class="btn btn-success"><span class="fa fa-save"></span> Save Calendar</button>
-                <button type="button" class="btn btn-warning"><span class="fa fa-save"></span> Cancel</button>
-            </div>
-        </div>
-    </div>                            
+	</div>                            
 </div>        

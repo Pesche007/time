@@ -47,6 +47,20 @@ angular.module('time')
 			  ]}
 			]
 		}
+	$scope.get_internal = function () {
+		return [{id: 'Int-Absence', title: 'Absences', type:'company', categories: [
+					{id: 'Sickness', title: 'Sickness', type:'project', categories: []},
+					{id: 'Sickness-Child', title: 'Sick Child', type:'project', categories: []},
+					{id: 'Maternity', title: 'Maternity', type:'project', categories: []},
+					
+					]},
+				{id: 'Int-Planning', title: 'Planning', type:'company', categories: [
+					{id: 'Vacation', title: 'Vacation', type:'project', categories: []},
+					{id: 'Military', title: 'Military', type:'project', categories: []},
+					{id: 'Overtime', title: 'Overtime', type:'project', categories: []}
+					]},					
+				];
+		}
 	$scope.events=[];
 	$scope.eventSource=[$scope.events]
 	//Sets details for event in focus
@@ -54,6 +68,7 @@ angular.module('time')
 	//Options, like if projects should be shown for mapped people only
 	$scope.eventOPT={showmine:false, showid:"007", "monthsloaded":[], "viewfrom":"", "viewto":""};
 	$scope.clientprojects = $scope.get_tree();
+	$scope.internal = $scope.get_internal();
 	
     $scope.uiConfig = {
       calendar:{
@@ -65,19 +80,10 @@ angular.module('time')
 		timeFormat: 'HH:mm{ - HH:mm}',
 		scrollTime: '08:00:00', //v2
 		firstHour : 8, //v1
-        header:{
-          left: 'month agendaWeek agendaDay',
-          center: 'title',
-          right: 'today prev,next'
-	        },
-		titleFormat:{
-			month: 'MMMM yyyy', 
-			week: "d.M.{ '&#8212;' d.M.yyyy}", 
-			day: 'd.M.yyyy' 
-			},
+        header:false,
 		columnFormat:{
 		    week: 'ddd d.M.',
-			day: 'dddd' 
+			day: 'dddd d.M.' 
 			},
 		businessHours:{
 			start: '08:00', 
@@ -157,6 +163,13 @@ angular.module('time')
       $scope.events.push(newEvent);
 	  if(showdetails) $scope.eventdetailsset(newEvent)
     };
+	//Calendar control
+	$scope.calendar_simplecontrol = function(action){
+		$scope.myCalendar.fullCalendar(action)
+		}
+	$scope.calendar_advancedcontrol = function(action, option){
+		$scope.myCalendar.fullCalendar(action, option)
+		}	
 	//Filter only events within view
 	 $scope.daterangefilter = function (item) {
         return (item.start >= $scope.eventOPT.viewfrom && item.end <= $scope.eventOPT.viewto);
@@ -172,14 +185,21 @@ angular.module('time')
 				return checkPerson;
 				}
 			}
-		}
+		}		
 	$scope.calendarSourceClear = function(){
 		$scope.events.splice(0);
 		}
 	$scope.calendarsave = function(){
 		console.log($scope.events)
 		}
-
+	$scope.calendar_resourcestoggle = function(dir){
+		angular.forEach($scope.clientprojects, function(value, key) {
+			value.childrenVisible=dir;
+			});
+		angular.forEach($scope.internal, function(value, key) {
+			value.childrenVisible=dir;
+			});			
+		}
 	//************ POSSIBLE FACTORIES ******************//
 	//Time functions
 	//Check if input is in 24h-time-format e.g. 14:00
@@ -205,5 +225,5 @@ angular.module('time')
 				break;
 				}
 			}	
-		}		
+		}				
 	})

@@ -1,6 +1,7 @@
 /*General classes*/
 .ul-unstyled{list-style:none}
 .margin-left-L{margin-left:20px}
+.margin-right-L{margin-right:20px}
 .margin-left-M{margin-left:10px}
 .margin-right-M{margin-right:10px}
 .margin-top-M{margin-top:10px}
@@ -18,7 +19,8 @@
 .maxheight600{max-height:600px;overflow:auto}
 .maxheight200{max-height:200px;overflow:auto}
 .divider-vertical {height: 20px;margin: 0 10px; border-left: 1px dotted #999;}
-
+.nodecoration, .nodecoration:hover{text-decoration:none}
+/*BOOTSTRAP*/
 /*Bootstrap Callouts*/
 .bs-callout {   padding: 20px;    margin: 0px 0px 20px 0px;    border: 1px solid #eee;    border-left-width: 5px;    border-radius: 3px;}
 .bs-callout h4 {    margin-top: 0;    margin-bottom: 5px;}
@@ -37,7 +39,8 @@
 .bs-callout-warning h4 {    color: #f0ad4e;}
 .bs-callout-info {    border-left-color: #5bc0de;}
 .bs-callout-info h4 {    color: #5bc0de;}
-
+/*buttons*/
+.button-move-TR{margin-top:-2px;margin-right:-4px}
 
 /*TREE*/
 .treewrapper{width:100%;background:#FFF;}

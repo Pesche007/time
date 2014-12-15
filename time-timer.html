@@ -25,13 +25,13 @@
                 
                 <button type="button" class="btn btn-default margin-left-L" ng-model="time_timerOPT.time_multiple" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
                 	<span class="fa fa-forward"></span>
-                    <span ng-if="time_timerOPT.time_multiple==0">Mulitple Off</span>
-                    <span ng-if="time_timerOPT.time_multiple==1">Mulitple On</span>
+                    <span ng-if="!time_timerOPT.time_multiple" class="fa fa-toggle-off"></span>
+                    <span ng-if="time_timerOPT.time_multiple" class="fa fa-toggle-on"></span>
                 </button>
                 <button type="button" class="btn btn-default" ng-model="time_timerOPT.showmine" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
                 	<span class="fa fa-user"></span>
-                    <span ng-if="time_timerOPT.showmine==0">Assigned Off</span>
-                    <span ng-if="time_timerOPT.showmine==1">Assigned On</span>
+                    <span ng-if="!time_timerOPT.showmine" class="fa fa-toggle-off"></span>
+                    <span ng-if="time_timerOPT.showmine" class="fa fa-toggle-on"></span>                    
                 </button>
 				<div class="pull-right">
                 	<span class="fa fa-save"></span>

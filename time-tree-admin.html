@@ -5,7 +5,7 @@
                 <div class="panel-heading">
                 	<h3 class="panel-title">
                     	Rates
-                        <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="add_rate()"><span class="fa fa-plus"></span> New Rate</button>
+                        <button type="button" class="btn btn-primary btn-xs pull-right button-move-TR" ng-click="add_rate()"><span class="fa fa-plus"></span> New Rate</button>
                     </h3>
                 </div>
                 <div class="panel-body">        
@@ -51,16 +51,20 @@
                 <div class="panel-heading">
                 	<h3 class="panel-title">
                     	Projects                         
-                        <button type="button" ng-click="" class="btn btn-success btn-xs pull-right"><span class="fa fa-save"></span> Save</button>
+                        <button type="button" class="btn btn-success btn-xs pull-right button-move-TR" ng-click=""><span class="fa fa-save"></span> Save</button>
                         <div class="divider-vertical pull-right"></div>
-                        <button type="button" class="btn btn-default btn-xs pull-right" ng-model="treeOpt.treeRatesView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                        <a href="javascript:void(0)" class="nodecoration pull-right" ng-model="treeOpt.treeRatesView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
                         	<span class="fa fa-usd"></span>
-                        </button>
-                        <button type="button" class="btn btn-default btn-xs pull-right margin-right-S" ng-model="treeOpt.treePeopleView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                            <span ng-if="!treeOpt.treeRatesView" class="fa fa-toggle-off"></span>
+                            <span ng-if="treeOpt.treeRatesView" class="fa fa-toggle-on"></span>                            
+                        </a>
+                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-model="treeOpt.treePeopleView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
                         	<span class="fa fa-user"></span>
-                        </button>
-                        <button type="button" class="btn btn-default btn-xs pull-right margin-right-S" ng-click="tree_toggleChildrenAll(0, treeOPT.items)"><span class="fa fa-caret-right"></span></button>
-                        <button type="button" class="btn btn-default btn-xs pull-right margin-right-S" ng-click="tree_toggleChildrenAll(1, treeOPT.items)"><span class="fa fa-caret-down"></span></button>
+                            <span ng-if="!treeOpt.treePeopleView" class="fa fa-toggle-off"></span>
+                            <span ng-if="treeOpt.treePeopleView" class="fa fa-toggle-on"></span>                              
+                        </a>
+                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="tree_toggleChildrenAll(0, treeOPT.items)"><span class="fa fa-arrow-up"></span></a>
+                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="tree_toggleChildrenAll(1, treeOPT.items)"><span class="fa fa-arrow-down"></span></a>
                     </h3>
                 </div>
                 <div class="panel-body">        
@@ -83,7 +87,7 @@
                                 <li ng-if="obj.type=='project'"><a href="javascript:void(0)" ng-click="tree_action(obj, 0, 'add')"><span class="text-success fa fa-plus"></span>  Add sub-project</a></li>						
                                 <li ng-if="obj.type=='project'"><a href="javascript:void(0)" ng-click="tree_action(obj, 0, 'edit')"><span class="fa fa-pencil"></span> Edit</a></li>
                                 <li ng-if="obj.type=='project'"><a href="javascript:void(0)" ng-click="tree_action(parentOBJ, $index, 'delete')"><span class="text-danger fa fa-times"></span> Delete</a></li>						
-                                <li ng-if="obj.children.length"><a href="javascript:void(0)" ng-click="tree_toggleBranchAll(obj)"><span class="fa fa-caret-down"></span>  Expand all</a></li>
+                                <li ng-if="obj.children.length"><a href="javascript:void(0)" ng-click="tree_toggleBranchAll(obj)"><span class="fa fa-arrow-down"></span> Expand all</a></li>
                             </ul>
                             </div> 
                         </div>				
