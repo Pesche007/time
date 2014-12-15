@@ -4,14 +4,18 @@
 .margin-left-M{margin-left:10px}
 .margin-right-M{margin-right:10px}
 .margin-top-M{margin-top:10px}
+.margin-bottom-M{margin-bottom:10px}
 .paddingS{padding:1px}
+.paddingM{padding:10px}
 .inv_table{border:none}
 .inv_table td{padding-right:5px}
 .pointer{cursor:pointer}
 .clear{clear:both}
 .box{padding:10px}
-.height600{max-height:600px;overflow:auto}
-.height200{max-height:200px;overflow:auto}
+.height600{height:600px;overflow:auto}
+.height200{height:200px;overflow:auto}
+.maxheight600{max-height:600px;overflow:auto}
+.maxheight200{max-height:200px;overflow:auto}
 /*Bootstrap Callouts*/
 .bs-callout {   padding: 20px;    margin: 0px 0px 20px 0px;    border: 1px solid #eee;    border-left-width: 5px;    border-radius: 3px;}
 .bs-callout h4 {    margin-top: 0;    margin-bottom: 5px;}
@@ -33,14 +37,14 @@
 
 
 /*TREE*/
-.treewrapper{width:100%;border:1px solid #CCC;background:#F7F7F7;border-radius:3px;padding:10px}
+.treewrapper{width:100%;background:#FFF;}
 .tree, .tree ul.tree {margin:0;padding:0;list-style:none;}
 .tree ul.tree {  margin-left:1.5em;  position:relative;}
 .tree ul.tree ul.tree {margin-left:1.5em} 
 .tree ul.tree:before { content:"";  display:block;  width:0;  position:absolute;  top:0;  bottom:0;  left:0;  border-left:1px dotted #AAA;}
 .tree > li { margin:0;  padding:0 1.5em; line-height:2em;   position:relative;}
 .tree ul.tree > li:before {  content:"";  display:block;  width:10px; height:0;border-top:1px dotted #AAA; margin-top:-1px;  position:absolute;top:1em; left:0;}
-.tree ul.tree > li:last-child:before { background:#F7F7F7;  height:auto;  top:1em;  bottom:0;}
+.tree ul.tree > li:last-child:before { background:#FFF;  height:auto;  top:1em;  bottom:0;}
 .treefolder{margin-right:0.3em}
 
 /*Calendar*/

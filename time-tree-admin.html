@@ -1,94 +1,146 @@
 <div class="container-fluid">        
 	<div class="row">    
-        <div class="col-sm-3"></div>
-        <div class="col-sm-6">
-			<script type="text/ng-template" id="categoryTree">
-               <div> 
-					<div class="pull-left pointer margin-right-M" ng-click="tree_toggleChildren(obj)">
-						<span class="treefolder fa" ng-class="{'fa-caret-down' : obj.childrenVisible && obj.children.length, 'fa-caret-right' : !obj.childrenVisible && obj.children.length}"></span> 
-						<span class="fa" ng-class="{'fa-building-o' : obj.type=='company', 'fa-file-text-o' : chiobjldren.type=='project'}"></span> {{ obj.title }}
-					</div>
-					<div class="btn-group" dropdown>
-						<button type="button" class="btn btn-default btn-xs dropdown-toggle">
-							<span class="fa fa-gear"></span>
-						</button>
-					<ul class="dropdown-menu" role="menu">
-						<li role="presentation" class="dropdown-header">{{ obj.title }}</li>
-						<li ng-if="treeOpt.treePeopleView && obj.type=='project'">
-							<a href="javascript:void(0)" ng-click="tree_action(obj, 0, 'assign_person')"><span class="text-primary fa fa-user"></span>  Manage people</a>
-						</li>
-						<li ng-if="obj.type=='company'"><a href="javascript:void(0)" ng-click="tree_action(obj, 0, 'add')"><span class="text-success fa fa-plus"></span>  Add project</a></li>						
-						<li ng-if="obj.type=='project'"><a href="javascript:void(0)" ng-click="tree_action(obj, 0, 'add')"><span class="text-success fa fa-plus"></span>  Add sub-project</a></li>						
-						<li ng-if="obj.type=='project'"><a href="javascript:void(0)" ng-click="tree_action(obj, 0, 'edit')"><span class="fa fa-pencil"></span> Edit</a></li>
-						<li ng-if="obj.type=='project'"><a href="javascript:void(0)" ng-click="tree_action(parentOBJ, $index, 'delete')"><span class="text-danger fa fa-times"></span> Delete</a></li>						
-						<li ng-if="obj.children.length"><a href="javascript:void(0)" ng-click="tree_toggleBranchAll(obj)"><span class="fa fa-caret-down"></span>  Expand all</a></li>
-					</ul>
-					</div> 
-				</div>				
-                <ul class="tree" ng-if="obj.people && treeOpt.treePeopleView && obj.childrenVisible">
-					<li ng-repeat="person in obj.people">
-						<span class="treefolder fa fa-user"></span> {{person.firstname}} {{person.lastname}} 
-						<span ng-if="treeOpt.treeRatesView"> @ <select ng-model="person.rate" ng-options="item.ID as (item.Title + ' ' + item.Rate) for item in rates"></select></span>
-					</li>
-                </ul>
-                <ul class="tree" ng-if="obj.children && obj.childrenVisible">
-					<li ng-repeat="obj in obj.children" ng-include="'categoryTree'" ng-init="parentOBJ=$parent.obj"></li>
-                </ul>
-            </script>
-            <div class="treewrapper">
-                <button type="button" ng-click="" class="btn btn-success"><span class="fa fa-save"></span> Save</button> 
-                <button type="button" ng-click="" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
-                <button type="button" class="btn btn-default pull-right" ng-model="treeOpt.treeRatesView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"><span class="fa fa-usd"></span></button>
-                <button type="button" class="btn btn-default pull-right" ng-model="treeOpt.treePeopleView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"><span class="fa fa-user"></span></button>
-                <button type="button" class="btn btn-default pull-right" ng-click="tree_toggleChildrenAll(0, treeOPT.items)"><span class="fa fa-caret-right"></span></button>
-                <button type="button" class="btn btn-default pull-right" ng-click="tree_toggleChildrenAll(1, treeOPT.items)"><span class="fa fa-caret-down"></span></button>
-                <hr />
-                <div class="alert alert-info" role="alert" ng-show="treeOPT.delete_show">
-                    {{treeOPT.treeitemDesc}}<br /><br />
-                    <button type="button" ng-click="tree_actionExec()" class="btn btn-success"><span class="fa fa-trash-o"></span> Delete</button>
-                    <button type="button" ng-click="tree_cleartmp()" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
+        <div class="col-sm-3">
+            <div class="panel panel-default maxheight600">
+                <div class="panel-heading">
+                	<h3 class="panel-title">Rates</h3>
                 </div>
-                <div class="alert alert-info" role="alert" ng-show="treeOPT.assign_person_show">
-                   {{ treeOPT.treeitemDesc }}<br /><br />
-		        	<div class="form-inline">
-        		        <input type="text" ng-model="treeOPT.peopleselect" placeholder="Enter name"
-                        typeahead-on-select="updatePeople($item, treeOPT.tmppeople, 'peopleselect')" 
-                        typeahead="person as (person.firstname + ' ' + person.lastname) for person in people | filter:$viewValue" class="form-control">
-                        <div class="btn-group" dropdown>
-                            <button type="button" class="btn btn-default dropdown-toggle">
-	                            <span class="fa fa-user"></span> <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-    	                        <li ng-repeat="person in people"><a ng-click="selectMultiPerson(person, treeOPT.tmppeople)" href="javascript:void(0)">{{person.firstname}} {{person.lastname}}</a></li>
-                            </ul>
-                        </div> 
-                        <br />
-                        <div>
-                            <ul class="list-group">
-        	                    <li class="list-group-item" ng-repeat="person in treeOPT.tmppeople"><span class="fa fa-user"></span> {{person.firstname}} {{person.lastname}} 
-            	                    <button type="button" ng-click="removeMultiSinglePerson(person, treeOPT.tmppeople)" class="btn btn-default btn-xs"><span class="fa fa-times"></span></button>
-                	            </li>
-                            </ul>
-                        </div>                                        
+                <div class="panel-body">        
+                	<div class="bg-info paddingM margin-bottom-M" ng-if="ratesTMP.edit">        	
+                        <form name="Rate_Form" class="form-horizontal" role="form" ng-submit="rate_save()">
+                            <div class="form-group">
+                                <label for="R_Title" class="col-sm-2 control-label">Title</label>
+                                <div class="col-sm-10">
+                                    <input type="text" ng-model="ratesTMP.tmpobj.title" class="form-control" placeholder="Title" required>
+                                </div>
+        
+                                <label for="R_Rate" class="col-sm-2 control-label">Rate</label>
+                                <div class="col-sm-10">
+                                    <input type="text" ng-model="ratesTMP.tmpobj.rate" class="form-control" name="R_Rate" placeholder="Rate" ng-pattern="/^[+]?\d+([.]\d+)?$/" required>
+                                       <p class="text-danger" ng-show="Rate_Form.R_Rate.$error.pattern">
+                                            Only numbers allowed
+                                        </p>
+                                </div>
+                                <label for="R_Description" class="col-sm-2 control-label">Text</label>
+                                <div class="col-sm-10">
+                                    <textarea name="R_Description" ng-model="ratesTMP.tmpobj.description" class="form-control" rows="2" placeholder="Description"></textarea>
+                                </div>                                
+                            </div>
+                            <button type="submit" class="btn btn-success" ng-disabled="Rate_Form.$invalid"><span class="fa fa-save"></span> Save</button>
+                            <button type="button" ng-click="rate_cancel()" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
+                        </form>
                     </div>
-                    <br />
-                    <button type="button" ng-click="tree_actionExec()" class="btn btn-success"><span class="fa fa-save"></span> Save</button>
-                    <button type="button" ng-click="tree_cleartmp()" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>                
-                </div>                
-                <div class="alert alert-info" role="alert" ng-show="treeOPT.addedit_show">
-                   {{ treeOPT.treeitemDesc }}<br /><br />
-                    <form class="form-inline" role="form">
-                        <div class="form-group">
-                            <input type="text" ng-model="treeOPT.catName" class="form-control" placeholder="Enter Name">
-                        </div>
-                        <button type="button" ng-click="tree_actionExec()" class="btn btn-success"><span class="fa fa-save"></span> Save</button>
-                        <button type="button" ng-click="tree_cleartmp()" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
-                    </form>                        	
+                	<table class="inv_table">
+                        <tr ng-repeat="rate in rates">
+                            <td>{{rate.title}}</td>
+                            <td>{{rate.rate}}</td>
+                            <td>
+                            <button type="button" ng-click="rate_edit(rate)" class="btn btn-default btn-xs"><span class="fa fa-pencil"></span></button>
+                            <button type="button" ng-click="rate_delete($index)" class="btn btn-default btn-xs"><span class="fa fa-trash"></span></button>
+                            </td>	                        
+	                    </tr>
+                    </table>                    
+                    <button type="button" class="btn btn-default" ng-click="add_rate()"><span class="fa fa-plus"></span> New Rate</button>                    
                 </div>
-                <ul class="tree">
-                    <li ng-repeat="obj in treeOPT.items" ng-include="'categoryTree'" ng-init="parentOBJ=treeOPT"></li>
-                </ul> 
-			</div>
+            </div>  
+        </div>
+        <div class="col-sm-6">
+            <div class="panel panel-default height600">
+                <div class="panel-heading">
+                	<h3 class="panel-title">Projects</h3>
+                </div>
+                <div class="panel-body">        
+					<script type="text/ng-template" id="categoryTree">
+                       <div> 
+                            <div class="pull-left pointer margin-right-M" ng-click="tree_toggleChildren(obj)">
+                                <span class="treefolder fa" ng-class="{'fa-caret-down' : obj.childrenVisible && obj.children.length, 'fa-caret-right' : !obj.childrenVisible && obj.children.length}"></span> 
+                                <span class="fa" ng-class="{'fa-building-o' : obj.type=='company', 'fa-file-text-o' : chiobjldren.type=='project'}"></span> {{ obj.title }}
+                            </div>
+                            <div class="btn-group" dropdown>
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle">
+                                    <span class="fa fa-gear"></span>
+                                </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li role="presentation" class="dropdown-header">{{ obj.title }}</li>
+                                <li ng-if="treeOpt.treePeopleView && obj.type=='project'">
+                                    <a href="javascript:void(0)" ng-click="tree_action(obj, 0, 'assign_person')"><span class="text-primary fa fa-user"></span>  Manage people</a>
+                                </li>
+                                <li ng-if="obj.type=='company'"><a href="javascript:void(0)" ng-click="tree_action(obj, 0, 'add')"><span class="text-success fa fa-plus"></span>  Add project</a></li>						
+                                <li ng-if="obj.type=='project'"><a href="javascript:void(0)" ng-click="tree_action(obj, 0, 'add')"><span class="text-success fa fa-plus"></span>  Add sub-project</a></li>						
+                                <li ng-if="obj.type=='project'"><a href="javascript:void(0)" ng-click="tree_action(obj, 0, 'edit')"><span class="fa fa-pencil"></span> Edit</a></li>
+                                <li ng-if="obj.type=='project'"><a href="javascript:void(0)" ng-click="tree_action(parentOBJ, $index, 'delete')"><span class="text-danger fa fa-times"></span> Delete</a></li>						
+                                <li ng-if="obj.children.length"><a href="javascript:void(0)" ng-click="tree_toggleBranchAll(obj)"><span class="fa fa-caret-down"></span>  Expand all</a></li>
+                            </ul>
+                            </div> 
+                        </div>				
+                        <ul class="tree" ng-if="obj.people && treeOpt.treePeopleView && obj.childrenVisible">
+                            <li ng-repeat="person in obj.people">
+                                <span class="treefolder fa fa-user"></span> {{person.firstname}} {{person.lastname}} 
+                                <span ng-if="treeOpt.treeRatesView"> 
+									@ <select ng-model="person.rate" ng-options="item.id as (item.title + ' ' + item.rate) for item in rates"><option value=''>Select Rate</option></select>
+								</span>
+                            </li>
+                        </ul>
+                        <ul class="tree" ng-if="obj.children && obj.childrenVisible">
+                            <li ng-repeat="obj in obj.children" ng-include="'categoryTree'" ng-init="parentOBJ=$parent.obj"></li>
+                        </ul>
+                    </script>
+                    <div class="treewrapper">
+                        <button type="button" ng-click="" class="btn btn-success"><span class="fa fa-save"></span> Save</button> 
+                        <button type="button" ng-click="" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
+                        <button type="button" class="btn btn-default pull-right" ng-model="treeOpt.treeRatesView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"><span class="fa fa-usd"></span></button>
+                        <button type="button" class="btn btn-default pull-right" ng-model="treeOpt.treePeopleView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"><span class="fa fa-user"></span></button>
+                        <button type="button" class="btn btn-default pull-right" ng-click="tree_toggleChildrenAll(0, treeOPT.items)"><span class="fa fa-caret-right"></span></button>
+                        <button type="button" class="btn btn-default pull-right" ng-click="tree_toggleChildrenAll(1, treeOPT.items)"><span class="fa fa-caret-down"></span></button>
+                        <hr />
+                        <div class="alert alert-info" role="alert" ng-show="treeOPT.delete_show">
+                            {{treeOPT.treeitemDesc}}<br /><br />
+                            <button type="button" ng-click="tree_actionExec()" class="btn btn-success"><span class="fa fa-trash-o"></span> Delete</button>
+                            <button type="button" ng-click="tree_cleartmp()" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
+                        </div>
+                        <div class="alert alert-info" role="alert" ng-show="treeOPT.assign_person_show">
+                           {{ treeOPT.treeitemDesc }}<br /><br />
+                            <div class="form-inline">
+                                <input type="text" ng-model="treeOPT.peopleselect" placeholder="Enter name"
+                                typeahead-on-select="updatePeople($item, treeOPT.tmppeople, 'peopleselect')" 
+                                typeahead="person as (person.firstname + ' ' + person.lastname) for person in people | filter:$viewValue" class="form-control">
+                                <div class="btn-group" dropdown>
+                                    <button type="button" class="btn btn-default dropdown-toggle">
+                                        <span class="fa fa-user"></span> <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li ng-repeat="person in people"><a ng-click="selectMultiPerson(person, treeOPT.tmppeople)" href="javascript:void(0)">{{person.firstname}} {{person.lastname}}</a></li>
+                                    </ul>
+                                </div> 
+                                <br />
+                                <div>
+                                    <ul class="list-group">
+                                        <li class="list-group-item" ng-repeat="person in treeOPT.tmppeople"><span class="fa fa-user"></span> {{person.firstname}} {{person.lastname}} 
+                                            <button type="button" ng-click="removeMultiSinglePerson(person, treeOPT.tmppeople)" class="btn btn-default btn-xs"><span class="fa fa-times"></span></button>
+                                        </li>
+                                    </ul>
+                                </div>                                        
+                            </div>
+                            <br />
+                            <button type="button" ng-click="tree_actionExec()" class="btn btn-success"><span class="fa fa-save"></span> Save</button>
+                            <button type="button" ng-click="tree_cleartmp()" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>                
+                        </div>                
+                        <div class="alert alert-info" role="alert" ng-show="treeOPT.addedit_show">
+                           {{ treeOPT.treeitemDesc }}<br /><br />
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <input type="text" ng-model="treeOPT.catName" class="form-control" placeholder="Enter Name">
+                                </div>
+                                <button type="button" ng-click="tree_actionExec()" class="btn btn-success"><span class="fa fa-save"></span> Save</button>
+                                <button type="button" ng-click="tree_cleartmp()" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
+                            </form>                        	
+                        </div>
+                        <ul class="tree">
+                            <li ng-repeat="obj in treeOPT.items" ng-include="'categoryTree'" ng-init="parentOBJ=treeOPT"></li>
+                        </ul> 
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-sm-3"><pre class="code">{{ treeOPT.items | json }}</pre></div>               
     </div>                                               

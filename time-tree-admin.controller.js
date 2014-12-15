@@ -28,11 +28,10 @@ angular.module('time')
 
 	$scope.get_rates = function() {
 		var rates =  [
-			{ID: '000001', Title: 'Junior Rate', Rate:500},
-			{ID: '000002', Title: 'Senior Rate', Rate:1000},
-			{ID: '000003', Title: 'Executive Rate', Rate:2000},
+			{id: '000001', title: 'Junior Rate', rate:500},
+			{id: '000002', title: 'Senior Rate', rate:1000},
+			{id: '000003', title: 'Executive Rate', rate:2000},
 		];
-		rates.unshift({ID:null, Title: 'Select Rate', Rate:''});
 		return rates;
 		}
 	//Load config
@@ -183,4 +182,33 @@ angular.module('time')
 			}
 		$scope.tree_cleartmp();
 		}
+	/************** RATES ****************/
+	$scope.ratesTMP={'edit':false, 'tmpobj':{'id':'', 'title':'', 'rate':'', 'description':''}};
+	$scope.add_rate=function(){
+		$scope.rate_toggle(1);
+		}
+	$scope.rate_save = function(){
+		$scope.rates.push(angular.copy($scope.ratesTMP.tmpobj))
+		$scope.rate_toggle(0);
+		$scope.rate_formreset();
+		}
+	$scope.rate_cancel = function(){
+		$scope.rate_toggle(0);
+		$scope.rate_formreset();
+		}
+	$scope.rate_edit = function(rate){
+		$scope.rate_toggle(1);
+		$scope.ratesTMP.tmpobj=angular.copy(rate)
+		}
+	$scope.rate_delete = function(i){
+		$scope.rates.splice(i, 1);
+		$scope.rate_toggle(0);
+		$scope.rate_formreset();		
+		}				
+	$scope.rate_toggle = function(dir){
+		$scope.ratesTMP.edit=dir;
+		}
+	$scope.rate_formreset = function(){
+		$scope.ratesTMP.tmpobj={id:'', 'title':'', rate:''};
+		}		
   })
