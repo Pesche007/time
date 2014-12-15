@@ -5,12 +5,12 @@ angular.module('time')
 	AppConfig.setCurrentApp('Time', 'fa-tumblr', 'time', 'app/time/menu.html');
 
 	//API 
-	$scope.API_addelements = function(month){
-			console.log("Events added for month "+month)
+	$scope.API_addelements = function(month, year){
+			console.log("Events added for month " + month + " year " + year)
 			var data = [
-			  {"title": "Test", "start": new Date('2014/'+month+'/10 10:00'), "end": new Date('2014/'+month+'/10 12:00'), "allDay": false, "comment":"", "backgroundColor":"#996666"},
-			  {"title": "Best", "start": new Date('2014/'+month+'/11 13:00'), "end": new Date('2014/'+month+'/11 14:00'), "allDay": false, "comment":"", "backgroundColor":"#996666"},
-			  {"title": "Zest", "start": new Date('2014/'+month+'/12 10:00'), "end": new Date('2014/'+month+'/12 12:00'), "allDay": false, "comment":"", "backgroundColor":"#996666"}
+			  {"title": "Test", "start": new Date(year+'/'+month+'/10 10:00'), "end": new Date(year+'/'+month+'/10 12:00'), "allDay": false, "comment":"", "backgroundColor":"#996666"},
+			  {"title": "Best", "start": new Date(year+'/'+month+'/11 13:00'), "end": new Date(year+'/'+month+'/11 14:00'), "allDay": false, "comment":"", "backgroundColor":"#996666"},
+			  {"title": "Zest", "start": new Date(year+'/'+month+'/12 10:00'), "end": new Date(year+'/'+month+'/12 12:00'), "allDay": false, "comment":"", "backgroundColor":"#996666"}
 			  ];
 			for(var i = 0; i < data.length; ++i) { $scope.events.push(data[i]); }
 		}
@@ -19,16 +19,17 @@ angular.module('time')
 	$scope.loadIntoView = function(start, end){		
 		$scope.eventOPT.viewfrom=start;
 		$scope.eventOPT.viewto=end;
-		var monthStart=$filter('date')(start, 'M');
 		var monthEnd=$filter('date')(end, 'M');
-		if($scope.eventOPT.months.indexOf(monthStart)==-1) {
-			$scope.API_addelements(monthStart);
-			$scope.eventOPT.months.push(monthStart);
-			}
-		if($scope.eventOPT.months.indexOf(monthEnd)==-1) {
-			$scope.API_addelements(monthEnd);
-			$scope.eventOPT.months.push(monthEnd);
-			}		
+		var yearEnd=$filter('date')(end, 'yyyy');		
+		$scope.checkCalendarViewLoaded($filter('date')(start, 'M'), $filter('date')(start, 'yyyy'))
+		$scope.checkCalendarViewLoaded($filter('date')(end, 'M'), $filter('date')(end, 'yyyy'))				
+		}
+	$scope.checkCalendarViewLoaded = function (m, y) {
+		if($scope.eventOPT.monthsloaded[y]===undefined) $scope.eventOPT.monthsloaded[y]=[]
+			if($scope.eventOPT.monthsloaded[y].indexOf(m)==-1) {
+				$scope.API_addelements(m, y);
+				$scope.eventOPT.monthsloaded[y].push(m);
+				}		
 		}
 	$scope.get_tree = function () {
 		return [{id: 'CmpA', title: 'UBS', type:'company', categories: [
@@ -51,12 +52,8 @@ angular.module('time')
 	//Sets details for event in focus
 	$scope.eventfocus={"visible": false, "title":"", "start":"", "end":"", "comment":"", "startTMP":"", "endTMP":"", "error":false, "calEvent":{}}
 	//Options, like if projects should be shown for mapped people only
-	$scope.eventOPT={showmine:false, showid:"007", "months":[], "viewfrom":"", "viewto":""};
+	$scope.eventOPT={showmine:false, showid:"007", "monthsloaded":[], "viewfrom":"", "viewto":""};
 	$scope.clientprojects = $scope.get_tree();
-
-	 $scope.daterangefilter = function (item) {
-        return (item.start >= $scope.eventOPT.viewfrom && item.end <= $scope.eventOPT.viewto);
-    };
 	
     $scope.uiConfig = {
       calendar:{
@@ -75,11 +72,11 @@ angular.module('time')
 	        },
 		titleFormat:{
 			month: 'MMMM yyyy', 
-			week: "d.M{ '&#8212;' d.M.yyyy}", 
+			week: "d.M.{ '&#8212;' d.M.yyyy}", 
 			day: 'd.M.yyyy' 
 			},
 		columnFormat:{
-		    week: 'ddd d.M',
+		    week: 'ddd d.M.',
 			day: 'dddd' 
 			},
 		businessHours:{
@@ -110,7 +107,7 @@ angular.module('time')
 	$scope.eventdetailsset = function(calEvent){
 		var startVal=$scope.formatAddLeadingZero(calEvent.start.getHours()) + ":" + $scope.formatAddLeadingZero(calEvent.start.getMinutes());
 		var endVal=$scope.formatAddLeadingZero(calEvent.end.getHours()) + ":" + $scope.formatAddLeadingZero(calEvent.end.getMinutes());		
-		$scope.eventfocus={"visible": true, "title":calEvent.title, "start":calEvent.start, "end":calEvent.end, "comment":calEvent.comment, "startTMP":startVal, "endTMP":endVal, "calEvent":calEvent}		
+		$scope.eventfocus={"visible": true, "title":calEvent.title, "start":calEvent.start, "end":calEvent.end, "comment":calEvent.comment, "startTMP":startVal, "endTMP":endVal, "calEvent":calEvent}	
 		}
 	//Save changes in entry details - check hours:minutes and save in OBJ
 	$scope.eventdetailssave = function(){
@@ -121,7 +118,8 @@ angular.module('time')
 			if(!$scope.checktimeFromBiggerTo(startArr, endArr)){
 				$scope.eventfocus.calEvent.start.setHours(startArr[0], startArr[1], 0);
 				$scope.eventfocus.calEvent.end.setHours(endArr[0], endArr[1], 0);
-				$scope.cleareventfocus();				
+				$scope.cleareventfocus();
+				$scope.addToLog("edit event", $scope.events);				
 				}
 			else {
 				$scope.eventfocus.error="Start time bigger than end time.";
@@ -159,6 +157,10 @@ angular.module('time')
       $scope.events.push(newEvent);
 	  if(showdetails) $scope.eventdetailsset(newEvent)
     };
+	//Filter only events within view
+	 $scope.daterangefilter = function (item) {
+        return (item.start >= $scope.eventOPT.viewfrom && item.end <= $scope.eventOPT.viewto);
+    };	
 	//Filter -> check if field has people with same id	
 	$scope.checkAssignedOnly = function(field){
 		if($scope.eventOPT.showmine==false) return true
@@ -170,6 +172,9 @@ angular.module('time')
 				return checkPerson;
 				}
 			}
+		}
+	$scope.calendarSourceClear = function(){
+		$scope.events.splice(0);
 		}
 	$scope.calendarsave = function(){
 		console.log($scope.events)
