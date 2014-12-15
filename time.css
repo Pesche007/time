@@ -5,7 +5,8 @@
 .margin-right-M{margin-right:10px}
 .margin-top-M{margin-top:10px}
 .margin-bottom-M{margin-bottom:10px}
-.paddingS{padding:1px}
+.margin-right-S{margin-right:3px}
+.paddingS{padding:3px}
 .paddingM{padding:10px}
 .inv_table{border:none}
 .inv_table td{padding-right:5px}
@@ -16,6 +17,8 @@
 .height200{height:200px;overflow:auto}
 .maxheight600{max-height:600px;overflow:auto}
 .maxheight200{max-height:200px;overflow:auto}
+.divider-vertical {height: 20px;margin: 0 10px; border-left: 1px dotted #999;}
+
 /*Bootstrap Callouts*/
 .bs-callout {   padding: 20px;    margin: 0px 0px 20px 0px;    border: 1px solid #eee;    border-left-width: 5px;    border-radius: 3px;}
 .bs-callout h4 {    margin-top: 0;    margin-bottom: 5px;}

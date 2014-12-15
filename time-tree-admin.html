@@ -3,7 +3,10 @@
         <div class="col-sm-3">
             <div class="panel panel-default maxheight600">
                 <div class="panel-heading">
-                	<h3 class="panel-title">Rates</h3>
+                	<h3 class="panel-title">
+                    	Rates
+                        <button type="button" class="btn btn-primary btn-xs pull-right" ng-click="add_rate()"><span class="fa fa-plus"></span> New Rate</button>
+                    </h3>
                 </div>
                 <div class="panel-body">        
                 	<div class="bg-info paddingM margin-bottom-M" ng-if="ratesTMP.edit">        	
@@ -40,14 +43,25 @@
                             </td>	                        
 	                    </tr>
                     </table>                    
-                    <button type="button" class="btn btn-default" ng-click="add_rate()"><span class="fa fa-plus"></span> New Rate</button>                    
                 </div>
             </div>  
         </div>
         <div class="col-sm-6">
             <div class="panel panel-default height600">
                 <div class="panel-heading">
-                	<h3 class="panel-title">Projects</h3>
+                	<h3 class="panel-title">
+                    	Projects                         
+                        <button type="button" ng-click="" class="btn btn-success btn-xs pull-right"><span class="fa fa-save"></span> Save</button>
+                        <div class="divider-vertical pull-right"></div>
+                        <button type="button" class="btn btn-default btn-xs pull-right" ng-model="treeOpt.treeRatesView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                        	<span class="fa fa-usd"></span>
+                        </button>
+                        <button type="button" class="btn btn-default btn-xs pull-right margin-right-S" ng-model="treeOpt.treePeopleView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                        	<span class="fa fa-user"></span>
+                        </button>
+                        <button type="button" class="btn btn-default btn-xs pull-right margin-right-S" ng-click="tree_toggleChildrenAll(0, treeOPT.items)"><span class="fa fa-caret-right"></span></button>
+                        <button type="button" class="btn btn-default btn-xs pull-right margin-right-S" ng-click="tree_toggleChildrenAll(1, treeOPT.items)"><span class="fa fa-caret-down"></span></button>
+                    </h3>
                 </div>
                 <div class="panel-body">        
 					<script type="text/ng-template" id="categoryTree">
@@ -86,13 +100,6 @@
                         </ul>
                     </script>
                     <div class="treewrapper">
-                        <button type="button" ng-click="" class="btn btn-success"><span class="fa fa-save"></span> Save</button> 
-                        <button type="button" ng-click="" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
-                        <button type="button" class="btn btn-default pull-right" ng-model="treeOpt.treeRatesView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"><span class="fa fa-usd"></span></button>
-                        <button type="button" class="btn btn-default pull-right" ng-model="treeOpt.treePeopleView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"><span class="fa fa-user"></span></button>
-                        <button type="button" class="btn btn-default pull-right" ng-click="tree_toggleChildrenAll(0, treeOPT.items)"><span class="fa fa-caret-right"></span></button>
-                        <button type="button" class="btn btn-default pull-right" ng-click="tree_toggleChildrenAll(1, treeOPT.items)"><span class="fa fa-caret-down"></span></button>
-                        <hr />
                         <div class="alert alert-info" role="alert" ng-show="treeOPT.delete_show">
                             {{treeOPT.treeitemDesc}}<br /><br />
                             <button type="button" ng-click="tree_actionExec()" class="btn btn-success"><span class="fa fa-trash-o"></span> Delete</button>
