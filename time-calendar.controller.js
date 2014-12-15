@@ -25,7 +25,7 @@ angular.module('time')
 		$scope.checkCalendarViewLoaded($filter('date')(end, 'M'), $filter('date')(end, 'yyyy'))				
 		}
 	$scope.checkCalendarViewLoaded = function (m, y) {
-		if($scope.eventOPT.monthsloaded[y]===undefined) $scope.eventOPT.monthsloaded[y]=[]
+		if($scope.eventOPT.monthsloaded[y]===undefined) $scope.eventOPT.monthsloaded[y]=[];
 			if($scope.eventOPT.monthsloaded[y].indexOf(m)==-1) {
 				$scope.API_addelements(m, y);
 				$scope.eventOPT.monthsloaded[y].push(m);

@@ -26,9 +26,18 @@ angular.module('time')
 		return [{'id':'007', 'firstname':'Peter', 'lastname':'Windemann'}, {'id':'001alpha', 'firstname':'Bruno', 'lastname':'Kaiser'}, {'id':'123-KK', 'firstname':'Thomas', 'lastname':'Huber'}];	
 		}
 
+	$scope.get_rates = function() {
+		var rates =  [
+			{ID: '000001', Title: 'Junior Rate', Rate:500},
+			{ID: '000002', Title: 'Senior Rate', Rate:1000},
+			{ID: '000003', Title: 'Executive Rate', Rate:2000},
+		];
+		rates.unshift({ID:null, Title: 'Select Rate', Rate:''});
+		return rates;
+		}
 	//Load config
 	$scope.people=$scope.get_people();
-			
+	$scope.rates=$scope.get_rates();	
 	//************************************** Select Multiple **************************************
 	$scope.removeMultiSinglePerson = function(data, model){
 		$scope.deleteExistingMulti(data, model, "id");

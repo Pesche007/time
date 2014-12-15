@@ -25,7 +25,10 @@
 					</div> 
 				</div>				
                 <ul class="tree" ng-if="obj.people && treeOpt.treePeopleView && obj.childrenVisible">
-					<li ng-repeat="person in obj.people"><span class="treefolder fa fa-user"></span> {{person.firstname}} {{person.lastname}}</li>
+					<li ng-repeat="person in obj.people">
+						<span class="treefolder fa fa-user"></span> {{person.firstname}} {{person.lastname}} @ 
+						<select ng-model="person.rate" ng-options="item.ID as (item.Title + ' ' + item.Rate) for item in rates"></select>
+					</li>
                 </ul>
                 <ul class="tree" ng-if="obj.children && obj.childrenVisible">
 					<li ng-repeat="obj in obj.children" ng-include="'categoryTree'" ng-init="parentOBJ=$parent.obj"></li>
