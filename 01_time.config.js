@@ -12,31 +12,37 @@ angular.module('time', ['core', 'ui.calendar', 'ngDragDrop'])
 	.state('time-calendar', {
 		url: '/time-calendar',
 		controller: 'TimeCalendarCtrl',
-		templateUrl: 'app/time/time-calendar.html',
+		templateUrl: 'app/time/input/time-calendar.html',
 		authenticate: true
 	})	
 	.state('time-tree-admin', {
 		url: '/time-tree-admin',
 		controller: 'TreeAdminCtrl',
-		templateUrl: 'app/time/time-tree-admin.html',
+		templateUrl: 'app/time/admin/time-tree-admin.html',
 		authenticate: true
 	})	
 	.state('time-tree-input', {
 		url: '/time-tree-input',
 		controller: 'TreeInputCtrl',
-		templateUrl: 'app/time/time-tree-input.html',
+		templateUrl: 'app/time/input/time-tree-input.html',
 		authenticate: true
 	})	
 	.state('time-list', {
 		url: '/time-list',
 		controller: 'TimeListCtrl',
-		templateUrl: 'app/time/time-list.html',
+		templateUrl: 'app/time/input/time-list.html',
 		authenticate: true
 	})	
 	.state('time-timer', {
 		url: '/time-timer',
 		controller: 'TimeTimerCtrl',
-		templateUrl: 'app/time/time-timer.html',
+		templateUrl: 'app/time/input/time-timer.html',
 		authenticate: true
-	})					
+	})
+	.state('time-report', {
+		url: '/time-report',
+		controller: 'TimeReportCtrl',
+		templateUrl: 'app/time/report/time-report.html',
+		authenticate: true
+	});	
 });

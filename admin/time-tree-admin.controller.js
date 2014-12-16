@@ -185,6 +185,7 @@ angular.module('time')
 	/************** RATES ****************/
 	$scope.ratesTMP={'edit':false, 'tmpobj':{'id':'', 'title':'', 'rate':'', 'description':''}};
 	$scope.add_rate=function(){
+		$scope.rate_formreset();
 		$scope.rate_toggle(1);
 		}
 	$scope.rate_save = function(){

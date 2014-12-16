@@ -20,6 +20,7 @@
 .maxheight200{max-height:200px;overflow:auto}
 .divider-vertical {height: 20px;margin: 0 10px; border-left: 1px dotted #999;}
 .nodecoration, .nodecoration:hover{text-decoration:none}
+
 /*BOOTSTRAP*/
 /*Bootstrap Callouts*/
 .bs-callout {   padding: 20px;    margin: 0px 0px 20px 0px;    border: 1px solid #eee;    border-left-width: 5px;    border-radius: 3px;}

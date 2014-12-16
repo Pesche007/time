@@ -4,16 +4,56 @@ angular.module('time')
   .controller('TimeCalendarCtrl', function ($scope, $filter, AppConfig, uiCalendarConfig) {
 	AppConfig.setCurrentApp('Time', 'fa-tumblr', 'time', 'app/time/menu.html');
 
-	//API 
-	$scope.API_addelements = function(month, year){
-			console.log("Events added for month " + month + " year " + year)
+	//API
+    $scope.API={};
+	$scope.API.Addelements = function(month, year){
+			console.log('Events added for month ' + month + ' year ' + year);
 			var data = [
-			  {"title": "Test", "start": new Date(year+'/'+month+'/10 10:00'), "end": new Date(year+'/'+month+'/10 12:00'), "allDay": false, "comment":"", "backgroundColor":"#996666"},
-			  {"title": "Best", "start": new Date(year+'/'+month+'/11 13:00'), "end": new Date(year+'/'+month+'/11 14:00'), "allDay": false, "comment":"", "backgroundColor":"#996666"},
-			  {"title": "Zest", "start": new Date(year+'/'+month+'/12 10:00'), "end": new Date(year+'/'+month+'/12 12:00'), "allDay": false, "comment":"", "backgroundColor":"#996666"}
+			  {"title": "Test", "start": new Date(year+"/"+month+"/10 10:00"), "end": new Date(year+"/"+month+"/10 12:00"), "allDay": false, "comment":"", "backgroundColor":"#996666"},
+			  {"title": "Best", "start": new Date(year+"/"+month+"/11 13:00"), "end": new Date(year+"/"+month+"/11 14:00"), "allDay": false, "comment":"", "backgroundColor":"#996666"},
+			  {"title": "Zest", "start": new Date(year+"/"+month+"/12 10:00"), "end": new Date(year+"/"+month+"/12 12:00"), "allDay": false, "comment":"", "backgroundColor":"#996666"}
 			  ];
 			for(var i = 0; i < data.length; ++i) { $scope.events.push(data[i]); }
+		};
+	$scope.API.GetTree = function () {
+		return [{id: "CmpA", title: "UBS", type:"company", categories: [
+					{id: "PjtA1", title: "Project A1", type:"project", categories: [
+						 {id: "SPjtA11", title: "Sub-Project A11", type:"project", categories:[
+						 	{id: "SSPjtA11", title: "Sub-Sub-Project A111", type:"project", categories: [], people:[]}
+						], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}, 
+						 {id: "SPjtA12", title: "Sub-Project A12", type:"project", categories:[
+						 {id: "SSPjtA12", title: "Sub-Sub-Project A112", type:"project", categories: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
+						 ], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
+					 ]},
+				]},
+			  {id: "CmpB", title: "HRG", type:"company", categories:[
+			 	 {id: "PjtB1", title: "Project B1", type:"project", categories: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
+			  ]}
+			]
 		}
+	$scope.API.GetInternal = function () {
+		return [{id: "Int-Absence", title: "Absences", type:"company", categories: [
+					{id: "Sickness", title: "Sickness", type:"project", categories: []},
+					{id: "Sickness-Child", title: "Sick Child", type:"project", categories: []},
+					{id: "Maternity", title: "Maternity", type:"project", categories: []},
+					
+					]},
+				{id: "Int-Planning", title: "Planning", type:"company", categories: [
+					{id: "Vacation", title: "Vacation", type:"project", categories: []},
+					{id: "Military", title: "Military", type:"project", categories: []},
+					{id: "Overtime", title: "Overtime", type:"project", categories: []}
+					]},					
+				];
+		}		
+
+	$scope.events=[];
+	$scope.eventSource=[$scope.events]
+	//Sets details for event in focus
+	$scope.eventfocus={"visible": false, "title":"", "start":"", "end":"", "comment":"", "startTMP":"", "endTMP":"", "error":false, "calEvent":{}}
+	//Options, like if projects should be shown for mapped people only
+	$scope.eventOPT={showmine:false, showid:"007", "monthsloaded":[], "viewfrom":"", "viewto":""};
+	$scope.clientprojects = $scope.API.GetTree();
+	$scope.internal = $scope.API.GetInternal();
 
 	//Change in month -> load new month data
 	$scope.loadIntoView = function(start, end){		
@@ -21,55 +61,17 @@ angular.module('time')
 		$scope.eventOPT.viewto=end;
 		var monthEnd=$filter('date')(end, 'M');
 		var yearEnd=$filter('date')(end, 'yyyy');		
-		$scope.checkCalendarViewLoaded($filter('date')(start, 'M'), $filter('date')(start, 'yyyy'))
-		$scope.checkCalendarViewLoaded($filter('date')(end, 'M'), $filter('date')(end, 'yyyy'))				
+		$scope.checkCalendarViewLoaded($filter('date')(start, 'M'), $filter('date')(start, 'yyyy'));
+		$scope.checkCalendarViewLoaded($filter('date')(end, 'M'), $filter('date')(end, 'yyyy'));				
 		}
 	$scope.checkCalendarViewLoaded = function (m, y) {
 		if($scope.eventOPT.monthsloaded[y]===undefined) $scope.eventOPT.monthsloaded[y]=[];
 			if($scope.eventOPT.monthsloaded[y].indexOf(m)==-1) {
-				$scope.API_addelements(m, y);
+				$scope.API.Addelements(m, y);
 				$scope.eventOPT.monthsloaded[y].push(m);
 				}		
 		}
-	$scope.get_tree = function () {
-		return [{id: 'CmpA', title: 'UBS', type:'company', categories: [
-					{id: 'PjtA1', title: 'Project A1', type:'project', categories: [
-						 {id: 'SPjtA11', title: 'Sub-Project A11', type:'project', categories:[
-						 	{id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', categories: [], people:[]}
-						], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}, 
-						 {id: 'SPjtA12', title: 'Sub-Project A12', type:'project', categories:[
-						 {id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', categories: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
-						 ], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
-					 ]},
-				]},
-			  {id: 'CmpB', title: 'HRG', type:'company', categories:[
-			 	 {id: 'PjtB1', title: 'Project B1', type:'project', categories: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
-			  ]}
-			]
-		}
-	$scope.get_internal = function () {
-		return [{id: 'Int-Absence', title: 'Absences', type:'company', categories: [
-					{id: 'Sickness', title: 'Sickness', type:'project', categories: []},
-					{id: 'Sickness-Child', title: 'Sick Child', type:'project', categories: []},
-					{id: 'Maternity', title: 'Maternity', type:'project', categories: []},
-					
-					]},
-				{id: 'Int-Planning', title: 'Planning', type:'company', categories: [
-					{id: 'Vacation', title: 'Vacation', type:'project', categories: []},
-					{id: 'Military', title: 'Military', type:'project', categories: []},
-					{id: 'Overtime', title: 'Overtime', type:'project', categories: []}
-					]},					
-				];
-		}
-	$scope.events=[];
-	$scope.eventSource=[$scope.events]
-	//Sets details for event in focus
-	$scope.eventfocus={"visible": false, "title":"", "start":"", "end":"", "comment":"", "startTMP":"", "endTMP":"", "error":false, "calEvent":{}}
-	//Options, like if projects should be shown for mapped people only
-	$scope.eventOPT={showmine:false, showid:"007", "monthsloaded":[], "viewfrom":"", "viewto":""};
-	$scope.clientprojects = $scope.get_tree();
-	$scope.internal = $scope.get_internal();
-	
+	//calendar Config	
     $scope.uiConfig = {
       calendar:{
         height: 500,
