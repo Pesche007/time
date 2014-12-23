@@ -1,7 +1,48 @@
 <div class="container-fluid">    
 	<div class="row">
-	    <div class="col-sm-3"></div>
-		<div class="col-sm-6"></div>
-        <div class="col-sm-3"></div> 
+	    <div class="col-sm-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                	<h3 class="panel-title">
+                    Time Allocation
+                    <a href="javascript:void(0)" class="nodecoration pull-right" ng-click="test()"><span class="fa fa-money"></span></a> 
+                    </h3>
+                </div>
+                <div class="panel-body">
+					<div arbalo-chart type="bar" orientation="horizontal" option="" data="barchart"></div>
+                    <div arbalo-chart type="bar" orientation="vertical" option="" data="barchart"></div>               
+                </div>
+            </div>                	  
+  		</div>
+	    <div class="col-sm-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                	<h3 class="panel-title">Monthly Time</h3>
+                </div>
+                <div class="panel-body">                
+					<div arbalo-chart type="pie" orientation="" option="dougnut" data="barchart"></div>       
+                </div>
+            </div>                 		  
+  		</div>
+	    <div class="col-sm-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                	<h3 class="panel-title">Monthly</h3>
+                </div>
+                <div class="panel-body">                
+					<div arbalo-chart type="bar" orientation="horizontal" option="stacked" data="barchart"></div>
+              </div>
+            </div> 			
+  		</div>        
+        <div class="col-sm-3">
+        	
+           <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title"> Time Allocation</h3>
+                </div>
+                <div class="panel-body">					
+                    <div arbalo-chart type="bar" orientation="vertical" option="stacked" data="barchart"></div>
+                </div>            
+            
+        </div> 
 	</div>              
 </div>        
