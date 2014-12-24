@@ -3,23 +3,20 @@
 	    <div class="col-sm-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                	<h3 class="panel-title">
-                    Time Allocation
-                    <a href="javascript:void(0)" class="nodecoration pull-right" ng-click="test()"><span class="fa fa-money"></span></a> 
-                    </h3>
+                	<h3 class="panel-title"> Time Item</h3>
                 </div>
-                <div class="panel-body">
-					<div arbalo-chart type="bar" orientation="horizontal" option="" legend="true" data="barchart"></div>            
+                <div class="panel-body"> 
+                	<pre>{{data |json}}</pre>         
                 </div>
             </div>                	  
   		</div>
 	    <div class="col-sm-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                	<h3 class="panel-title">Monthly Time</h3>
+                	<h3 class="panel-title">Hours per Day</h3>
                 </div>
-                <div class="panel-body">                
-					<div arbalo-chart type="pie" orientation="" option="dougnut" data="barchart"></div>
+                <div class="panel-body">   
+                	<div arbalo-chart type="bar" orientation="horizontal" option="stacked" sum="true" data="data"></div>
                 </div>
             </div>                 		  
   		</div>
@@ -28,8 +25,7 @@
                 <div class="panel-heading">
                 	<h3 class="panel-title">Monthly</h3>
                 </div>
-                <div class="panel-body">                
-					<div arbalo-chart type="bar" orientation="horizontal" option="stacked" data="barchart"></div>
+                <div class="panel-body">              
               </div>
             </div> 			
   		</div>        
@@ -39,7 +35,6 @@
                 <div class="panel-heading"><h3 class="panel-title"> Time Allocation</h3>
                 </div>
                 <div class="panel-body">					
-                    <div arbalo-chart type="bar" orientation="vertical" option="" legend="true" data="barchart"></div>
                 </div>            
             
         </div> 

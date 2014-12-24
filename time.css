@@ -65,6 +65,8 @@
 .arbalochart .bars{text-align:center;color:#FFF;border-right:2px solid #FFF;-o-transition:.5s;  -ms-transition:.5s;  -moz-transition:.5s;  -webkit-transition:.5s;  transition:.5s;}
 .arbalochart .lines{text-align:right;color:#FFF;border-bottom:2px solid #FFF;height:25px;clear:both;padding-right:5px;-o-transition:.5s;-ms-transition:.5s;-moz-transition:.5s;-webkit-transition:.5s;transition:.5s;}
 .arbalochart .linesstacked{text-align:right;color:#FFF;border-bottom:2px solid #FFF;height:25px;padding-right:5px;float:left}
+.arbalochart .whitestack{background:#FFF;position:relative}
+.arbalochart .whitestack p{position:absolute;bottom:0px;width:100%;font-weight:bold;text-align:center}
 
 .floatBars{height:200px}
 .chartgroup{border-right:4px solid #FFF}
