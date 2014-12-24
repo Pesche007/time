@@ -63,12 +63,12 @@
 
 .arbalochart{width:100%;min-height:200px;}
 .arbalochart .bars{text-align:center;color:#FFF;border-right:2px solid #FFF;-o-transition:.5s;  -ms-transition:.5s;  -moz-transition:.5s;  -webkit-transition:.5s;  transition:.5s;}
-.arbalochart .lines{text-align:right;color:#FFF;border-bottom:2px solid #FFF;height:25px;clear:both;padding-right:5px;-o-transition:.5s;  -ms-transition:.5s;  -moz-transition:.5s;  -webkit-transition:.5s;  transition:.5s;}
+.arbalochart .lines{text-align:right;color:#FFF;border-bottom:2px solid #FFF;height:25px;clear:both;padding-right:5px;-o-transition:.5s;-ms-transition:.5s;-moz-transition:.5s;-webkit-transition:.5s;transition:.5s;}
 .arbalochart .linesstacked{text-align:right;color:#FFF;border-bottom:2px solid #FFF;height:25px;padding-right:5px;float:left}
 
 .floatBars{height:200px}
 .chartgroup{border-right:4px solid #FFF}
-.chartlegend{border-top:1px solid #DDD;margin-top:10px;float:left;text-align:center;position:relative;margin-bottom:10px;}
+.chartlegend{border-top:1px solid #DDD;margin-top:10px;float:left;text-align:center;position:relative;}
 .chartlegend_border{position:absolute;border-right:1px solid #DDD;right:0px;top:-5px;height:10px;}
 .chartlegend:last-child .chartlegend_border{border:none}
 
@@ -83,3 +83,7 @@
 .slice:hover, .sliceB:hover, .arbalochart .bars:hover, .arbalochart .lines:hover{background:#069 !important; -o-transition:.5s;  -ms-transition:.5s;  -moz-transition:.5s;  -webkit-transition:.5s;  transition:.5s;}
 .hoversame:hover div{background:#069 !important;-o-transition:.5s;  -ms-transition:.5s;  -moz-transition:.5s;  -webkit-transition:.5s;  transition:.5s;}
 .slice p, .sliceB p{position:absolute;top:10%;left:10%;color:#FFF;}	
+
+.legend{clear:both;list-style:none;padding:5px;border:1px solid #DDD;float:left;margin:10px 0 0 0}
+.legend li{float:left;margin:0 10px 0 0}
+.legend li p{width:16px;height:16px;margin:1px 5px 1px 0;float:left;border-radius:5px}
