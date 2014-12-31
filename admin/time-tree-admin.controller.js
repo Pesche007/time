@@ -3,11 +3,11 @@
 angular.module('time')
   .controller('TreeAdminCtrl', function ($scope, AppConfig) {
 	AppConfig.setCurrentApp('Time', 'fa-tumblr', 'time', 'app/time/menu.html');
-	
 	//API
-	$scope.get_tree = function () {
+	$scope.API={};
+	$scope.API.get_tree = function () {
 		var obj=[];
-		for(var i=0;i<200;i++) {
+		for(var i=0;i<100;i++) {
 			var tmp={id: 'CmpA'+i, title: 'Company A'+i, type:'company', children: [
 					{id: 'PjtA1'+i, title: 'Project A1'+i, type:'project', children: [
 						 {id: 'SPjtA11'+i, title: 'Sub-Project A11'+i, type:'project', children:[
@@ -20,27 +20,12 @@ angular.module('time')
 				]};
 			obj.push(tmp)
 			}
-		return obj;/*[{id: 'CmpA', title: 'Company A', type:'company', children: [
-					{id: 'PjtA1', title: 'Project A1', type:'project', children: [
-						 {id: 'SPjtA11', title: 'Sub-Project A11', type:'project', children:[
-						 	{id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', children: [], people:[]}
-						], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}, 
-						 {id: 'SPjtA12', title: 'Sub-Project A12', type:'project', children:[
-						 {id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', children: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
-						 ], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann", "rate": "000003"}]}
-					 ]}
-				]},
-			  {id: 'CmpB', title: 'Company B', type:'company', children:[
-			 	 {id: 'PjtB1', title: 'Project B1', type:'project', children: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
-			  ]}
-			]*/
+		return obj;
 		}
-
-	$scope.get_people = function(){
+	$scope.API.get_people = function(){
 		return [{'id':'007', 'firstname':'Peter', 'lastname':'Windemann'}, {'id':'001alpha', 'firstname':'Bruno', 'lastname':'Kaiser'}, {'id':'123-KK', 'firstname':'Thomas', 'lastname':'Huber'}];	
 		}
-
-	$scope.get_rates = function() {
+	$scope.API.get_rates = function() {
 		var rates =  [
 			{id: '000001', title: 'Junior Rate', rate:500},
 			{id: '000002', title: 'Senior Rate', rate:1000},
@@ -49,8 +34,8 @@ angular.module('time')
 		return rates;
 		}
 	//Load config
-	$scope.people=$scope.get_people();
-	$scope.rates=$scope.get_rates();	
+	$scope.people=$scope.API.get_people();
+	$scope.rates=$scope.API.get_rates();	
 	//************************************** Select Multiple **************************************
 	$scope.removeMultiSinglePerson = function(data, model){
 		$scope.deleteExistingMulti(data, model, "id");
@@ -88,7 +73,13 @@ angular.module('time')
 					
 	//************************************** Tree **************************************
 	//Options for tree - idea: save all actions and objects handleded as tmp saves and then act upon them (e.g. create subtree -> stores action "add", then enter name and save -> tmp action "add" execute
-	$scope.treeOPT={addedit_show:false, delete_show:false, tmpobj: "", tmpindex:0, tmppeople:[], peopleselect:[], catName: "", treeitemDesc:"", treeAction:"", treePeopleView:0, treeRatesView:0, items:$scope.get_tree()}
+	$scope.treeOPT={addedit_show:false,delete_show:false,tmpobj:"",tmpindex:0,tmppeople:[],peopleselect:[],catName: "",treeitemDesc:"",treeAction:"",treePeopleView:0, treeRatesView:0, items:$scope.API.get_tree()};
+	//Sets and Shows tree for selected company
+	$scope.selectedComp={};
+	$scope.show_tree = function(obj){
+		$scope.tree_toggleBranchAll(obj);
+		$scope.selectedComp=Array(obj);
+		}
 	//remove all input modal divs
 	$scope.tree_removeAllShow = function(){
 		$scope.treeOPT.addedit_show=false;
@@ -225,5 +216,5 @@ angular.module('time')
 		}
 	$scope.rate_formreset = function(){
 		$scope.ratesTMP.tmpobj={id:'', 'title':'', rate:''};
-		}		
+		}				
   })

@@ -22,6 +22,7 @@
 .nodecoration, .nodecoration:hover{text-decoration:none}
 
 /*BOOTSTRAP*/
+.scrollable-menu {height: auto; max-height: 300px; overflow-x: hidden;}
 /*Bootstrap Callouts*/
 .bs-callout {   padding: 20px;    margin: 0px 0px 20px 0px;    border: 1px solid #eee;    border-left-width: 5px;    border-radius: 3px;}
 .bs-callout h4 {    margin-top: 0;    margin-bottom: 5px;}
@@ -47,7 +48,7 @@
 .treewrapper{width:100%;background:#FFF;}
 .tree, .tree ul.tree {margin:0;padding:0;list-style:none;}
 .tree ul.tree {  margin-left:1.5em;  position:relative;}
-.tree ul.tree ul.tree {margin-left:1.5em} 
+.tree ul.tree ul.tree {margin-left:0.3em} 
 .tree ul.tree:before { content:"";  display:block;  width:0;  position:absolute;  top:0;  bottom:0;  left:0;  border-left:1px dotted #AAA;}
 .tree > li { margin:0;  padding:0 1.5em; line-height:2em;   position:relative;}
 .tree ul.tree > li:before {  content:"";  display:block;  width:10px; height:0;border-top:1px dotted #AAA; margin-top:-1px;  position:absolute;top:1em; left:0;}
