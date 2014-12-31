@@ -6,7 +6,21 @@ angular.module('time')
 	
 	//API
 	$scope.get_tree = function () {
-		return [{id: 'CmpA', title: 'Company A', type:'company', children: [
+		var obj=[];
+		for(var i=0;i<200;i++) {
+			var tmp={id: 'CmpA'+i, title: 'Company A'+i, type:'company', children: [
+					{id: 'PjtA1'+i, title: 'Project A1'+i, type:'project', children: [
+						 {id: 'SPjtA11'+i, title: 'Sub-Project A11'+i, type:'project', children:[
+						 	{id: 'SSPjtA11'+i, title: 'Sub-Sub-Project A111'+i, type:'project', children: [], people:[]}
+						], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}, 
+						 {id: 'SPjtA12'+i, title: 'Sub-Project A12'+i, type:'project', children:[
+						 {id: 'SSPjtA12'+i, title: 'Sub-Sub-Project A112'+i, type:'project', children: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
+						 ], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann", "rate": "000003"}]}
+					 ]}
+				]};
+			obj.push(tmp)
+			}
+		return obj;/*[{id: 'CmpA', title: 'Company A', type:'company', children: [
 					{id: 'PjtA1', title: 'Project A1', type:'project', children: [
 						 {id: 'SPjtA11', title: 'Sub-Project A11', type:'project', children:[
 						 	{id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', children: [], people:[]}
@@ -14,12 +28,12 @@ angular.module('time')
 						 {id: 'SPjtA12', title: 'Sub-Project A12', type:'project', children:[
 						 {id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', children: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
 						 ], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann", "rate": "000003"}]}
-					 ]},
+					 ]}
 				]},
 			  {id: 'CmpB', title: 'Company B', type:'company', children:[
 			 	 {id: 'PjtB1', title: 'Project B1', type:'project', children: [], people:[ {"id": "007", "firstname": "Peter", "lastname": "Windemann"}]}
 			  ]}
-			]
+			]*/
 		}
 
 	$scope.get_people = function(){

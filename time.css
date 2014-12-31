@@ -60,32 +60,25 @@
 .calendar-projects{list-style:none;margin:5px 0px 5px 10px}
 
 /*Chart */
-
-.arbalochart{width:100%;min-height:200px;}
-.arbalochart .bars{text-align:center;color:#FFF;border-right:2px solid #FFF;-o-transition:.5s;  -ms-transition:.5s;  -moz-transition:.5s;  -webkit-transition:.5s;  transition:.5s;}
-.arbalochart .lines{text-align:right;color:#FFF;border-bottom:2px solid #FFF;height:25px;clear:both;padding-right:5px;-o-transition:.5s;-ms-transition:.5s;-moz-transition:.5s;-webkit-transition:.5s;transition:.5s;}
-.arbalochart .linesstacked{text-align:right;color:#FFF;border-bottom:2px solid #FFF;height:25px;padding-right:5px;float:left}
-.arbalochart .whitestack{background:#FFF;position:relative}
-.arbalochart .whitestack p{position:absolute;bottom:0px;width:100%;font-weight:bold;text-align:center}
-
+.arbalochart{width:100%;min-height:200px;position:relative;clear:both}
+.chart-bar{position:absolute; bottom:0px;text-align:center;color:#FFF;border-right:2px solid #FFF;box-shadow: -1px -1px 2px #CCC}
+.chart-lines{text-align:right;color:#FFF;border-bottom:2px solid #FFF;height:25px;clear:both;padding-right:5px;}
+.chart-sum{position:absolute;top:0px;text-align:center;font-weight:bold}
 .floatBars{height:200px}
-.chartgroup{border-right:4px solid #FFF}
-.chartlegend{border-top:1px solid #DDD;margin-top:10px;float:left;text-align:center;position:relative;}
-.chartlegend_border{position:absolute;border-right:1px solid #DDD;right:0px;top:-5px;height:10px;}
 .chartlegend:last-child .chartlegend_border{border:none}
-
 .pie1half{width:40%;float:left;margin-left:10%;overflow:hidden;padding:1% 0 1% 1%}
 .pie1{position:relative;width: 200%; height:0; padding-bottom: 200%; border-radius: 50%;overflow:hidden;box-shadow: 1px 1px 2px #AAA;border:2px solid #EEE;}
 .pie2{position:relative;width: 200%; height:0; padding-bottom: 200%; border-radius: 50%;overflow:hidden;box-shadow: 1px 1px 2px #AAA;border:2px solid #EEE;right:100%}
 .pie2half{width:40%;float:left;margin-right:10%;overflow:hidden;padding:1% 1% 1% 0}
 .piedougnut1{position:absolute;width:30%;height:30%;left:35%;top:35%;background:#FFF;z-Index:5000;border-radius:50%;box-shadow:inset 1px 1px 2px #AAA;}
 .piedougnut2{position:absolute;width:30%;height:30%;right:35%;top:35%;background:#FFF;z-Index:5000;border-radius:50%;box-shadow:inset 1px 1px 2px #AAA;}
-.sliceB{position:absolute;width:100%;height:100%;left:50%;-moz-transform-origin:0 50%;-ms-transform-origin:0 50%;-o-transform-origin:0 50%;-webkit-transform-origin:0 50%;transform-origin: 0 50%;-o-transition:.5s;  -ms-transition:.5s;  -moz-transition:.5s;  -webkit-transition:.5s;  transition:.5s;}		
-.slice{	position:absolute;width:50%;height:50%;left:50%;-moz-transform-origin:0 100%;-ms-transform-origin:0 100%;-o-transform-origin:0 100%;-webkit-transform-origin:0 100%;transform-origin: 0 100%;-o-transition:.5s;  -ms-transition:.5s;  -moz-transition:.5s;  -webkit-transition:.5s;  transition:.5s;}
-.slice:hover, .sliceB:hover, .arbalochart .bars:hover, .arbalochart .lines:hover{background:#069 !important; -o-transition:.5s;  -ms-transition:.5s;  -moz-transition:.5s;  -webkit-transition:.5s;  transition:.5s;}
-.hoversame:hover div{background:#069 !important;-o-transition:.5s;  -ms-transition:.5s;  -moz-transition:.5s;  -webkit-transition:.5s;  transition:.5s;}
+.sliceB{position:absolute;width:100%;height:100%;left:50%;-moz-transform-origin:0 50%;-ms-transform-origin:0 50%;-o-transform-origin:0 50%;-webkit-transform-origin:0 50%;transform-origin: 0 50%;}		
+.slice{	position:absolute;width:50%;height:50%;left:50%;-moz-transform-origin:0 100%;-ms-transform-origin:0 100%;-o-transform-origin:0 100%;-webkit-transform-origin:0 100%;transform-origin: 0 100%;}
+.slice:hover, .sliceB:hover, .chart-bar:hover{background:#069 !important;}
+.hoversame:hover div{background:#069 !important;}
 .slice p, .sliceB p{position:absolute;top:10%;left:10%;color:#FFF;}	
-
+.chartlegend{border-top:1px solid #DDD;margin-top:10px;float:left;text-align:center;position:relative;}
+.chartlegend_border{position:absolute;border-right:1px solid #DDD;right:0px;top:-5px;height:10px;}
 .legend{clear:both;list-style:none;padding:5px;border:1px solid #DDD;float:left;margin:10px 0 0 0}
 .legend li{float:left;margin:0 10px 0 0}
 .legend li p{width:16px;height:16px;margin:1px 5px 1px 0;float:left;border-radius:5px}
