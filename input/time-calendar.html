@@ -23,8 +23,8 @@
                             <span ng-if="!eventOPT.showmine" class="fa fa-toggle-off"></span>
                             <span ng-if="eventOPT.showmine" class="fa fa-toggle-on"></span>                              
                         </a>     
-                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendar_resourcestoggle(0)"><span class="fa fa-arrow-up"></span></a>
-                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendar_resourcestoggle(1)"><span class="fa fa-arrow-down"></span></a>                        
+                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendarResourcestoggle(0)"><span class="fa fa-arrow-up"></span></a>
+                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendarResourcestoggle(1)"><span class="fa fa-arrow-down"></span></a>                        
                     </h3>
                 </div>
                 <div class="panel-body">
@@ -53,13 +53,13 @@
                     	Calendar
                         <button type="button" class="btn btn-success btn-xs pull-right button-move-TR" ng-click=""><span class="fa fa-save"></span> Save</button>
                         <div class="divider-vertical pull-right"></div>
-                        <a href="javascript:void(0)" class="nodecoration pull-right" ng-click="calendar_simplecontrol('next')"><span class="fa fa-chevron-circle-right"></span></a>
-                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendar_simplecontrol('prev')"><span class="fa fa-chevron-circle-left"></span></a>      
+                        <a href="javascript:void(0)" class="nodecoration pull-right" ng-click="calendarSimplecontrol('next')"><span class="fa fa-chevron-circle-right"></span></a>
+                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendarSimplecontrol('prev')"><span class="fa fa-chevron-circle-left"></span></a>      
                         <div class="divider-vertical pull-right"></div>                                          
-                        <a href="javascript:void(0)" class="nodecoration pull-right margin-left-L" ng-click="calendar_simplecontrol('today')"><span class="fa fa-dot-circle-o"></span></a>
-                        <a href="javascript:void(0)" class="nodecoration pull-right" ng-click="calendar_advancedcontrol('changeView', 'agendaDay')"><span class="fa fa-calendar-o"></span></a>
-                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendar_advancedcontrol('changeView', 'agendaWeek')"><span class="fa fa-columns"></span></a>      
-                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendar_advancedcontrol('changeView', 'month')"><span class="fa fa-calendar"></span></a>                    </h3>
+                        <a href="javascript:void(0)" class="nodecoration pull-right margin-left-L" ng-click="calendarSimplecontrol('today')"><span class="fa fa-dot-circle-o"></span></a>
+                        <a href="javascript:void(0)" class="nodecoration pull-right" ng-click="calendarAdvancedcontrol('changeView', 'agendaDay')"><span class="fa fa-calendar-o"></span></a>
+                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendarAdvancedcontrol('changeView', 'agendaWeek')"><span class="fa fa-columns"></span></a>      
+                        <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendarAdvancedcontrol('changeView', 'month')"><span class="fa fa-calendar"></span></a>                    </h3>
                 </div>
                 <div class="panel-body">
                    	<div ui-calendar="uiConfig.calendar" ng-model="eventSource" class="calendar-wrapper" calendar="myCalendar"></div>             		
