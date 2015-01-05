@@ -4,9 +4,9 @@ angular.module('time', ['core', 'ui.calendar', 'ngDragDrop'])
 .config(function ($stateProvider) {
 	$stateProvider
 	.state('time', {
-		url: '/tree',
-		controller: 'TreeCtrl',
-		templateUrl: 'app/time/tree.html',
+		url: '/time-list',
+		controller: 'TimeListCtrl',
+		templateUrl: 'app/time/input/time-list.html',
 		authenticate: true
 	})
 	.state('time-calendar', {
@@ -25,12 +25,6 @@ angular.module('time', ['core', 'ui.calendar', 'ngDragDrop'])
 		url: '/time-tree-input',
 		controller: 'TreeInputCtrl',
 		templateUrl: 'app/time/input/time-tree-input.html',
-		authenticate: true
-	})	
-	.state('time-list', {
-		url: '/time-list',
-		controller: 'TimeListCtrl',
-		templateUrl: 'app/time/input/time-list.html',
 		authenticate: true
 	})	
 	.state('time-timer', {
