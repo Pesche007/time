@@ -2,7 +2,7 @@
 
 angular.module('time')
   .controller('TreeAdminCtrl', function ($scope, AppConfig) {
-	AppConfig.setCurrentApp('Time', 'fa-tumblr', 'time', 'app/time/menu.html');
+	AppConfig.setCurrentApp('TimeAppName', 'fa-tumblr', 'time', 'app/time/menu.html');
 	//API
 	$scope.API={};
 	$scope.API.getTree = function () {

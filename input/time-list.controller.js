@@ -1,26 +1,40 @@
 'use strict';
 
 angular.module('time')
-  .controller('TimeListCtrl', function ($scope, $filter, AppConfig) {
-	AppConfig.setCurrentApp('Time', 'fa-tumblr', 'time', 'app/time/menu.html');
+  .controller('TimeListCtrl', function ($scope, $filter, $http, $log, AppConfig) {
+	AppConfig.setCurrentApp('TimeAppName', 'fa-tumblr', 'time', 'app/time/menu.html');
 	
-	$scope.getTree = function () {
-		return [{id: 'CmpA', title: 'Company A', type:'company', categories: [
-					{id: 'PjtA1', title: 'Project A1', type:'project', categories: [
-						 {id: 'SPjtA11', title: 'Sub-Project A11', type:'project', categories:[
-						 	{id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', categories: [], people:[]}
-						], people:[ {'id': '007', 'firstname': 'Peter', 'lastname': 'Windemann'}]}, 
-						 {id: 'SPjtA12', title: 'Sub-Project A12', type:'project', categories:[
-						 {id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', categories: [], people:[ {'id': '007', 'firstname': 'Peter', 'lastname': 'Windemann'}]}
-						 ], people:[ {'id': '007', 'firstname': 'Peter', 'lastname': 'Windemann'}]}
-					 ]},
-				]},
-			  {id: 'CmpB', title: 'Company B', type:'company', categories:[
-			 	 {id: 'PjtB1', title: 'Project B1', type:'project', categories: [], people:[ {'id': '007', 'firstname': 'Peter', 'lastname': 'Windemann'}]}
-			  ]}
-			];
-		};
-	$scope.treeOPT={addeditShow:false, deleteShow:false, tmpobj: '', tmpindex:0, tmppeople:[], peopleselect:[], catName: '', treeitemDesc:'', treeAction:'', treePeopleView:0, items:$scope.getTree()};
+	$scope.treeOPT=
+	{
+		addeditShow: false, 
+		deleteShow: false, 
+		tmpobj: '', 
+		tmpindex: 0, 
+		tmppeople: [], 
+		peopleselect: [], 
+		catName: '', 
+		treeitemDesc: '', 
+		treeAction: '', 
+		treePeopleView: 0, 
+		items: {}
+	};
+
+	$scope.getTree = function() {
+		var _listUri = '/api/wtt/getmockedtree';
+		$http.get(_listUri)
+		.success(function(data, status) {
+			$log.log('time-list.controller: **** SUCCESS: GET(' + _listUri + ') returns with ' + status);
+	    	// $log.log('data=<' + JSON.stringify(data) + '>');
+	    	$scope.treeOPT.items = data;
+		})
+		.error(function(data, status) {
+	  		// called asynchronously if an error occurs or server returns response with an error status.
+	    	$log.log('time-list.controller: **** ERROR:  GET(' + _listUri + ') returns with ' + status);
+	    	// $log.log('data=<' + JSON.stringify(data) + '>');
+	  	});
+	};
+
+	$scope.getTree();
 	$scope.treeCompany=[];
 	$scope.treeNew=[];
 	$scope.timeUpdate = function(item){

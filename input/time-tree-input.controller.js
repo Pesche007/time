@@ -1,27 +1,42 @@
 'use strict';
 
 angular.module('time')
-  .controller('TreeInputCtrl', function ($scope, $filter, AppConfig) {
-	AppConfig.setCurrentApp('Time', 'fa-tumblr', 'time', 'app/time/menu.html');
+  .controller('TreeInputCtrl', function ($scope, $filter, $http, $log, AppConfig) {
+	AppConfig.setCurrentApp('TimeAppName', 'fa-tumblr', 'time', 'app/time/menu.html');
 	
 	//API
 	$scope.API={};
-	$scope.API.getTree = function () {
-		return [{id: 'CmpA', title: 'Company A', type:'company', categories: [
-					{id: 'PjtA1', title: 'Project A1', type:'project', categories: [
-						 {id: 'SPjtA11', title: 'Sub-Project A11', type:'project', categories:[
-						 	{id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', categories: [], people:[]}
-						], people:[ {'id': '007', 'firstname': 'Peter', 'lastname': 'Windemann'}]}, 
-						 {id: 'SPjtA12', title: 'Sub-Project A12', type:'project', categories:[
-						 {id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', categories: [], people:[ {'id': '007', 'firstname': 'Peter', 'lastname': 'Windemann'}]}
-						 ], people:[ {'id': '007', 'firstname': 'Peter', 'lastname': 'Windemann'}]}
-					 ]},
-				]},
-			  {id: 'CmpB', title: 'Company B', type:'company', categories:[
-			 	 {id: 'PjtB1', title: 'Project B1', type:'project', categories: [], people:[ {'id': '007', 'firstname': 'Peter', 'lastname': 'Windemann'}]}
-			  ]}
-			];
-		};
+
+	$scope.treeOPT=
+	{
+		addeditShow: false, 
+		deleteShow: false, 
+		tmpobj: '', 
+		tmpindex: 0, 
+		tmppeople: [], 
+		peopleselect: [], 
+		catName: '', 
+		treeitemDesc: '', 
+		treeAction: '', 
+		treePeopleView: 0, 
+		items: {}
+	};
+
+	$scope.API.getTree = function() {
+		var _listUri = '/api/wtt/getmockedtree';
+		$http.get(_listUri)
+		.success(function(data, status) {
+			$log.log('time-tree-input.controller: **** SUCCESS: GET(' + _listUri + ') returns with ' + status);
+	    	// $log.log('data=<' + JSON.stringify(data) + '>');
+	    	$scope.treeOPT.items = data;
+		})
+		.error(function(data, status) {
+	  		// called asynchronously if an error occurs or server returns response with an error status.
+	    	$log.log('time-tree-input.controller: **** ERROR:  GET(' + _listUri + ') returns with ' + status);
+	    	// $log.log('data=<' + JSON.stringify(data) + '>');
+	  	});
+	};
+
 	//get time entries for a specific date 
 	$scope.API.getentries = function(){
 		return [ {   'id': 'SPjtA11',    'title': 'Sub-Project A11',    'time': '1000-1200',    'comment': 'Test1',    'level': 2,    'path': [
@@ -50,7 +65,7 @@ angular.module('time')
 		$scope.opened[openid] = true;
 		};
 	//************************************** Tree Input**************************************
-	$scope.treeOPT={addeditShow:false, deleteShow:false, tmpobj: '', tmpindex:0, tmppeople:[], peopleselect:[], catName: '', treeitemDesc:'', treeAction:'', treePeopleView:0, items:$scope.API.getTree()};
+	$scope.API.getTree();
 	$scope.treeTable = [];
 	$scope.treeTablepplid='007';
 	$scope.treeGenerateTable = function(obj, objdetails, level) {	

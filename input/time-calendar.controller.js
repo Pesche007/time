@@ -1,11 +1,12 @@
 'use strict';
 
 angular.module('time')
-  .controller('TimeCalendarCtrl', function ($scope, $filter, AppConfig) {
-	AppConfig.setCurrentApp('Time', 'fa-tumblr', 'time', 'app/time/menu.html');
+  .controller('TimeCalendarCtrl', function ($scope, $filter, $http, $log,AppConfig) {
+	AppConfig.setCurrentApp('TimeAppName', 'fa-tumblr', 'time', 'app/time/menu.html');
 
 	//API
     $scope.API={};
+    $scope.clientprojects = {};
 	$scope.API.Addelements = function(month, year){
 			console.log('Events added for month ' + month + ' year ' + year);
 			var data = [
@@ -15,22 +16,23 @@ angular.module('time')
 			  ];
 			for(var i = 0; i < data.length; ++i) { $scope.events.push(data[i]); }
 		};
-	$scope.API.GetTree = function () {
-		return [{id: 'CmpA', title: 'UBS', type:'company', categories: [
-					{id: 'PjtA1', title: 'Project A1', type:'project', categories: [
-						 {id: 'SPjtA11', title: 'Sub-Project A11', type:'project', categories:[
-						 	{id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', categories: [], people:[]}
-						], people:[ {'id': '007', 'firstname': 'Peter', 'lastname': 'Windemann'}]}, 
-						 {id: 'SPjtA12', title: 'Sub-Project A12', type:'project', categories:[
-						 {id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', categories: [], people:[ {'id': '007', 'firstname': 'Peter', 'lastname': 'Windemann'}]}
-						 ], people:[ {'id': '007', 'firstname': 'Peter', 'lastname': 'Windemann'}]}
-					 ]},
-				]},
-			  {id: 'CmpB', title: 'HRG', type:'company', categories:[
-			 	 {id: 'PjtB1', title: 'Project B1', type:'project', categories: [], people:[ {'id': '007', 'firstname': 'Peter', 'lastname': 'Windemann'}]}
-			  ]}
-			];
-		};
+
+
+	$scope.API.GetTree = function() {
+		var _listUri = '/api/wtt/getmockedtree';
+		$http.get(_listUri)
+		.success(function(data, status) {
+			$log.log('time-calendar.controller: **** SUCCESS: GET(' + _listUri + ') returns with ' + status);
+	    	// $log.log('data=<' + JSON.stringify(data) + '>');
+	    	$scope.clientprojects = data;
+		})
+		.error(function(data, status) {
+	  		// called asynchronously if an error occurs or server returns response with an error status.
+	    	$log.log('time-calendar.controller: **** ERROR:  GET(' + _listUri + ') returns with ' + status);
+	    	// $log.log('data=<' + JSON.stringify(data) + '>');
+	  	});
+	};
+
 	$scope.API.GetInternal = function () {
 		return [{id: 'Int-Absence', title: 'Absences', type:'company', categories: [
 					{id: 'Sickness', title: 'Sickness', type:'project', categories: []},
@@ -51,7 +53,7 @@ angular.module('time')
 	$scope.eventfocus={'visible': false, 'title':'', 'start':'', 'end':'', 'comment':'', 'startTMP':'', 'endTMP':'', 'error':false, 'calEvent':{}};
 	//Options, like if projects should be shown for mapped people only
 	$scope.eventOPT={showmine:false, showid:'007', 'monthsloaded':[], 'viewfrom':'', 'viewto':''};
-	$scope.clientprojects = $scope.API.GetTree();
+	$scope.API.GetTree();
 	$scope.internal = $scope.API.GetInternal();
 
 	//Change in month -> load new month data
