@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('time')
-  .controller('TimeCalendarCtrl', function ($scope, $filter, $http, $log,AppConfig) {
-	AppConfig.setCurrentApp('TimeAppName', 'fa-tumblr', 'time', 'app/time/menu.html');
+  .controller('TimeCalendarCtrl', function ($scope, $filter, $http, $log, cfg) {
+	cfg.GENERAL.CURRENT_APP = 'time';
 
 	//API
     $scope.API={};

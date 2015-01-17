@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('time')
-  .controller('TimeTimerCtrl', function ($scope, $filter, $interval, $http, $log, AppConfig) {
-	AppConfig.setCurrentApp('TimeAppName', 'fa-tumblr', 'time', 'app/time/menu.html');
+  .controller('TimeTimerCtrl', function ($scope, $filter, $interval, $http, $log, cfg) {
+	cfg.GENERAL.CURRENT_APP = 'time';
 	
 	$scope.treeOPT=
 	{
