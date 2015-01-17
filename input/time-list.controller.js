@@ -3,7 +3,7 @@
 angular.module('time')
   .controller('TimeListCtrl', function ($scope, $filter, $http, $log, cfg) {
 	cfg.GENERAL.CURRENT_APP = 'time';
-	$log.log('TimeListCtrl/cfg = ' + JSON.stringify(cfg));
+	$log.log('TimeListCtrl/cfg = ' + JSON.stringify(cfg, null, '\t'));
 	
 	$scope.treeOPT=
 	{
