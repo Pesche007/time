@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('time')
-  .controller('TreeAdminCtrl', function ($scope, AppConfig) {
+  .controller('TreeAdminCtrl', function ($scope, $log, AppConfig) {
 	AppConfig.setCurrentApp('TimeAppName', 'fa-tumblr', 'time', 'app/time/menu.html');
 	//API
 	$scope.API={};
@@ -72,7 +72,7 @@ angular.module('time')
 			}
 		};		
 	$scope.logMultiPerson = function(){
-		console.log($scope.MultiplePeople);
+		$log.log($scope.MultiplePeople);
 		};
 					
 	//************************************** Tree **************************************

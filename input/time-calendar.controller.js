@@ -8,7 +8,7 @@ angular.module('time')
     $scope.API={};
     $scope.clientprojects = {};
 	$scope.API.Addelements = function(month, year){
-			console.log('Events added for month ' + month + ' year ' + year);
+			$log.log('Events added for month ' + month + ' year ' + year);
 			var data = [
 			  {'title': 'Test', 'start': new Date(year+'/'+month+'/10 10:00'), 'end': new Date(year+'/'+month+'/10 12:00'), 'allDay': false, 'comment':'', 'backgroundColor':'#996666'},
 			  {'title': 'Best', 'start': new Date(year+'/'+month+'/11 13:00'), 'end': new Date(year+'/'+month+'/11 14:00'), 'allDay': false, 'comment':'', 'backgroundColor':'#996666'},
@@ -196,7 +196,7 @@ angular.module('time')
 		$scope.events.splice(0);
 		};
 	$scope.calendarsave = function(){
-		console.log($scope.events);
+		$log.log($scope.events);
 		};
 	$scope.calendarResourcestoggle = function(dir){
 		angular.forEach($scope.clientprojects, function(value) {

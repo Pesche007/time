@@ -184,7 +184,7 @@ angular.module('time')
 			//AutoSave
 			$scope.autosave = $interval(function(){
 				localStorage.setItem('TimeTimerCtrl', JSON.stringify($scope.treeNew));
-				console.log('autosave');
+				$log.log('autosave');
 				},10000);
 			//AutoLoad
 			$scope.autoload = function() {
@@ -192,7 +192,7 @@ angular.module('time')
 				if ($scope.autosaveitem !== null) {			
 					$scope.treeNew=JSON.parse($scope.autosaveitem);
 					localStorage.removeItem('TimeTimerCtrl');
-					console.log('autoload');
+					$log.log('autoload');
 					angular.forEach($scope.treeNew, function(value) {
 						if(value.state===1) {
 							$scope.timeTimerpause(value);
