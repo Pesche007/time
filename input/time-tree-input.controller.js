@@ -23,7 +23,7 @@ angular.module('time')
 	};
 
 	$scope.API.getTree = function() {
-		var _listUri = '/api/wtt/getmockedtree';
+		var _listUri = '/api/wtt/gettree';
 		$http.get(_listUri)
 		.success(function(data, status) {
 			$log.log('time-tree-input.controller: **** SUCCESS: GET(' + _listUri + ') returns with ' + status);
