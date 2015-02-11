@@ -7,12 +7,19 @@
 .margin-top-M{margin-top:10px}
 .margin-bottom-M{margin-bottom:10px}
 .margin-right-S{margin-right:3px}
+.padding-top-M{padding-top:10px;}
 .paddingS{padding:3px}
 .paddingM{padding:10px}
 .inv_table{border:none}
 .inv_table td{padding-right:5px}
 .pointer{cursor:pointer}
 .clear{clear:both}
+.row.no-gutter {margin-right: 0;margin-left: 0;}
+.row.no-gutter > [class^="col-"],.row.no-gutters > [class*=" col-"] {   padding-right: 0;   padding-left: 0;}
+.list-group-no-border-radius .list-group-item{border-radius: 0px !important;}
+.leap-left-1{margin-left:-1px;}
+.group-item-height{min-height: 56px;}
+.group-item-height h3{line-height: 34px;}
 .box{padding:10px}
 .height600{height:600px;overflow:auto}
 .height200{height:200px;overflow:auto}
@@ -20,6 +27,22 @@
 .maxheight200{max-height:200px;overflow:auto}
 .divider-vertical {height: 20px;margin: 0 10px; border-left: 1px dotted #999;}
 .nodecoration, .nodecoration:hover{text-decoration:none}
+.highlight{background-color: #428BCA !important; color:#FFFFFF !important;}
+.highlight h1, .highlight h2, .highlight h3, .highlight h4, .highlight h5, .highlight h6, .highlight p, .highlight span, .highlight div{color:#FFFFFF !important;}
+
+/* Animate background blue */
+.animate-if {background-color: #F0F9FF !important; opacity:1; height:inherit;}
+.animate-if.ng-enter {-webkit-transition: 1s linear all; -moz-transition: 1s linear all; -ms-transition: 1s linear all; -o-transition: 1s linear all; transition: 1s linear all;}
+.animate-if.ng-leave { -webkit-transition: 0.2s linear all; -moz-transition: 0.2s linear all; -ms-transition: 0.2s linear all; -o-transition: 0.2s linear all;    transition: 0.2s linear all;}
+/*Anim enter start*/
+ .animate-if.ng-enter {opacity: 0;}
+/*Anim end start */
+ .animate-if.ng-enter.ng-enter-active {opacity:1;background-color: #F0F9FF !important;}
+/* Anim enter exit*/
+ .animate-if.ng-leave { opacity:1;}
+/* Anim end exit */
+ .animate-if.ng-leave.ng-leave-active {opacity:1; background-color: #FFFFFF !important;}
+
 
 /*BOOTSTRAP*/
 .scrollable-menu {height: auto; max-height: 300px; overflow-x: hidden;}
