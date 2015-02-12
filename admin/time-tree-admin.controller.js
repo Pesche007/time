@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('time')
-  .controller('TreeAdminCtrl', function ($scope, $log, AppConfig) {
-	AppConfig.setCurrentApp('TimeAppName', 'fa-tumblr', 'time', 'app/time/menu.html');
+  .controller('TreeAdminCtrl', function ($scope, $log) {
 	//API
 	$scope.API={};
 	$scope.API.getTree = function () {

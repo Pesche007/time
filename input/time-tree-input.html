@@ -1,56 +1,52 @@
-<div class="container-fluid">    
-	<div class="row">
-	    <div class="col-sm-3"><pre class="code">{{ treeOPT.items | json }}</pre></div> 
-		<div class="col-sm-6"> 
-            <div class="form-inline">   
-                <button type="button" class="btn btn-default" ng-click="loadDate(-1)"><span class="fa fa-caret-left"></span></button>
-                <input type="text" class="form-control" datepicker-popup="dd.MM.yyyy" ng-model="dt" ng-click="open($event, item.$$hashKey)" is-open="opened[item.$$hashKey]">
-                <button type="button" class="btn btn-default"  ng-click="loadDate(1)"><span class="fa fa-caret-right"></span></button>
-                <input ng-model="treeInputsearch" type="text" placeholder="Filter" class="form-control"> 
-	            <a href="javascript:void(0)" class="pull-right" ng-click="isCollapsed = !isCollapsed">Log <span class="badge">{{actionlog.length}}</span></a>
-            </div>            
-            <div class="height200" collapse="isCollapsed">
-                <table class="table table-condensed table-striped">
-                    <thead>
-                        <tr><th>Time</th><th>Change</th><th>Actions</th></tr>
-                    </thead>                
-                    <tr ng-repeat="item in actionlog.slice().reverse()">
-                        <td>{{item.time | date:'HH:mm:ss'}} <span class="label label-info" ng-if="compareEquals(item.obj)">Current View</span></td>
-                        <td>{{item.action}}</td>
-                        <td><button class="btn btn-default btn-xs" ng-click="actionlogLoad(item)">Load</button> <button class="btn btn-default btn-xs" ng-click="actionlogRestore(item)">Restore</button></td>
-                    </tr>
-                </table>
-            </div>            
+<div class="row">
+	<div class="col-sm-12"> 
+        <div class="form-inline">   
+            <button type="button" class="btn btn-default" ng-click="loadDate(-1)"><span class="fa fa-caret-left"></span></button>
+            <input type="text" class="form-control" datepicker-popup="dd.MM.yyyy" ng-model="dt" ng-click="open($event, item.$$hashKey)" is-open="opened[item.$$hashKey]">
+            <button type="button" class="btn btn-default"  ng-click="loadDate(1)"><span class="fa fa-caret-right"></span></button>
+            <input ng-model="treeInputsearch" type="text" placeholder="Filter" class="form-control"> 
+            <a href="javascript:void(0)" class="pull-right" ng-click="isCollapsed = !isCollapsed">Log <span class="badge">{{actionlog.length}}</span></a>
+        </div>            
+        <div class="height200" collapse="isCollapsed">
             <table class="table table-condensed table-striped">
-            <thead>
-                <tr><th>Company</th><th>Projects</th><th>Hours</th><th>Comments</th><th>Actions</th></tr>
-            </thead>
-            <tbody>
-                 <tr ng-repeat="obj in treeTable | filter:treeInputsearch track by $index">
-                    <td><span class="label label-primary">{{obj.path[0].title}}</span></td>
-                    <td>
-                    <span class="label label-default margin-right-M" ng-repeat="item in obj.path" ng-show="!$first">{{item.title}}</span><span class="label label-default">{{obj.title}}</span></td>
-                    <td>
-                    <form name="myform" class="form-inline"> 
-                        <input type="text" class="form-control input-sm" name="price_field" ng-model="obj.time" ng-pattern="/(^\d{1,2}(?:\.\d{1})?$)|(^\d{4}(\-)\d{4})/" placeholder="Time" 
-                        ng-change="actionlogUpdatefield('time', obj.time)" ng-model-options="{updateOn: 'blur'}">
-                        <p class="text-danger" ng-show="myform.price_field.$error.pattern">
-                            Valid times:<br />
-                            1. Hours <strong>1.5</strong><br />2. From-To <strong>1000-1200</strong></span>
-                        </p>
-                    </form>
-                    </td>
-                    <td>
-                    <input type="text" class="form-control input-sm" ng-model="obj.comment" placeholder="Comment" ng-change="actionlogUpdatefield('comment', obj.comment)" ng-model-options="{updateOn: 'blur'}"/>
-                    </td>
-                    <td>
-                        <button type="button" ng-click="treeInputTableRemove($index)" class="btn btn-default"><span class="fa fa-times"></span></button>
-                        <button type="button" ng-click="treeInputTableCopy(obj, $index)" class="btn btn-default"><span class="fa fa-files-o"></span></button>                    
-                    </td>
+                <thead>
+                    <tr><th>Time</th><th>Change</th><th>Actions</th></tr>
+                </thead>                
+                <tr ng-repeat="item in actionlog.slice().reverse()">
+                    <td>{{item.time | date:'HH:mm:ss'}} <span class="label label-info" ng-if="compareEquals(item.obj)">Current View</span></td>
+                    <td>{{item.action}}</td>
+                    <td><button class="btn btn-default btn-xs" ng-click="actionlogLoad(item)">Load</button> <button class="btn btn-default btn-xs" ng-click="actionlogRestore(item)">Restore</button></td>
                 </tr>
-            </tbody>
             </table>
-        </div>
-        <div class="col-sm-3"><pre class="code">{{ treeTable | json }}</pre></div> 
-	</div>              
-</div>        
+        </div>            
+        <table class="table table-condensed table-striped">
+        <thead>
+            <tr><th>Company</th><th>Projects</th><th>Hours</th><th>Comments</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+             <tr ng-repeat="obj in treeTable | filter:treeInputsearch track by $index">
+                <td><span class="label label-primary">{{obj.path[0].title}}</span></td>
+                <td>
+                <span class="label label-default margin-right-M" ng-repeat="item in obj.path" ng-show="!$first">{{item.title}}</span><span class="label label-default">{{obj.title}}</span></td>
+                <td>
+                <form name="myform" class="form-inline"> 
+                    <input type="text" class="form-control input-sm" name="price_field" ng-model="obj.time" ng-pattern="/(^\d{1,2}(?:\.\d{1})?$)|(^\d{4}(\-)\d{4})/" placeholder="Time" 
+                    ng-change="actionlogUpdatefield('time', obj.time)" ng-model-options="{updateOn: 'blur'}">
+                    <p class="text-danger" ng-show="myform.price_field.$error.pattern">
+                        Valid times:<br />
+                        1. Hours <strong>1.5</strong><br />2. From-To <strong>1000-1200</strong></span>
+                    </p>
+                </form>
+                </td>
+                <td>
+                <input type="text" class="form-control input-sm" ng-model="obj.comment" placeholder="Comment" ng-change="actionlogUpdatefield('comment', obj.comment)" ng-model-options="{updateOn: 'blur'}"/>
+                </td>
+                <td>
+                    <button type="button" ng-click="treeInputTableRemove($index)" class="btn btn-default"><span class="fa fa-times"></span></button>
+                    <button type="button" ng-click="treeInputTableCopy(obj, $index)" class="btn btn-default"><span class="fa fa-files-o"></span></button>                    
+                </td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+</div>              

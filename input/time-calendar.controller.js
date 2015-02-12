@@ -19,7 +19,7 @@ angular.module('time')
 
 
 	$scope.API.GetTree = function() {
-		var _listUri = '/api/wtt/getmockedtree';
+		/*var _listUri = '/api/wtt/getmockedtree';
 		$http.get(_listUri)
 		.success(function(data, status) {
 			$log.log('time-calendar.controller: **** SUCCESS: GET(' + _listUri + ') returns with ' + status);
@@ -30,7 +30,8 @@ angular.module('time')
 	  		// called asynchronously if an error occurs or server returns response with an error status.
 	    	$log.log('time-calendar.controller: **** ERROR:  GET(' + _listUri + ') returns with ' + status);
 	    	// $log.log('data=<' + JSON.stringify(data) + '>');
-	  	});
+	  	});*/
+		$scope.clientprojects = [{ id: 'CmpA', title: 'UBS', type:'company', categories: [{ id: 'PjtA1', title: 'Project A1', type:'project', categories: [{ id: 'SPjtA11', title: 'Sub-Project A11', type:'project', 	categories: [	{ id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', categories: [], people:[] 	}], people: [{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]}, { id: 'SPjtA12', title: 'Sub-Project A12', type:'project', categories: [{ id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', categories: [], people:[ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]} ],  people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' } ]}]},]},{ id: 'CmpB', title: 'HRG', type:'company', categories: [{ id: 'PjtB1', title: 'Project B1', type:'project', 	categories: [], people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann'}	]}]}];
 	};
 
 	$scope.API.GetInternal = function () {

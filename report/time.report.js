@@ -230,8 +230,7 @@ angular.module('time')
    	 	}
   	};
 }])
-  .controller('TimeReportCtrl', function ($scope, $sce, $compile, AppConfig, colorChange) {
-	AppConfig.setCurrentApp('Time', 'fa-tumblr', 'time', 'app/time/menu.html');
+  .controller('TimeReportCtrl', function ($scope, $sce, $compile, colorChange) {
 	$scope.API={};
 	$scope.API.getTimeDate = function(){
 		return {'id':'007', 'name':'Peter Windemann', 'items':[
