@@ -38,7 +38,7 @@
                         <td>{{rate.rate}}</td>
                         <td>
                         <button type="button" ng-click="rateEdit(rate, $index)" class="btn btn-default btn-xs"><span class="fa fa-pencil"></span></button>
-                        <button type="button" ng-click="rateDelete($index)" class="btn btn-default btn-xs"><span class="fa fa-trash"></span></button>
+                        <button type="button" modal-confirm title="Confirm" text="Delete Rate &quot;{{rate.title}}&quot;?" function="rateDelete($index)" class="btn btn-default btn-xs"><span class="fa fa-trash"></span></button>
                         </td>	                        
                     </tr>
                 </table>                    

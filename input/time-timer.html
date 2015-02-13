@@ -55,7 +55,7 @@
                         <button ng-disabled="checktimer(obj, 'start')" type="button" ng-click="timeTimerstart(obj)" class="btn btn-default">Start <span class="fa fa-caret-right"></span></button>
                         <button ng-disabled="checktimer(obj, 'pause')" type="button" ng-click="timeTimerpause(obj)" class="btn btn-default">Pause <span class="fa fa-pause"></span></button>
                         <button ng-disabled="checktimer(obj, 'stop')" type="button" ng-click="timeTimerstop(obj)" class="btn btn-default">Stop <span class="fa fa-stop"></span></button>
-                        <button ng-if="obj.state==3" type="button" ng-click="itemRemove($index)" class="btn btn-default"><span class="fa fa-trash-o"></span></button>
+                        <button ng-if="obj.state==3" type="button" modal-confirm title="Confirm" text="Delete Entry?" function="itemRemove($index)" class="btn btn-default"><span class="fa fa-trash-o"></span></button>
                         </td>
                         <td>
                         <span ng-if="obj.state!=3">{{calctime(obj)}}</span>

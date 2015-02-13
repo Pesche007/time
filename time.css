@@ -57,6 +57,9 @@ div.list-group-item-primary-active:hover{color: #FFF;background-color: #337AB7;b
 .animate-enter.ng-leave{opacity: 0; -webkit-transition: 0.2s linear all; -moz-transition: 0.2s linear all; -ms-transition: 0.2s linear all; -o-transition: 0.2s linear all; transition: 0.2s linear all;}
 .animate-enter.ng-leave.ng-leave-active{opacity: 1;}
 
+.page-animate{opacity:1;}
+.page-animate.ng-enter{opacity: 0; -webkit-transition: 0.5s linear all; -moz-transition: 0.5s linear all; -ms-transition: 0.5s linear all; -o-transition: 0.5s linear all; transition: 0.5s linear all;}
+.page-animate.ng-enter.ng-enter-active{opacity: 1; }
 
 /*BOOTSTRAP*/
 .scrollable-menu {height: auto; max-height: 300px; overflow-x: hidden;}
