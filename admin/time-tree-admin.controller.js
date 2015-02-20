@@ -1,10 +1,18 @@
 'use strict';
 
 angular.module('time')
-  .controller('TreeAdminCtrl', function ($scope, $log) {
+  .controller('TreeAdminCtrl', function ($scope, $log, $http, cfg) {
 	//API
 	$scope.API={};
 	$scope.API.getTree = function () {
+		/*
+		$log.log('TreeAdminCtrl.getTree() calling ' + cfg.wtt.SVC_URI);
+		$http
+			.get(cfg.wtt.SVC_URI)
+			.success(function (data, status) {
+				$log.log(data.toJSON());
+				return(data);
+			}); */
 		var obj=[];
 		for(var i=0;i<100;i++) {
 			var tmp={id: 'CmpA'+i, title: 'Company A'+i, type:'company', children: [
@@ -18,23 +26,15 @@ angular.module('time')
 					 ]}
 				]};
 			obj.push(tmp);
-			}
+		}
 		return obj;
+
 		};
 	$scope.API.getPeople = function(){
 		return [{'id':'007', 'firstname':'Peter', 'lastname':'Windemann'}, {'id':'001alpha', 'firstname':'Bruno', 'lastname':'Kaiser'}, {'id':'123-KK', 'firstname':'Thomas', 'lastname':'Huber'}];	
 		};
-	$scope.API.getRates = function() {
-		var rates =  [
-			{id: '000001', title: 'Junior Rate', rate:500},
-			{id: '000002', title: 'Senior Rate', rate:1000},
-			{id: '000003', title: 'Executive Rate', rate:2000},
-		];
-		return rates;
-		};
 	//Load config
 	$scope.people=$scope.API.getPeople();
-	$scope.rates=$scope.API.getRates();	
 	//************************************** Select Multiple **************************************
 	$scope.removeMultiSinglePerson = function(data, model){
 		$scope.deleteExistingMulti(data, model, 'id');
@@ -198,21 +198,66 @@ angular.module('time')
 		$scope.treeCleartmp();
 		};
 	/************** RATES ****************/
+		$scope.API.getRates = function() {
+		$log.log('TreeAdminCtrl.getRates() calling get(' + cfg.rates.SVC_URI + ')');
+		$http.get(cfg.rates.SVC_URI)
+			.success(function (data, status) {
+				$log.log('data=<' + angular.toJson(data.ratesData, 4) + '>');
+				$scope.rates = data.ratesData;
+			})
+			.error(function(data, status, headers, config) {
+				$log.log('ERROR: TreeAdminCtrl.getRates() returned with status ' + status);
+			});
+		}; 
+
+		$scope.API.getRates();	
+
+
 	$scope.ratesTMP={'view':false, 'edit':false, 'index':0, 'tmpobj':{'id':'', 'title':'', 'rate':'', 'description':''}};
 	$scope.addRate=function(){
 		$scope.rateFormreset();
 		$scope.rateToggle(1);
 		};
 	$scope.rateSave = function(){
-		if($scope.ratesTMP.edit) {
-			$scope.rates[$scope.ratesTMP.index]=angular.copy($scope.ratesTMP.tmpobj);
-			}
-		else {
-			$scope.rates.push(angular.copy($scope.ratesTMP.tmpobj));
-			}
-		$scope.rateToggle(0);
-		$scope.rateFormreset();
-		};
+
+		// TODO: add currency (selection box)
+		var _rate = {};
+		_rate.id = $scope.ratesTMP.tmpobj.id;
+		_rate.title = $scope.ratesTMP.tmpobj.title;
+		_rate.rate = $scope.ratesTMP.tmpobj.rate;
+		_rate.description = $scope.ratesTMP.tmpobj.description;
+		var _ratesData = { 'ratesData': _rate };
+	// TODO:	_rate.currency = $scope.ratesTMP.tmpobj.currency;
+		$log.log('TreeAdminCtrl.rateSave() of rate: ' + angular.toJson(_ratesData, 4));
+		if($scope.ratesTMP.edit) {		// update  -> put
+			$log.log('TreeAdminCtrl.rateSave() calling put(' + cfg.rates.SVC_URI + ', '  
+				+ angular.toJson(_ratesData) + ')');
+			$http.put(cfg.rates.SVC_URI, _ratesData)
+			.success(function(data, status) {
+				$log.log('updated successfully');
+				$scope.rates[$scope.ratesTMP.index]=angular.copy(_rate);
+				$scope.rateToggle(0);
+				$scope.rateFormreset();
+			})
+			.error(function(data, status, headers, config) {
+				$log.log('ERROR: TreeAdminCtrl.rateSave(put) returned with Status ' + status);
+			});
+		}
+		else {		// create -> post
+			$log.log('TreeAdminCtrl.rateSave() calling post(' + cfg.rates.SVC_URI + ', ' 
+				+ angular.toJson(_ratesData) + ')');
+			$http.post(cfg.rates.SVC_URI, _ratesData)
+			.success(function(data, status) {
+				$log.log('created successfully');
+				$scope.rates.push(angular.copy(_rate));
+				$scope.rateToggle(0);
+				$scope.rateFormreset();
+			})
+			.error(function(data, status, headers, config) {
+				$log.log('ERROR: TreeAdminCtrl.rateSave(post)/ returned with Status ' + status);
+			});
+		}
+	};
 	$scope.rateCancel = function(){
 		$scope.rateToggle(0);
 		$scope.rateFormreset();
@@ -223,10 +268,18 @@ angular.module('time')
 		$scope.ratesTMP.index=i;
 		$scope.ratesTMP.tmpobj=angular.copy(rate);
 		};
-	$scope.rateDelete = function(i){
-		$scope.rates.splice(i, 1);
-		$scope.rateToggle(0);
-		$scope.rateFormreset();		
+	$scope.rateDelete = function(id, index){
+		$log.log('TreeAdminCtrl.rateDelete(' + id + ') calling delete(' + cfg.rates.SVC_URI + '/' + id + ')');
+		$http.delete(cfg.rates.SVC_URI + '/' + id)
+			.success(function(data, status) {
+				$log.log('deleted successfully');
+				$scope.rates.splice(index, 1);
+				$scope.rateToggle(0);
+				$scope.rateFormreset();		
+			})
+			.error(function(data, status, headers, config) {
+				$log.log('ERROR: TreeAdminCtrl.rateDelete() returned with status ' + status);
+			});
 		};
 	$scope.rateToggle = function(dir){
 		$scope.ratesTMP.view=dir;
