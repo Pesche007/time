@@ -14,9 +14,9 @@
 				</li>
 			</ul>				
 		</script>        
-        <div class="panel panel-default">
+        <div class="panel panel-white no-border-radius">
             <div class="panel-heading maxheight600">
-            	<h3 class="panel-title">
+            	<h4>
                 	Resources                        
                     <a href="javascript:void(0)" class="nodecoration pull-right" ng-model="eventOPT.showmine" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
                     	<span class="fa fa-user"></span>
@@ -25,7 +25,7 @@
                     </a>     
                     <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendarResourcestoggle(0)"><span class="fa fa-arrow-up"></span></a>
                     <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendarResourcestoggle(1)"><span class="fa fa-arrow-down"></span></a>                        
-                </h3>
+                </h4>
             </div>
             <div class="panel-body">
                 <input type="text" placeholder="Filter" ng-model="searchClientProjects" class="form-control"> 
@@ -47,9 +47,9 @@
         </div>
     </div>
     <div class="col-sm-6"> 
-        <div class="panel panel-default maxheight600">
+        <div class="panel panel-white no-border-radius maxheight600">
             <div class="panel-heading">
-            	<h3 class="panel-title">
+            	<h4>
                 	Calendar
                     <button type="button" class="btn btn-success btn-xs pull-right button-move-TR" ng-click=""><span class="fa fa-save"></span> Save</button>
                     <div class="divider-vertical pull-right"></div>
@@ -59,7 +59,8 @@
                     <a href="javascript:void(0)" class="nodecoration pull-right margin-left-L" ng-click="calendarSimplecontrol('today')"><span class="fa fa-dot-circle-o"></span></a>
                     <a href="javascript:void(0)" class="nodecoration pull-right" ng-click="calendarAdvancedcontrol('changeView', 'agendaDay')"><span class="fa fa-calendar-o"></span></a>
                     <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendarAdvancedcontrol('changeView', 'agendaWeek')"><span class="fa fa-columns"></span></a>      
-                    <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendarAdvancedcontrol('changeView', 'month')"><span class="fa fa-calendar"></span></a>                    </h3>
+                    <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendarAdvancedcontrol('changeView', 'month')"><span class="fa fa-calendar"></span></a>                    
+                </h4>
             </div>
             <div class="panel-body">
                	<div ui-calendar="uiConfig.calendar" ng-model="eventSource" class="calendar-wrapper" calendar="myCalendar"></div>             		
@@ -67,9 +68,9 @@
         </div>  
     </div>
     <div class="col-sm-2">  
-        <div class="panel panel-default maxheight600">
+        <div class="panel panel-white no-border-radius maxheight600">
             <div class="panel-heading">
-            	<h3 class="panel-title">Selected Entry</h3>
+            	<h4>Selected Entry</h4>
             </div>
             <div class="panel-body">
                 <div ng-if="eventfocus.visible">
@@ -107,9 +108,9 @@
         </div>            
     </div>
     <div class="col-sm-2">
-        <div class="panel panel-default maxheight600">
+        <div class="panel panel-white no-border-radius maxheight600">
             <div class="panel-heading">
-            	<h3 class="panel-title">Entries in view</h3>
+            	<h4>Entries in view</h4>
             </div>
             <div class="panel-body">
                 <input type="text" placeholder="Filter" ng-model="searchExistingEvents" class="form-control">

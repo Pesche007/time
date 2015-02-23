@@ -1,74 +1,122 @@
+<script type="text/ng-template" id="categoryTree">
+    <div class="treenode" ng-class="{'highlight':obj.id===treeOPT.tmpobj.id, 'background-grey':obj.type==='company'}">
+        <button ng-if="obj.children.length" class="btn-none" ng-click="treeToggleChildren(obj)">
+            <span class="fa" ng-class="{'fa-caret-down':obj.childrenVisible && obj.children.length,'fa-caret-right':!obj.childrenVisible && obj.children.length}"></span>
+        </button>
+        <span ng-if="obj.type==='company'">{{obj.title}}</span>
+        <a href="javascript:void(0)" ng-click="editTreebranch(obj)" ng-if="obj.type!=='company'">{{ obj.title }}</a>
+        <div ng-if="obj.people && treeOpt.treePeopleView && obj.childrenVisible">
+            <small class="clearfix" ng-repeat="person in obj.people">
+                {{::person.firstname}} {{::person.lastname}}
+                <span ng-if="treeOpt.treeRatesView"> @
+                    <select ng-model="person.rate" ng-options="item.id as (item.title + ' ' + item.rate) for item in rates">
+                        <option value=''>Select Rate</option>
+                    </select>                
+                </span>
+            </small>
+        </div>
+    </div>        
+    <ul ng-if="obj.children.length && obj.childrenVisible">
+        <li ng-repeat="obj in obj.children" ng-include="'categoryTree'"></li>
+    </ul>
+</script>
 <div class="row">    
     <div class="col-sm-3">
-        <div class="panel panel-default maxheight600">
+        <div class="panel panel-white no-border-radius">
             <div class="panel-heading">
-            	<h3 class="panel-title">
-                	Rates
-                    <button type="button" class="btn btn-primary btn-xs pull-right button-move-TR" ng-click="addRate()"><span class="fa fa-plus"></span> New Rate</button>
-                </h3>
-            </div>
-            <div class="panel-body">        
-            	<div class="bg-info paddingM margin-bottom-M" ng-if="ratesTMP.view">        	
-                    <form name="Rate_Form" class="form-horizontal" role="form" ng-submit="rateSave()">
-                        <div class="form-group">
-                            <label for="R_Title" class="col-sm-2 control-label">Title</label>
-                            <div class="col-sm-10">
-                                <input type="text" ng-model="ratesTMP.tmpobj.title" class="form-control" placeholder="Title" required>
-                            </div>
-    
-                            <label for="R_Rate" class="col-sm-2 control-label">Rate</label>
-                            <div class="col-sm-10">
-                                <input type="text" ng-model="ratesTMP.tmpobj.rate" class="form-control" name="R_Rate" placeholder="Rate" ng-pattern="/^[+]?\d+([.]\d+)?$/" required>
-                                   <p class="text-danger" ng-show="Rate_Form.R_Rate.$error.pattern">
-                                        Only numbers allowed
-                                    </p>
-                            </div>
-                            <label for="R_Description" class="col-sm-2 control-label">Text</label>
-                            <div class="col-sm-10">
-                                <textarea name="R_Description" ng-model="ratesTMP.tmpobj.description" class="form-control" rows="2" placeholder="Description"></textarea>
-                            </div>                                
+            	<h4>Rates</h4>
+                <ul class="panel-header-actions border-light"> <!-- RATES Menu -->
+                    <li>
+                        <div class="dropdown">
+                            <span class="fa fa-gears fa-2x dropdown-toggle"></span>                        
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a href="javascript:void(0)" ng-click="addRate()"><span class="fa fa-plus"></span> New Rate</a>     
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" ng-click="ratesTMP.ratesEdit=!ratesTMP.ratesEdit">
+                                        <span class="fa" ng-class="{'fa-pencil-square-o':!ratesTMP.ratesEdit, 'fa-check':ratesTMP.ratesEdit}"></span> 
+                                        <span ng-if="!ratesTMP.ratesEdit">Edit Rates</span><span ng-if="ratesTMP.ratesEdit">Done Editing</span>
+                                    </a>                                 
+                                </li>             
+                            </ul>
                         </div>
-                        <button type="submit" class="btn btn-success" ng-disabled="Rate_Form.$invalid"><span class="fa fa-save"></span> Save</button>
-                        <button type="button" ng-click="rateCancel()" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
-                    </form>
-                </div>
-            	<table class="inv_table">
-                    <tr ng-repeat="rate in rates">
-                        <td>{{rate.title}}</td>
-                        <td>{{rate.rate}}</td>
-                        <td>
-                        <button type="button" ng-click="rateEdit(rate, $index)" class="btn btn-default btn-xs"><span class="fa fa-pencil"></span></button>
-                        <button type="button" modal-confirm title="Confirm" text="Delete Rate &quot;{{rate.title}}&quot;?" function="rateDelete($index)" class="btn btn-default btn-xs"><span class="fa fa-trash"></span></button>
-                        </td>	                        
-                    </tr>
-                </table>                    
+                    </li> 
+                    <li ng-if="ratesTMP.view">
+                        <button class="btn-none margin-right-M" ng-click="rateCancel()"><span class="fa fa-trash-o fa-2x"></span></button>
+                        <button class="btn-none" ng-disabled="addrateForm.$invalid" ng-click="rateSave()"><span class="fa fa-check fa-2x"></span></button>                       
+                    </li>                     
+                    <li ng-if="ratesTMP.ratesEdit && !ratesTMP.view">
+                        <button class="btn-none" ng-click="rateRestore()"><span class="fa fa-check fa-2x"></span></button>
+                    </li> 
+                </ul>                    
+            </div>
+            <div class="panel-body no-padding panel-list-group">        
+            	<form name="addrateForm">
+                    <div class="animate-if paddingM" ng-if="ratesTMP.view">        	                    
+                        <input type="text" ng-model="ratesTMP.tmpobj.title" class="form-control" placeholder="Title" required>
+                        <select class="form-control" ng-model="ratesTMP.tmpobj.currency" required>
+                            <option value="" disabled selected>Currency</option>
+                            <option value="CHF">CHF</option>
+                            <option value="EUR">EUR</option>
+                            <option value="USD">USD</option>
+                        </select>
+                        <input type="text" ng-model="ratesTMP.tmpobj.rate" class="form-control" name="R_Rate" placeholder="Rate" ng-pattern="/^[+]?\d+([.]\d+)?$/" required>
+                        <p class="text-danger" ng-show="addrateForm.R_Rate.$error.pattern">
+                            Only numbers allowed
+                        </p>
+                        <textarea name="R_Description" ng-model="ratesTMP.tmpobj.description" class="form-control" rows="2" placeholder="Description"></textarea>
+                    </div>
+                </form>
+                <div class="list-group">
+                    <div class="list-group-item" ng-repeat="rate in rates">
+                        <h4 class="list-group-item-heading">{{rate.title}} <small>{{rate.currency}} {{rate.rate}}</small>
+                            <div class="pull-right" ng-if="ratesTMP.ratesEdit">
+                                <button class="btn-none" ng-click="rateEdit(rate, $index)">
+                                    <span class="fa fa-pencil margin-right-S"></span>                        
+                                </button>
+                                <button class="btn-none" modal-confirm title="Confirm" text="Delete Rate &quot;{{rate.title}}&quot;?" function="rateDelete($index)">
+                                    <span class="fa fa-trash-o"></span>
+                                </button>                                
+                            </div>
+                        </h4>
+                    </div>
+                </div>                                   
             </div>
         </div>  
     </div>
     <div class="col-sm-9">
-        <div class="panel panel-default height600">
+        <div class="panel panel-white no-border-radius">
             <div class="panel-heading">
-            	<h3 class="panel-title">
-                	Projects                         
-                    <button type="button" class="btn btn-success btn-xs pull-right button-move-TR" ng-click=""><span class="fa fa-save"></span> Save</button>
-                    <div class="divider-vertical pull-right"></div>
-                    <a href="javascript:void(0)" class="nodecoration pull-right" ng-model="treeOpt.treeRatesView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
-                    	<span class="fa fa-usd"></span>
-                        <span ng-if="!treeOpt.treeRatesView" class="fa fa-toggle-off"></span>
-                        <span ng-if="treeOpt.treeRatesView" class="fa fa-toggle-on"></span>                            
-                    </a>
-                    <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-model="treeOpt.treePeopleView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
-                    	<span class="fa fa-user"></span>
-                        <span ng-if="!treeOpt.treePeopleView" class="fa fa-toggle-off"></span>
-                        <span ng-if="treeOpt.treePeopleView" class="fa fa-toggle-on"></span>                              
-                    </a>
-                </h3>
+            	<h4>Projects</h4>
+                <ul class="panel-header-actions border-light"> <!-- PROJECTS Menu -->
+                    <li>
+                        <div class="dropdown">
+                            <span class="fa fa-gears fa-2x dropdown-toggle"></span>                        
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a href="javascript:void(0)" ng-model="treeOpt.treePeopleView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                                        <span class="fa fa-user"></span>
+                                        <span ng-if="!treeOpt.treePeopleView">Show Assigned People</span>
+                                        <span ng-if="treeOpt.treePeopleView">Hide Assigned People</span>     
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" ng-model="treeOpt.treeRatesView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                                        <span class="fa fa-usd"></span>
+                                        <span ng-if="!treeOpt.treeRatesView">Show Rates</span>
+                                        <span ng-if="treeOpt.treeRatesView">Hide Rates</span>     
+                                    </a>                               
+                                </li>             
+                            </ul>
+                        </div>
+                    </li> 
+                </ul>           
             </div>
             <div class="panel-body"> 
                 <div class="form-inline margin-bottom-M">
-                    <input type="text" ng-model="timeCompany.title"  class="form-control"
+                    <input type="text" ng-model="timeCompany.title"  class="form-control" placeholder="Company Name"
                     typeahead-on-select="showTree($item)" typeahead="company as item.title for item in treeOPT.items | filter:$viewValue" typeahead-min-length="3">
-                    <button type="button" ng-click="timeCompany=null;selectedComp={}" class="btn btn-default"><span class="fa fa-times"></span></button>                        
                     <div class="btn-group" dropdown>
                         <button type="button" class="btn btn-default dropdown-toggle">
                         <span class="fa fa-building-o"></span> <span class="caret"></span>
@@ -77,92 +125,68 @@
                         <li ng-repeat="item in treeOPT.items"><a ng-click="showTree(item)" href="javascript:void(0)">{{item.title}}</a></li>
                         </ul>
                     </div>                                 
-                </div>
-                   
-				<script type="text/ng-template" id="categoryTree">
-                   <div> 
-                        <div class="pull-left pointer margin-right-M" ng-click="treeToggleChildren(obj)">
-                            <span class="treefolder fa" ng-class="{'fa-caret-down' : obj.childrenVisible && obj.children.length, 'fa-caret-right' : !obj.childrenVisible && obj.children.length}"></span>
-							<span ng-class="obj.type=='company' ? 'label label-primary' : 'label label-default'">{{ obj.title }}</span>
-                        </div>
-                        <div class="btn-group" dropdown>
-                            <button type="button" class="btn btn-default btn-xs dropdown-toggle">
-                                <span class="fa fa-gear"></span>
-                            </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li role="presentation" class="dropdown-header">{{ obj.title }}</li>
-                            <li ng-if="treeOpt.treePeopleView && obj.type=='project'">
-                                <a href="javascript:void(0)" ng-click="treeAction(obj, 0, 'assign_person')"><span class="text-primary fa fa-user"></span>  Manage people</a>
-                            </li>
-                            <li ng-if="obj.type=='company'"><a href="javascript:void(0)" ng-click="treeAction(obj, 0, 'add')"><span class="text-success fa fa-plus"></span>  Add project</a></li>						
-                            <li ng-if="obj.type=='project'"><a href="javascript:void(0)" ng-click="treeAction(obj, 0, 'add')"><span class="text-success fa fa-plus"></span>  Add sub-project</a></li>						
-                            <li ng-if="obj.type=='project'"><a href="javascript:void(0)" ng-click="treeAction(obj, 0, 'edit')"><span class="fa fa-pencil"></span> Edit</a></li>
-                            <li ng-if="obj.type=='project'"><a href="javascript:void(0)" ng-click="treeAction(parentOBJ, $index, 'delete')"><span class="text-danger fa fa-times"></span> Delete</a></li>						
-                            <li ng-if="obj.children.length"><a href="javascript:void(0)" ng-click="treetoggleBranchAll(obj)"><span class="fa fa-arrow-down"></span> Expand all</a></li>
-                        </ul>
-                        </div> 
-                    </div>				
-                    <ul class="tree" ng-if="obj.people && treeOpt.treePeopleView && obj.childrenVisible">
-                        <li ng-repeat="person in obj.people">
-                            <span class="treefolder fa fa-user"></span> <span class="label label-success">{{::person.firstname}} {{::person.lastname}}</span> 
-                            <span ng-if="treeOpt.treeRatesView"> 
-								@ <select ng-model="person.rate" ng-options="item.id as (item.title + ' ' + item.rate) for item in rates"><option value=''>Select Rate</option></select>
-							</span>
-                        </li>
-                    </ul>
-                    <ul class="tree" ng-if="obj.children && obj.childrenVisible">
-                        <li ng-repeat="obj in obj.children" ng-include="'categoryTree'" ng-init="parentOBJ=$parent.obj"></li>
-                    </ul>
-                </script>
-                <div class="treewrapper">
-                    <div class="alert alert-info" role="alert" ng-show="treeOPT.deleteShow">
-                        {{treeOPT.treeitemDesc}}<br /><br />
-                        <button type="button" ng-click="treeActionExec()" class="btn btn-success"><span class="fa fa-trash-o"></span> Delete</button>
-                        <button type="button" ng-click="treeCleartmp()" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
-                    </div>
-                    <div class="alert alert-info" role="alert" ng-show="treeOPT.assignPersonshow">
-                       {{ treeOPT.treeitemDesc }}<br /><br />
-                        <div class="form-inline">
-                            <input type="text" ng-model="treeOPT.peopleselect" placeholder="Enter name"
-                            typeahead-on-select="updatePeople($item, treeOPT.tmppeople, 'peopleselect')" 
-                            typeahead="person as (person.firstname + ' ' + person.lastname) for person in people | filter:$viewValue" class="form-control">
-                            <div class="btn-group" dropdown>
-                                <button type="button" class="btn btn-default dropdown-toggle">
-                                    <span class="fa fa-user"></span> <span class="caret"></span>
+                </div>  
+                <div class="animate-if padding-M margin-bottom-M pull-left min-width33" ng-if="treeOPT.addeditShow">
+                    <button type="button" class="close" ng-click="closeEditField()">&times;</button>
+                    <tabset>
+                        <tab>
+                            <tab-heading><i class="fa fa-pencil"></i></tab-heading>
+                            <form name="editTitleForm" class="input-group">
+                                <input type="text" class="form-control" ng-model="treeOPT.tmpobj.title" ng-disabled="treeOPT.tmpobj.type==='company'" placeholder="Name">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" modal-confirm title="Confirm" 
+                                text="Delete &quot;{{treeOPT.tmpobj.title}}&quot; and all Sub-Projects?" function="deleteSubProjects()">
+                                    <span class="fa fa-trash-o"></span>
                                 </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li ng-repeat="person in people"><a ng-click="selectMultiPerson(person, treeOPT.tmppeople)" href="javascript:void(0)">{{person.firstname}} {{person.lastname}}</a></li>
-                                </ul>
-                            </div> 
-                            <br />
-                            <div>
-                                <ul class="list-group">
-                                    <li class="list-group-item" ng-repeat="person in treeOPT.tmppeople"><span class="fa fa-user"></span> {{person.firstname}} {{person.lastname}} 
-                                        <button type="button" ng-click="removeMultiSinglePerson(person, treeOPT.tmppeople)" class="btn btn-default btn-xs"><span class="fa fa-times"></span></button>
-                                    </li>
-                                </ul>
-                            </div>                                        
-                        </div>
-                        <br />
-                        <button type="button" ng-click="treeActionExec()" class="btn btn-success"><span class="fa fa-save"></span> Save</button>
-                        <button type="button" ng-click="treeCleartmp()" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>                
-                    </div>                
-                    <div class="alert alert-info" role="alert" ng-show="treeOPT.addeditShow">
-                       {{ treeOPT.treeitemDesc }}<br /><br />
-                        <form class="form-inline" role="form">
-                            <div class="form-group">
-                                <input type="text" ng-model="treeOPT.catName" class="form-control" placeholder="Enter Name">
+                              </span>
+                            </form>
+                        </tab>
+                        <tab>
+                            <tab-heading><i class="fa fa-plus"></i></tab-heading>
+                            <h4>Add Project to <small>{{treeOPT.tmpobj.title}}</small></h4>
+                            <form name="newChildForm" class="input-group">
+                                <input type="text" ng-model="treeOPT.catName" class="form-control" placeholder="Project Name" required>
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-click="addNewProject()" ng-disabled="newChildForm.$invalid">
+                                    <span class="fa fa-check"></span>
+                                </button>
+                              </span>
+                            </form>                            
+                        </tab>                        
+                        <tab>
+                            <tab-heading><i class="fa fa-user"></i></tab-heading>
+                            <h4>Manage Collaborators on <small>{{treeOPT.tmpobj.title}}</small></h4>
+                            <div class="form-inline margin-bottom-S">
+                                <input type="text" ng-model="treeOPT.peopleselect" placeholder="Person Name" typeahead-on-select="updatePeople($item, treeOPT.tmpobj.people, 'peopleselect')" typeahead="person as (person.firstname + ' ' + person.lastname) for person in people | filter:$viewValue" class="form-control">
+                                <div class="btn-group" dropdown>
+                                    <button type="button" class="btn btn-default dropdown-toggle">
+                                        <span class="fa fa-user"></span> <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li ng-repeat="person in people">
+                                            <a ng-click="selectMultiPerson(person, treeOPT.tmpobj.people)" href="javascript:void(0)">{{person.firstname}} {{person.lastname}}</a>
+                                        </li>
+                                    </ul>
+                                </div>                                 
                             </div>
-                            <button type="button" ng-click="treeActionExec()" class="btn btn-success"><span class="fa fa-save"></span> Save</button>
-                            <button type="button" ng-click="treeCleartmp()" class="btn btn-danger"><span class="fa fa-ban"></span> Cancel</button>
-                        </form>                        	
-                    </div>                        
-                    <ul class="tree">
-                        <li ng-repeat="obj in selectedComp" ng-include="'categoryTree'" ng-init="parentOBJ=selectedComp"></li>
-                    </ul> 
+                            <ul class="list-group">
+                                <li class="list-group-item" ng-repeat="person in treeOPT.tmpobj.people">
+                                    {{person.firstname}} {{person.lastname}} 
+                                    <button type="button" ng-click="removeMultiSinglePerson(person, treeOPT.tmpobj.people)" class="btn-none pull-right">
+                                        <span class="fa fa-trash-o"></span>
+                                    </button>
+                                </li>
+                            </ul>                                                
+                        </tab>
+                    </tabset>                                    
+                </div>                 
+                <div class="tree min-width33" ng-if="selectedComp">
+                    <button type="button" class="tree-close" ng-click="resetTreeView()">&times;</button>
+                    <ul>
+                        <li ng-repeat="obj in selectedComp track by $index" ng-include="'categoryTree'"></li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>               
-</div>                                               
-       
+</div>    

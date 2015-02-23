@@ -5,20 +5,7 @@ angular.module('time')
 	cfg.GENERAL.CURRENT_APP = 'time';
 	$log.log('TimeListCtrl/cfg = ' + JSON.stringify(cfg, null, '\t'));
 	
-	$scope.treeOPT=
-	{
-		addeditShow: false, 
-		deleteShow: false, 
-		tmpobj: '', 
-		tmpindex: 0, 
-		tmppeople: [], 
-		peopleselect: [], 
-		catName: '', 
-		treeitemDesc: '', 
-		treeAction: '', 
-		treePeopleView: 0, 
-		items: {}
-	};
+	$scope.treeOPT=	{editItems:0, items: {}};
 
 	$scope.getTree = function() {
 		/*
@@ -36,17 +23,20 @@ angular.module('time')
 	  	});*/
 		$scope.treeOPT.items = [{ id: 'CmpA', title: 'UBS', type:'company', categories: [{ id: 'PjtA1', title: 'Project A1', type:'project', categories: [{ id: 'SPjtA11', title: 'Sub-Project A11', type:'project', 	categories: [	{ id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', categories: [], people:[] 	}], people: [{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]}, { id: 'SPjtA12', title: 'Sub-Project A12', type:'project', categories: [{ id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', categories: [], people:[ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]} ],  people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' } ]}]},]},{ id: 'CmpB', title: 'HRG', type:'company', categories: [{ id: 'PjtB1', title: 'Project B1', type:'project', 	categories: [], people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann'}	]}]}];
 	};
-
+ 
 	$scope.getTree();
-	$scope.treeCompany=[];
+	$scope.selectedCompany=null;
 	$scope.treeNew=[];
 	$scope.timeUpdate = function(item){
-		$scope.timeCompany=item;
+		$scope.selectedCompany=[item];
 		$scope.treeTable = item.categories;
 		};
 	$scope.treeNewentry = function (item) {
-		$scope.treeNew.push({'cmpid':$scope.timeCompany.id, 'cmptitle':$scope.timeCompany.title, 'prjid':item.id, 'prjtitle':item.title, 'date':'','time':'', 'comment':''});
+		$scope.treeNew.push({'cmpid':$scope.selectedCompany[0].id, 'cmptitle':$scope.selectedCompany[0].title, 'prjid':item.id, 'prjtitle':item.title, 'date':'','time':'', 'comment':''});
 		};
+	$scope.resetTreeView = function(){
+		$scope.selectedCompany=null;
+	};
 	//Datepicker
 	$scope.opened=[];
 	$scope.open = function($event, openid) {

@@ -37,18 +37,21 @@ angular.module('time')
 	};
 	
 	$scope.getTree();
-	$scope.treeCompany=[];	
+	$scope.selectedCompany=null;
 	$scope.treeNew=[];	
 	$scope.timeUpdate = function(item){
-		$scope.timeCompany=item;
+		$scope.selectedCompany=[item];
 		$scope.treeTable = item.categories;
 		};
 	$scope.treeNewentry = function (item) {
 		$scope.treeNew.push(
-			{'cmpid':$scope.timeCompany.id, 'cmptitle':$scope.timeCompany.title, 'prjid':item.id, 'prjtitle':item.title, 'timer':{'start':'','stop':'', 'run':''}, 'state':0, 
+			{'cmpid':$scope.selectedCompany[0].id, 'cmptitle':$scope.selectedCompany[0].title, 'prjid':item.id, 'prjtitle':item.title, 'timer':{'start':'','stop':'', 'run':''}, 'state':0, 
 			'date': $filter('date')(new Date(), 'dd.MM.yyyy'), 'time':'', 'comment':''}
 			);
 		};
+	$scope.resetTreeView = function(){
+		$scope.selectedCompany=null;
+	};		
 	$scope.timeTimerOPT={'timeMultiple':0, 'timeAutosave':0, 'showmine':0, 'showid':'007'};
 	//Callend whenever a date is selected. Because the date is stored unformatted, when performing a row-copy, the datepicker date gets rewritten with unformatted date. 		
 	$scope.formatedate = function (obj){

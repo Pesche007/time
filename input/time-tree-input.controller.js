@@ -6,22 +6,7 @@ angular.module('time')
 	
 	//API
 	$scope.API={};
-
-	$scope.treeOPT=
-	{
-		addeditShow: false, 
-		deleteShow: false, 
-		tmpobj: '', 
-		tmpindex: 0, 
-		tmppeople: [], 
-		peopleselect: [], 
-		catName: '', 
-		treeitemDesc: '', 
-		treeAction: '', 
-		treePeopleView: 0, 
-		items: {}
-	};
-
+	$scope.treeOPT=	{editItems:0, items: [{ id: 'CmpA', title: 'UBS', type:'company', categories: [{ id: 'PjtA1', title: 'Project A1', type:'project', categories: [{ id: 'SPjtA11', title: 'Sub-Project A11', type:'project', 	categories: [	{ id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', categories: [], people:[] 	}], people: [{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]}, { id: 'SPjtA12', title: 'Sub-Project A12', type:'project', categories: [{ id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', categories: [], people:[ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]} ],  people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' } ]}]},]},{ id: 'CmpB', title: 'HRG', type:'company', categories: [{ id: 'PjtB1', title: 'Project B1', type:'project', 	categories: [], people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann'}	]}]}]};
 	$scope.API.getTree = function() {
 		/*var _listUri = '/api/wtt/gettree';
 		$http.get(_listUri)
@@ -35,7 +20,6 @@ angular.module('time')
 	    	$log.log('time-tree-input.controller: **** ERROR:  GET(' + _listUri + ') returns with ' + status);
 	    	// $log.log('data=<' + JSON.stringify(data) + '>');
 	  	});*/
-		$scope.treeOPT.items = [{ id: 'CmpA', title: 'UBS', type:'company', categories: [{ id: 'PjtA1', title: 'Project A1', type:'project', categories: [{ id: 'SPjtA11', title: 'Sub-Project A11', type:'project', 	categories: [	{ id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', categories: [], people:[] 	}], people: [{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]}, { id: 'SPjtA12', title: 'Sub-Project A12', type:'project', categories: [{ id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', categories: [], people:[ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]} ],  people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' } ]}]},]},{ id: 'CmpB', title: 'HRG', type:'company', categories: [{ id: 'PjtB1', title: 'Project B1', type:'project', 	categories: [], people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann'}	]}]}];
 	};
 
 	//get time entries for a specific date 
@@ -120,31 +104,4 @@ angular.module('time')
 		$scope.treeTable = $scope.API.getentries($scope.dt);
 		};
 	$scope.treeGenerateTable('root', '');	
-	//Action log
-	$scope.actionlog=[];
-	$scope.compareEquals = function(obj) {
-		return angular.equals(obj, $scope.treeTable);
-		};
-	$scope.addToLog = function(action, obj){
-		$scope.actionlog.push({'time':new Date(), 'action':action, 'obj':angular.copy(obj)});
-		};
-	$scope.actionlogLoad = function(obj){
-		$scope.treeTable=obj.obj;
-		};
-	$scope.actionlogRestore = function(obj){
-		$scope.treeTable=obj.obj;
-		$scope.actionlogReset();
-		$scope.isCollapsed=true;
-		};
-	$scope.actionlogReset = function(){
-		$scope.actionlog.splice(1, Number.MAX_VALUE);
-		};
-	$scope.actionlogUpdatefield = function(action, obj){
-		if(obj!==undefined) {
-			obj=obj==='' ? 'delete' : obj;
-			$scope.addToLog('edit ' + action + ' -> ' + obj, $scope.treeTable);
-			}
-		};
-	$scope.addToLog('init', $scope.treeTable);
-	$scope.isCollapsed = true;
   });

@@ -1,14 +1,14 @@
 'use strict';
 
 angular.module('time')
-  .controller('TreeAdminCtrl', function ($scope, $log) {
+  .controller('TreeAdminCtrl', function ($scope, $log, $http, cfg) {
 	//API
 	$scope.API={};
 	$scope.API.getTree = function () {
 		var obj=[];
 		for(var i=0;i<100;i++) {
 			var tmp={id: 'CmpA'+i, title: 'Company A'+i, type:'company', children: [
-					{id: 'PjtA1'+i, title: 'Project A1'+i, type:'project', children: [
+					{id: 'PjtA1'+i, title: 'Project A1'+i, type:'project', people:[], children: [
 						 {id: 'SPjtA11'+i, title: 'Sub-Project A11'+i, type:'project', children:[
 						 	{id: 'SSPjtA11'+i, title: 'Sub-Sub-Project A111'+i, type:'project', children: [], people:[]}
 						], people:[ {'id': '007', 'firstname': 'Peter', 'lastname': 'Windemann'}]}, 
@@ -26,9 +26,9 @@ angular.module('time')
 		};
 	$scope.API.getRates = function() {
 		var rates =  [
-			{id: '000001', title: 'Junior Rate', rate:500},
-			{id: '000002', title: 'Senior Rate', rate:1000},
-			{id: '000003', title: 'Executive Rate', rate:2000},
+			{id: '000001', title: 'Junior Rate', currency:'CHF', rate:500},
+			{id: '000002', title: 'Senior Rate', currency:'CHF', rate:1000},
+			{id: '000003', title: 'Executive Rate', currency:'CHF', rate:2000},
 		];
 		return rates;
 		};
@@ -78,38 +78,32 @@ angular.module('time')
 	//Options for tree - idea: save all actions and objects handleded as tmp saves and then act upon them (e.g. create subtree -> stores action "add", then enter name and save -> tmp action "add" execute
 	$scope.treeOPT={addeditShow:false,deleteShow:false,tmpobj:'',tmpindex:0,tmppeople:[],peopleselect:[],catName: '',treeitemDesc:'',treeAction:'',treePeopleView:0, treeRatesView:0, items:$scope.API.getTree()};
 	//Sets and Shows tree for selected company
-	$scope.selectedComp={};
+	$scope.selectedComp=null;
+	$scope.editTreebranch = function(obj){
+		$scope.treeOPT.tmpobj=obj;
+		$scope.treeOPT.addeditShow=true;
+	};
+	$scope.addNewProject = function(){
+		$scope.treeOPT.tmpobj.children.unshift({id:Math.random().toString(36).substr(2, 9), title: $scope.treeOPT.catName, type:'project', childrenVisible: true, children:[], people:[]});
+		$scope.treeOPT.addeditShow=false;
+		$scope.treeOPT.catName='';
+	};
+	$scope.deleteSubProjects = function(){
+		console.log('delete');
+	};
+	$scope.closeEditField = function(){
+		$scope.treeOPT.tmpobj='';
+		$scope.treeOPT.addeditShow=false;
+	};
 	$scope.showTree = function(obj){
 		$scope.treetoggleBranchAll(obj);
-		$scope.selectedComp=new Array(obj);
+		$scope.selectedComp=[obj];
 		};
-	//remove all input modal divs
-	$scope.treeRemoveAllShow = function(){
-		$scope.treeOPT.addeditShow=false;
-		$scope.treeOPT.deleteShow=false;
-		$scope.treeOPT.assignPersonshow=false;
-		};
-	//show manage/add/edit modal div -> show=action
-	$scope.treeShow = function(show){
-		$scope.treeOPT[show]=true;
-		};
-	//add selected object (obj) and index in array (i) to tmp
-	$scope.treeaddtoTMP = function(obj, i){
-		$scope.treeOPT.tmpobj=obj;
-		$scope.treeOPT.tmpindex=i;		
-		};
-	//save selected action to tmp for further use
-	$scope.setTreeaction = function(action){
-		$scope.treeOPT.treeAction=action;
-		};
-	//set description on modal div to txt
-	$scope.setTreeDescription = function(txt){
-		$scope.treeOPT.treeitemDesc=txt;
-		};
-	//set value of input field of modal edit div
-	$scope.setModalInput = function(txt) {
-		$scope.treeOPT.catName=txt;
-		};
+	$scope.resetTreeView = function(){
+		$scope.selectedComp=null;
+		$scope.closeEditField();
+	};
+
 	//Open/hide tree
 	$scope.treeToggleChildren = function(obj) {		
 		obj.childrenVisible = !obj.childrenVisible;
@@ -128,77 +122,9 @@ angular.module('time')
 		obj.childrenVisible=true;
 		$scope.treeToggleChildrenAll(true, obj.children);
 		};
-	//through cleanup off all tmp saves
-	$scope.treeCleartmp = function(){
-		$scope.treeRemoveAllShow();
-		$scope.treeOPT.tmpobj='';
-		$scope.treeOPT.tmpindex=0;
-		$scope.treeOPT.catName='';
-		$scope.treeOPT.treeitemDesc='';
-		$scope.treeOPT.treeAction='';
-		$scope.treeOPT.tmppeople=[];
-		};
-	//Record tree action 
-	$scope.treeAction = function(obj, index, action){
-		$scope.treeRemoveAllShow();
-		$scope.treeaddtoTMP(obj, index);
-		$scope.setTreeaction(action);
-		var txt='';
-		if(action==='add') {
-			$scope.treeShow('addeditShow');
-			txt=obj.title!==undefined ? 'Add new element to ' +obj.title : 'Add new element to root';
-			}
-		else if(action==='assign_person') {
-			$scope.treeShow('assignPersonshow');
-			txt='Select person to assign to '+obj.title;			
-			//Assign values but don't link $scope.treeOPT.tmppeople=obj => links it to scope
-			angular.forEach(obj.people, function(item) {
-				$scope.treeOPT.tmppeople.push(item);		
-				});
-			}
-		else if(action==='edit') {
-			$scope.treeShow('addeditShow');
-			txt='Change name for element '+obj.title;
-			$scope.setModalInput(obj.title);
-			}
-		else if(action==='delete') {
-			$scope.treeShow('deleteShow');
-			var subtreeTXT=obj.children[index].children.length ? ' and all its subtrees':'';
-			txt='Confirm: Delete ' + obj.children[index].title + subtreeTXT + '?';			
-			}
-		else {
-			//proper error handling
-			return false;
-			}			
-		$scope.setTreeDescription(txt);
-		};
-	//Executes saved tmp action on click on "Save" button
-	$scope.treeActionExec = function() {
-		if($scope.treeOPT.treeAction==='add') {
-			if($scope.treeOPT.tmpobj==='root') {
-				$scope.treeOPT.items.unshift({'title': $scope.treeOPT.catName, 'type':'company', 'childrenVisible': true, children:[]});
-				}
-			else {
-				$scope.treeOPT.tmpobj.children.unshift({'title': $scope.treeOPT.catName, 'type':'project', 'childrenVisible': true, children:[]});	
-				}
-			}
-		else if($scope.treeOPT.treeAction==='assign_person') {
-			$scope.treeOPT.tmpobj.people=$scope.treeOPT.tmppeople;
-			}
-		else if($scope.treeOPT.treeAction==='edit') {
-			$scope.treeOPT.tmpobj.title=$scope.treeOPT.catName;
-			}
-		else if($scope.treeOPT.treeAction==='delete') {
-			$scope.treeOPT.tmpobj.children.splice($scope.treeOPT.tmpindex, 1);
-			}
-		else {
-			//proper error handling
-			return false;
-			}
-		$scope.treeCleartmp();
-		};
+
 	/************** RATES ****************/
-	$scope.ratesTMP={'view':false, 'edit':false, 'index':0, 'tmpobj':{'id':'', 'title':'', 'rate':'', 'description':''}};
+	$scope.ratesTMP={ratesEdit:0, view:0, edit:0, index:0, tmpobj:{id:'', title:'', currency:'', rate:'', description:''}};
 	$scope.addRate=function(){
 		$scope.rateFormreset();
 		$scope.rateToggle(1);
@@ -232,6 +158,9 @@ angular.module('time')
 		$scope.ratesTMP.view=dir;
 		};
 	$scope.rateFormreset = function(){
-		$scope.ratesTMP={'view':false, 'edit':false, 'index':0, 'tmpobj':{'id':'', 'title':'', 'rate':'', 'description':''}};
-		};			
+		$scope.ratesTMP.tmpobj={'id':'', 'title':'', currency:'', 'rate':'', 'description':''};		
+		};	
+	$scope.rateRestore = function(){
+		$scope.ratesTMP={ratesEdit:0, 'view':0, 'edit':0, 'index':0, 'tmpobj':{'id':'', 'title':'', currency:'', 'rate':'', 'description':''}};
+	};	
   });

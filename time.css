@@ -5,11 +5,14 @@
 .margin-left-M{margin-left:10px}
 .margin-right-M{margin-right:10px}
 .margin-top-M{margin-top:10px}
+.margin-bottom-S{margin-bottom:3px}
 .margin-bottom-M{margin-bottom:10px}
 .margin-right-S{margin-right:3px}
+.margin-M{margin:10px}
 .padding-top-M{padding-top:10px;}
-.paddingS{padding:3px}
-.paddingM{padding:10px}
+.padding-S{padding:3px}
+.padding-M{padding:10px}
+.no-padding{padding: 0 !important}
 .inv_table{border:none}
 .inv_table td{padding-right:5px}
 .pointer{cursor:pointer}
@@ -21,7 +24,9 @@
 .no-border-radius-TR, .no-border-radius-TR a, .no-border-radius-TR div{border-top-right-radius: 0px !important;}
 .no-border-radius-BL, .no-border-radius-BL a, .no-border-radius-BL div{border-bottom-left-radius: 0px !important;}
 .no-border-radius-BR, .no-border-radius-BR a, .no-border-radius-BR div{border-bottom-right-radius: 0px !important;}
-
+.no-border, .no-border .list-group-item{border: none !important;}
+.border-left{border-left:1px solid #E7E7E7;}
+.border-right{border-right:1px solid #E7E7E7;}
 .leap-left-1{margin-left:-1px;}
 
 div.list-group-item-primary:hover{background-color: #F8F8F8;cursor: pointer}
@@ -35,10 +40,26 @@ div.list-group-item-primary-active:hover{color: #FFF;background-color: #337AB7;b
 .height200{height:200px;overflow:auto}
 .maxheight600{max-height:600px;overflow:auto}
 .maxheight200{max-height:200px;overflow:auto}
+.min-width33{min-width:33%;}
 .divider-vertical {height: 20px;margin: 0 10px; border-left: 1px dotted #999;}
 .nodecoration, .nodecoration:hover{text-decoration:none}
 .highlight{background-color: #428BCA !important; color:#FFFFFF !important;}
 .highlight h1, .highlight h2, .highlight h3, .highlight h4, .highlight h5, .highlight h6, .highlight p, .highlight span, .highlight div{color:#FFFFFF !important;}
+.background-grey{background-color: #E7E7E7 !important}
+
+.btn-none{border:none; background: none; padding:none; margin:none;}
+.btn-none:disabled{color:#CCC;}
+
+/*Dropdown Icons*/
+.dropdown li a .fa {width:20px;}
+
+/*TABS*/
+.nav-tabs li{cursor:pointer;cursor:hand;}
+.tab-content{padding:10px 5px;}
+
+/*TABLES*/
+.table-nonfluid {width: auto !important;}
+.table-vertical-middle tr td{vertical-align: middle !important}
 
 /* ANIMATE */
 .animate-if {background-color: #F0F9FF !important; opacity:1; height:inherit;}
@@ -85,16 +106,22 @@ div.list-group-item-primary-active:hover{color: #FFF;background-color: #337AB7;b
 .button-move-TR{margin-top:-2px;margin-right:-4px}
 
 /*TREE*/
-.treewrapper{width:100%;background:#FFF;}
-.tree, .tree ul.tree {margin:0;padding:0;list-style:none;}
-.tree ul.tree {  margin-left:1.5em;  position:relative;}
-.tree ul.tree ul.tree {margin-left:0.3em} 
-.tree ul.tree:before { content:"";  display:block;  width:0;  position:absolute;  top:0;  bottom:0;  left:0;  border-left:1px dotted #AAA;}
-.tree > li { margin:0;  padding:0 1.5em; line-height:2em;   position:relative;}
-.tree ul.tree > li:before {  content:"";  display:block;  width:10px; height:0;border-top:1px dotted #AAA; margin-top:-1px;  position:absolute;top:1em; left:0;}
-.tree ul.tree > li:last-child:before { background:#FFF;  height:auto;  top:1em;  bottom:0;}
-.treefolder{margin-right:0.3em}
-
+.tree{clear:both;float:left;padding:0px 20px 20px 20px;border:1px solid #E7E7E7;position:relative;}
+.tree ul {  padding-top: 20px;  position: relative;}
+.tree li {  float: left;  text-align: center;  list-style-type: none;  position: relative;  padding: 20px 5px 0 5px;}
+.tree li::before,.tree li::after {  content: '';  position: absolute;  top: 0;  right: 50%;  border-top: 1px solid #ccc;  width: 50%;  height: 20px;}
+.tree li::after {  right: auto;  left: 50%;  border-left: 1px solid #ccc;}
+.tree li:only-child::after,.tree li:only-child::before {  display: none;}
+.tree li:only-child {  padding-top: 0;}
+.tree li:first-child::before,.tree li:last-child::after {  border: 0 none;}
+.tree li:last-child::before {  border-right: 1px solid #ccc;}
+.tree li:first-child::after {}
+.tree ul ul::before {  content: '';  position: absolute;  top: 0;  left: 50%;  border-left: 1px solid #ccc;  width: 0;  height: 20px;}
+.tree li .treenode {  border: 1px solid #ccc;  padding: 5px 10px;  display: inline-block;}
+.tree li .treenode a{  text-decoration: none;  color:inherit;}
+.tree-close{position: absolute;width:20px;height:20px;right:5px;top:5px;border:none;background-color: #fff;font-weight: bold;font-size:120%;opacity:0.2;}
+.tree-close:hover{opacity:0.5;}
+.close {font-size:120% !important;}
 /*Calendar*/
 .calendar-wrapper{}
 .calendar-projects-wrapper{max-height:500px;overflow:auto;margin-top:10px;background:#F7F7F7;border:1px solid #DDD;border-radius:3px;padding:0px 10px 10px 10px}
