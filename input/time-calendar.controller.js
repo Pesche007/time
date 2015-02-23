@@ -53,7 +53,7 @@ angular.module('time')
 	//Sets details for event in focus
 	$scope.eventfocus={'visible': false, 'title':'', 'start':'', 'end':'', 'comment':'', 'startTMP':'', 'endTMP':'', 'error':false, 'calEvent':{}};
 	//Options, like if projects should be shown for mapped people only
-	$scope.eventOPT={showmine:false, showid:'007', 'monthsloaded':[], 'viewfrom':'', 'viewto':''};
+	$scope.eventOPT={showmine:false, showid:'007', editEntry:0, monthsloaded:[], viewfrom:'', viewto:''};
 	$scope.API.GetTree();
 	$scope.internal = $scope.API.GetInternal();
 
@@ -135,22 +135,15 @@ angular.module('time')
 				}
 			}
 		};
-	$scope.eventdetailscancel = function(){
-		$scope.cleareventfocus();
-		};
 	//Delete event from entry detail view, event is saved in eventfocus
 	$scope.eventdetailsdelete = function() {
 		$scope.deleteExistingMulti($scope.eventfocus.calEvent, $scope.events, '_id');
 		$scope.cleareventfocus();
 		};
-	//Delete event from list, event as variable
-	$scope.eventdetailsdeletedirect = function(evt) {
-		$scope.deleteExistingMulti(evt, $scope.events, '_id');
-		$scope.cleareventfocus();
-		};	
 	//clear the entry details window	
 	$scope.cleareventfocus = function(){
 		$scope.eventfocus={'visible': false, 'title':'', 'start':'', 'end':'', 'comment':'', 'startTMP':'', 'endTMP':'', 'error':false, 'calEvent':{}};
+		$scope.eventOPT.editEntry=0;
 		};
 	//adds event, "eid" because "id" makes events double (i.e. resizing one resizes the other)	
    $scope.addEvent = function(date, eventoptions, showdetails) {
@@ -198,14 +191,6 @@ angular.module('time')
 		};
 	$scope.calendarsave = function(){
 		$log.log($scope.events);
-		};
-	$scope.calendarResourcestoggle = function(dir){
-		angular.forEach($scope.clientprojects, function(value) {
-			value.childrenVisible=dir;
-			});
-		angular.forEach($scope.internal, function(value) {
-			value.childrenVisible=dir;
-			});			
 		};
 	//************ POSSIBLE FACTORIES ******************//
 	//Time functions

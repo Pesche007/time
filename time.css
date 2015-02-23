@@ -41,6 +41,7 @@ div.list-group-item-primary-active:hover{color: #FFF;background-color: #337AB7;b
 .maxheight600{max-height:600px;overflow:auto}
 .maxheight200{max-height:200px;overflow:auto}
 .min-width33{min-width:33%;}
+.max-width33{max-width: 33%}
 .divider-vertical {height: 20px;margin: 0 10px; border-left: 1px dotted #999;}
 .nodecoration, .nodecoration:hover{text-decoration:none}
 .highlight{background-color: #428BCA !important; color:#FFFFFF !important;}

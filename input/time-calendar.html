@@ -1,31 +1,37 @@
-
+<script type="text/ng-template" id="calendarProjects">
+    <div ng-if="field.type=='company'" ng-click="field.childrenVisible=!field.childrenVisible" class="pointer">                                     
+        <span ng-show="!field.childrenVisible" class="fa fa-caret-right"></span>
+        <span ng-show="field.childrenVisible" class="fa fa-caret-down"></span>
+        {{field.title}}
+    </div>
+    <div ng-if="field.type=='project' && checkAssignedOnly(field)" ng-show="parentOBJ.childrenVisible" class='btn btn-primary btn-xs' data-drag='true' 
+    data-jqyoui-options='{revert: false, helper: "clone"}' jqyoui-draggable data-options='{"title":"{{field.title}}", "id":"{{field.id}}", "color":"#336699"}'>{{field.title}}</div>
+    <ul class="calendar-projects" ng-if="field.categories">
+        <li ng-repeat="field in field.categories" ng-include="'calendarProjects'">
+        </li>
+    </ul>               
+</script> 
 <div class="row">
-	<div class="col-sm-2">
-    	<script type="text/ng-template" id="calendarProjects">
-			<div ng-if="field.type=='company'" ng-click="field.childrenVisible=!field.childrenVisible" class="pointer"> 									
-				<span ng-show="!field.childrenVisible" class="fa fa-caret-right"></span>
-				<span ng-show="field.childrenVisible" class="fa fa-caret-down"></span>
-				{{field.title}}
-			</div>
-			<div ng-if="field.type=='project' && checkAssignedOnly(field)" ng-show="parentOBJ.childrenVisible" class='btn btn-primary btn-xs' data-drag='true' 
-			data-jqyoui-options='{revert: false, helper: "clone"}' jqyoui-draggable data-options='{"title":"{{field.title}}", "id":"{{field.id}}", "color":"#336699"}'>{{field.title}}</div>
-			<ul class="calendar-projects" ng-if="field.categories">
-				<li ng-repeat="field in field.categories" ng-include="'calendarProjects'">
-				</li>
-			</ul>				
-		</script>        
+	<div class="col-sm-2">       
         <div class="panel panel-white no-border-radius">
-            <div class="panel-heading maxheight600">
-            	<h4>
-                	Resources                        
-                    <a href="javascript:void(0)" class="nodecoration pull-right" ng-model="eventOPT.showmine" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
-                    	<span class="fa fa-user"></span>
-                        <span ng-if="!eventOPT.showmine" class="fa fa-toggle-off"></span>
-                        <span ng-if="eventOPT.showmine" class="fa fa-toggle-on"></span>                              
-                    </a>     
-                    <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendarResourcestoggle(0)"><span class="fa fa-arrow-up"></span></a>
-                    <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendarResourcestoggle(1)"><span class="fa fa-arrow-down"></span></a>                        
-                </h4>
+            <div class="panel-heading">
+            	<h4>Resources</h4>
+                <ul class="panel-header-actions border-light"> <!-- Resources Menu -->
+                    <li>
+                        <div class="dropdown">
+                            <span class="fa fa-gears fa-2x dropdown-toggle"></span>                        
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a href="javascript:void(0)" ng-model="eventOPT.showmine" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false">
+                                        <span class="fa fa-user"></span>
+                                        <span ng-if="!eventOPT.showmine">Show only My Projects</span>
+                                        <span ng-if="eventOPT.showmine">Show all Projects</span>                              
+                                    </a>     
+                                </li>            
+                            </ul>
+                        </div>
+                    </li>  
+                </ul> 
             </div>
             <div class="panel-body">
                 <input type="text" placeholder="Filter" ng-model="searchClientProjects" class="form-control"> 
@@ -46,21 +52,37 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6"> 
+    <div class="col-sm-8"> 
         <div class="panel panel-white no-border-radius maxheight600">
             <div class="panel-heading">
-            	<h4>
-                	Calendar
-                    <button type="button" class="btn btn-success btn-xs pull-right button-move-TR" ng-click=""><span class="fa fa-save"></span> Save</button>
-                    <div class="divider-vertical pull-right"></div>
-                    <a href="javascript:void(0)" class="nodecoration pull-right" ng-click="calendarSimplecontrol('next')"><span class="fa fa-chevron-circle-right"></span></a>
-                    <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendarSimplecontrol('prev')"><span class="fa fa-chevron-circle-left"></span></a>      
-                    <div class="divider-vertical pull-right"></div>                                          
-                    <a href="javascript:void(0)" class="nodecoration pull-right margin-left-L" ng-click="calendarSimplecontrol('today')"><span class="fa fa-dot-circle-o"></span></a>
-                    <a href="javascript:void(0)" class="nodecoration pull-right" ng-click="calendarAdvancedcontrol('changeView', 'agendaDay')"><span class="fa fa-calendar-o"></span></a>
-                    <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendarAdvancedcontrol('changeView', 'agendaWeek')"><span class="fa fa-columns"></span></a>      
-                    <a href="javascript:void(0)" class="nodecoration pull-right margin-right-L" ng-click="calendarAdvancedcontrol('changeView', 'month')"><span class="fa fa-calendar"></span></a>                    
-                </h4>
+            	<h4>Calendar</h4>
+                <ul class="panel-header-actions border-light"> <!-- Resources Menu -->
+                    <li>
+                        <div class="dropdown">
+                            <span class="fa fa-gears fa-2x dropdown-toggle"></span>                        
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a href="javascript:void(0)" ng-click="calendarSimplecontrol('today')"><span class="fa fa-dot-circle-o"></span> Today</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" ng-click="calendarAdvancedcontrol('changeView', 'agendaDay')"><span class="fa fa-calendar-o"></span> Day</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" ng-click="calendarAdvancedcontrol('changeView', 'agendaWeek')"><span class="fa fa-columns"></span> Week</a>
+                                </li>   
+                                <li>
+                                    <a href="javascript:void(0)" ng-click="calendarAdvancedcontrol('changeView', 'month')"><span class="fa fa-calendar"></span> Month</a>
+                                </li>                                       
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <button class="btn-none" ng-click="calendarSimplecontrol('next')"><span class="fa fa-angle-right fa-2x"></span></button>                        
+                    </li>  
+                    <li>
+                        <button class="btn-none" ng-click="calendarSimplecontrol('prev')"><span class="fa fa-angle-left fa-2x"></span></button>                        
+                    </li>  
+                </ul> 
             </div>
             <div class="panel-body">
                	<div ui-calendar="uiConfig.calendar" ng-model="eventSource" class="calendar-wrapper" calendar="myCalendar"></div>             		
@@ -70,11 +92,24 @@
     <div class="col-sm-2">  
         <div class="panel panel-white no-border-radius maxheight600">
             <div class="panel-heading">
-            	<h4>Selected Entry</h4>
+            	<h4>Selected</h4>
+                <ul class="panel-header-actions border-light"  ng-if="eventfocus.visible"> <!-- RATES Menu -->
+                    <li>
+                        <div class="dropdown">
+                            <span class="fa fa-gears fa-2x dropdown-toggle"></span>                        
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                <a href="javascript:void(0)" modal-confirm title="Confirm" text="Delete Selected Entry?" function="eventdetailsdelete()">
+                                    <span class="fa fa-trash-o"></span> Delete Entry
+                                </a>
+                                </li>             
+                            </ul>
+                        </div>
+                    </li>                     
+                </ul>                
             </div>
             <div class="panel-body">
-                <div ng-if="eventfocus.visible">
-                    <a href="javascript:void(0)" ng-click="eventdetailscancel()" class="pull-right"><span class="fa fa-times fa-lg"></span></a>
+                <div ng-if="eventfocus.visible">                                   
                     <strong>{{eventfocus.title}}</strong>                 
                     <form name="CalendarViewTimeFrom" class="form-inline" role="form">
                         <div class="form-group">
@@ -101,32 +136,8 @@
                     <strong>Comment</strong>:<br />
                     <textarea class="form-control" rows="3" ng-model="eventfocus.comment"></textarea><br />
                     <div class="alert alert-danger" ng-if="eventfocus.error">{{eventfocus.error}}</div>
-                    <button type="button" ng-click="eventdetailssave()" class="btn btn-success"><span class="fa fa-save"></span> Save</button>
-                    <button type="button" modal-confirm title="Confirm" text="Delete Entry?" function="eventdetailsdelete()" class="btn btn-danger"><span class="fa fa-trash-o"></span> Delete</button>
                 </div>                
             </div>
         </div>            
-    </div>
-    <div class="col-sm-2">
-        <div class="panel panel-white no-border-radius maxheight600">
-            <div class="panel-heading">
-            	<h4>Entries in view</h4>
-            </div>
-            <div class="panel-body">
-                <input type="text" placeholder="Filter" ng-model="searchExistingEvents" class="form-control">
-                <ul class="ul-unstyled">
-                	<!-- filter:searchExistingEvents generates error, so filter only titles-->
-                    <li ng-repeat="event in events | filter:daterangefilter | orderBy:'start'">                        	
-                        <div class="box">
-                        <a href="javascript:void(0)" modal-confirm title="Confirm" text="Delete Entry?" function="eventdetailsdeletedirect(event)" class="pull-right"><span class="fa fa-trash-o fa-lg"></span></a>
-                        <a href="javascript:void(0)" ng-click="eventdetailsset(event)" class="pull-right margin-right-M"><span class="fa fa-pencil fa-lg"></span></a>
-                        <strong>{{event.title}}</strong><br />
-                        {{event.start | date:"EEE dd.MM. HH:mm"}} - {{event.end | date:"HH:mm"}}
-                        <div ng-if="event.comment!=''">{{event.comment}}</div>
-                        </div>
-                    </li>
-                </ul>                
-            </div>
-        </div>
     </div>        
 </div>                            
