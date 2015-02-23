@@ -156,8 +156,7 @@ angular.module('time')
 	// TODO:	_rate.currency = $scope.ratesTMP.tmpobj.currency;
 		$log.log('TreeAdminCtrl.rateSave() of rate: ' + angular.toJson(_ratesData, 4));
 		if($scope.ratesTMP.edit) {		// update  -> put
-			$log.log('TreeAdminCtrl.rateSave() calling put(' + cfg.rates.SVC_URI + ', '  
-				+ angular.toJson(_ratesData) + ')');
+			$log.log('TreeAdminCtrl.rateSave() calling put(' + cfg.rates.SVC_URI + ', ' + angular.toJson(_ratesData) + ')');
 			$http.put(cfg.rates.SVC_URI, _ratesData)
 			.success(function(data, status) {
 				$log.log('updated successfully');
@@ -170,8 +169,7 @@ angular.module('time')
 			});
 		}
 		else {		// create -> post
-			$log.log('TreeAdminCtrl.rateSave() calling post(' + cfg.rates.SVC_URI + ', ' 
-				+ angular.toJson(_ratesData) + ')');
+			$log.log('TreeAdminCtrl.rateSave() calling post(' + cfg.rates.SVC_URI + ', ' + angular.toJson(_ratesData) + ')');
 			$http.post(cfg.rates.SVC_URI, _ratesData)
 			.success(function(data, status) {
 				$log.log('created successfully');
