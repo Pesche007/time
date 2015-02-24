@@ -1,10 +1,9 @@
 <script type="text/ng-template" id="categoryTree">
-    <div class="treenode" ng-class="{'highlight':obj.id===treeOPT.tmpobj.id, 'background-grey':obj.type==='company'}">
+    <div class="treenode" ng-class="{'highlight':obj.id===treeOPT.tmpobj.id, 'background-grey':(obj.type==='company' && obj.id!==treeOPT.tmpobj.id)}">
         <button ng-if="obj.children.length" class="btn-none" ng-click="treeToggleChildren(obj)">
             <span class="fa" ng-class="{'fa-caret-down':obj.childrenVisible && obj.children.length,'fa-caret-right':!obj.childrenVisible && obj.children.length}"></span>
-        </button>
-        <span ng-if="obj.type==='company'">{{obj.title}}</span>
-        <a href="javascript:void(0)" ng-click="editTreebranch(obj)" ng-if="obj.type!=='company'">{{ obj.title }}</a>
+        </button>        
+        <a href="javascript:void(0)" ng-click="editTreebranch(obj)">{{ obj.title }}</a>
         <div ng-if="obj.people && treeOpt.treePeopleView && obj.childrenVisible">
             <small class="clearfix" ng-repeat="person in obj.people">
                 {{::person.firstname}} {{::person.lastname}}
@@ -129,10 +128,10 @@
                 <div class="animate-if padding-M margin-bottom-M pull-left min-width33" ng-if="treeOPT.addeditShow">
                     <button type="button" class="close" ng-click="closeEditField()">&times;</button>
                     <tabset>
-                        <tab>
+                        <tab ng-if="treeOPT.tmpobj.type!=='company'">
                             <tab-heading><i class="fa fa-pencil"></i></tab-heading>
                             <form name="editTitleForm" class="input-group">
-                                <input type="text" class="form-control" ng-model="treeOPT.tmpobj.title" ng-disabled="treeOPT.tmpobj.type==='company'" placeholder="Name">
+                                <input type="text" class="form-control" ng-model="treeOPT.tmpobj.title" placeholder="Name">
                                 <span class="input-group-btn">
                                 <button class="btn btn-default" modal-confirm title="Confirm" 
                                 text="Delete &quot;{{treeOPT.tmpobj.title}}&quot; and all Sub-Projects?" function="deleteSubProjects()">
@@ -141,7 +140,7 @@
                               </span>
                             </form>
                         </tab>
-                        <tab>
+                        <tab ng-if="treeOPT.tmpobj.type==='company'">
                             <tab-heading><i class="fa fa-plus"></i></tab-heading>
                             <h4>Add Project to <small>{{treeOPT.tmpobj.title}}</small></h4>
                             <form name="newChildForm" class="input-group">
@@ -153,7 +152,7 @@
                               </span>
                             </form>                            
                         </tab>                        
-                        <tab>
+                        <tab ng-if="treeOPT.tmpobj.type!=='company'">
                             <tab-heading><i class="fa fa-user"></i></tab-heading>
                             <h4>Manage Collaborators on <small>{{treeOPT.tmpobj.title}}</small></h4>
                             <div class="form-inline margin-bottom-S">
@@ -180,7 +179,7 @@
                         </tab>
                     </tabset>                                    
                 </div>                 
-                <div class="tree min-width33" ng-if="selectedComp">
+                <div class="tree tree-list min-width33" ng-if="selectedComp">
                     <button type="button" class="tree-close" ng-click="resetTreeView()">&times;</button>
                     <ul>
                         <li ng-repeat="obj in selectedComp track by $index" ng-include="'categoryTree'"></li>

@@ -32,7 +32,7 @@
                 <div class="table-responsive">                        
                     <table class="table table-bordered table-hover table-nonfluid table-vertical-middle">
                         <thead>
-                            <tr><th>Company</th><th>Projects</th><th>Hours</th><th>Comments</th><th ng-if="treeOP.editItems">Actions</th></tr>
+                            <tr><th>Company</th><th>Projects</th><th>Hours</th><th>Comments</th><th ng-if="treeOPT.editItems">Actions</th></tr>
                         </thead>
                         <tbody>
                              <tr ng-repeat="obj in treeTable | filter:treeInputsearch track by $index">
@@ -53,7 +53,7 @@
                                 <td>
                                 <input type="text" class="form-control" ng-model="obj.comment" placeholder="Comment" ng-model-options="{updateOn: 'blur'}"/>
                                 </td>
-                                <td ng-if="treeOP.editItems">
+                                <td ng-if="treeOPT.editItems">
                                     <button type="button" ng-click="treeInputTableCopy(obj, $index)" class="btn-none">
                                         <span class="fa fa-files-o"></span>
                                     </button>                    

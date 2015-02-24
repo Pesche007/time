@@ -49,7 +49,7 @@
                       </ul>
                     </div>   
                 </div>
-                <div class="tree margin-top-M" ng-if="selectedCompany">
+                <div class="tree tree-list margin-top-M" ng-if="selectedCompany">
                     <button type="button" class="tree-close" ng-click="resetTreeView()">&times;</button>
                     <ul>
                         <li ng-repeat="item in selectedCompany" ng-include="'categoryTree'"></li>

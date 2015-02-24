@@ -108,21 +108,40 @@ div.list-group-item-primary-active:hover{color: #FFF;background-color: #337AB7;b
 
 /*TREE*/
 .tree{clear:both;float:left;padding:0px 20px 20px 20px;border:1px solid #E7E7E7;position:relative;}
-.tree ul {  padding-top: 20px;  position: relative;}
-.tree li {  float: left;  text-align: center;  list-style-type: none;  position: relative;  padding: 20px 5px 0 5px;}
-.tree li::before,.tree li::after {  content: '';  position: absolute;  top: 0;  right: 50%;  border-top: 1px solid #ccc;  width: 50%;  height: 20px;}
-.tree li::after {  right: auto;  left: 50%;  border-left: 1px solid #ccc;}
-.tree li:only-child::after,.tree li:only-child::before {  display: none;}
-.tree li:only-child {  padding-top: 0;}
-.tree li:first-child::before,.tree li:last-child::after {  border: 0 none;}
-.tree li:last-child::before {  border-right: 1px solid #ccc;}
-.tree li:first-child::after {}
-.tree ul ul::before {  content: '';  position: absolute;  top: 0;  left: 50%;  border-left: 1px solid #ccc;  width: 0;  height: 20px;}
-.tree li .treenode {  border: 1px solid #ccc;  padding: 5px 10px;  display: inline-block;}
-.tree li .treenode a{  text-decoration: none;  color:inherit;}
 .tree-close{position: absolute;width:20px;height:20px;right:5px;top:5px;border:none;background-color: #fff;font-weight: bold;font-size:120%;opacity:0.2;}
 .tree-close:hover{opacity:0.5;}
-.close {font-size:120% !important;}
+
+/*TREE-LIST*/
+.tree-list ul {margin:0 0 0 20px; padding:0; list-style:none; position:relative;}
+.tree-list ul:before { content:""; display:block; width:0; position:absolute; top:-10px; bottom:0; left:0; border-left:1px dotted #AAA;}
+.tree-list ul li {position:relative; margin:10px 0; padding:0 10px;}
+.tree-list ul li:before { content:""; display:block; width:10px; height:0;border-top:1px dotted #AAA; position:absolute; top:15px;left:0;}
+.tree-list ul li:last-child:before { background:#FFF; height:auto; top:10px; bottom:0;}
+
+.tree-list > ul {margin-left:0;}
+.tree-list > ul:before { border-color:#FFF;}
+.tree-list > ul > li {padding:0;}
+.tree-list > ul > li:before { border-color:#FFF;}
+.tree-list > ul > li:last-child:before { top:32px;background:#FFF}
+
+.tree-list ul li .treenode {  background:#FFF;border: 1px solid #ccc;  padding: 5px 10px;  display: inline-block;}
+.tree-list ul li .treenode a{  text-decoration: none;  color:inherit;}
+
+/*TREE-ORG*/
+.tree-org ul {  padding-top: 20px;  position: relative;}
+.tree-org li {  float: left;  text-align: center;  list-style-type: none;  position: relative;  padding: 20px 5px 0 5px;}
+.tree-org li::before,.tree-org li::after {  content: '';  position: absolute;  top: 0;  right: 50%;  border-top: 1px solid #ccc;  width: 50%;  height: 20px;}
+.tree-org li::after {  right: auto;  left: 50%;  border-left: 1px solid #ccc;}
+.tree-org li:only-child::after,.tree-org li:only-child::before {  display: none;}
+.tree-org li:only-child {  padding-top: 0;}
+.tree-org li:first-child::before,.tree-org li:last-child::after {  border: 0 none;}
+.tree-org li:last-child::before {  border-right: 1px solid #ccc;}
+.tree-org li:first-child::after {}
+.tree-org ul ul::before {  content: '';  position: absolute;  top: 0;  left: 50%;  border-left: 1px solid #ccc;  width: 0;  height: 20px;}
+.tree-org li .treenode {  border: 1px solid #ccc;  padding: 5px 10px;  display: inline-block;}
+.tree-org li .treenode a{  text-decoration: none;  color:inherit;}
+
+
 /*Calendar*/
 .calendar-wrapper{}
 .calendar-projects-wrapper{max-height:500px;overflow:auto;margin-top:10px;background:#F7F7F7;border:1px solid #DDD;border-radius:3px;padding:0px 10px 10px 10px}
