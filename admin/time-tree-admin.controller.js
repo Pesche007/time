@@ -81,38 +81,32 @@ angular.module('time')
 					
 	//************************************** Tree **************************************
 	//Sets and Shows tree for selected company
-	$scope.selectedComp={};
+	$scope.selectedComp=null;
+	$scope.editTreebranch = function(obj){
+		$scope.treeOPT.tmpobj=obj;
+		$scope.treeOPT.addeditShow=true;
+	};
+	$scope.addNewProject = function(){
+		$scope.treeOPT.tmpobj.children.unshift({id:Math.random().toString(36).substr(2, 9), title: $scope.treeOPT.catName, type:'project', childrenVisible: true, children:[], people:[]});
+		$scope.treeOPT.addeditShow=false;
+		$scope.treeOPT.catName='';
+	};
+	$scope.deleteSubProjects = function(){
+		console.log('delete');
+	};
+	$scope.closeEditField = function(){
+		$scope.treeOPT.tmpobj='';
+		$scope.treeOPT.addeditShow=false;
+	};
 	$scope.showTree = function(obj){
 		$scope.treetoggleBranchAll(obj);
-		$scope.selectedComp=new Array(obj);
+		$scope.selectedComp=[obj];
 		};
-	//remove all input modal divs
-	$scope.treeRemoveAllShow = function(){
-		$scope.treeOPT.addeditShow=false;
-		$scope.treeOPT.deleteShow=false;
-		$scope.treeOPT.assignPersonshow=false;
-		};
-	//show manage/add/edit modal div -> show=action
-	$scope.treeShow = function(show){
-		$scope.treeOPT[show]=true;
-		};
-	//add selected object (obj) and index in array (i) to tmp
-	$scope.treeaddtoTMP = function(obj, i){
-		$scope.treeOPT.tmpobj=obj;
-		$scope.treeOPT.tmpindex=i;		
-		};
-	//save selected action to tmp for further use
-	$scope.setTreeaction = function(action){
-		$scope.treeOPT.treeAction=action;
-		};
-	//set description on modal div to txt
-	$scope.setTreeDescription = function(txt){
-		$scope.treeOPT.treeitemDesc=txt;
-		};
-	//set value of input field of modal edit div
-	$scope.setModalInput = function(txt) {
-		$scope.treeOPT.catName=txt;
-		};
+	$scope.resetTreeView = function(){
+		$scope.selectedComp=null;
+		$scope.closeEditField();
+	};
+
 	//Open/hide tree
 	$scope.treeToggleChildren = function(obj) {		
 		obj.childrenVisible = !obj.childrenVisible;
@@ -131,77 +125,9 @@ angular.module('time')
 		obj.childrenVisible=true;
 		$scope.treeToggleChildrenAll(true, obj.children);
 		};
-	//through cleanup off all tmp saves
-	$scope.treeCleartmp = function(){
-		$scope.treeRemoveAllShow();
-		$scope.treeOPT.tmpobj='';
-		$scope.treeOPT.tmpindex=0;
-		$scope.treeOPT.catName='';
-		$scope.treeOPT.treeitemDesc='';
-		$scope.treeOPT.treeAction='';
-		$scope.treeOPT.tmppeople=[];
-		};
-	//Record tree action 
-	$scope.treeAction = function(obj, index, action){
-		$scope.treeRemoveAllShow();
-		$scope.treeaddtoTMP(obj, index);
-		$scope.setTreeaction(action);
-		var txt='';
-		if(action==='add') {
-			$scope.treeShow('addeditShow');
-			txt=obj.title!==undefined ? 'Add new element to ' +obj.title : 'Add new element to root';
-			}
-		else if(action==='assign_person') {
-			$scope.treeShow('assignPersonshow');
-			txt='Select person to assign to '+obj.title;			
-			//Assign values but don't link $scope.treeOPT.tmppeople=obj => links it to scope
-			angular.forEach(obj.people, function(item) {
-				$scope.treeOPT.tmppeople.push(item);		
-				});
-			}
-		else if(action==='edit') {
-			$scope.treeShow('addeditShow');
-			txt='Change name for element '+obj.title;
-			$scope.setModalInput(obj.title);
-			}
-		else if(action==='delete') {
-			$scope.treeShow('deleteShow');
-			var subtreeTXT=obj.children[index].children.length ? ' and all its subtrees':'';
-			txt='Confirm: Delete ' + obj.children[index].title + subtreeTXT + '?';			
-			}
-		else {
-			//proper error handling
-			return false;
-			}			
-		$scope.setTreeDescription(txt);
-		};
-	//Executes saved tmp action on click on "Save" button
-	$scope.treeActionExec = function() {
-		if($scope.treeOPT.treeAction==='add') {
-			if($scope.treeOPT.tmpobj==='root') {
-				$scope.treeOPT.items.unshift({'title': $scope.treeOPT.catName, 'type':'company', 'childrenVisible': true, children:[]});
-				}
-			else {
-				$scope.treeOPT.tmpobj.children.unshift({'title': $scope.treeOPT.catName, 'type':'project', 'childrenVisible': true, children:[]});	
-				}
-			}
-		else if($scope.treeOPT.treeAction==='assign_person') {
-			$scope.treeOPT.tmpobj.people=$scope.treeOPT.tmppeople;
-			}
-		else if($scope.treeOPT.treeAction==='edit') {
-			$scope.treeOPT.tmpobj.title=$scope.treeOPT.catName;
-			}
-		else if($scope.treeOPT.treeAction==='delete') {
-			$scope.treeOPT.tmpobj.children.splice($scope.treeOPT.tmpindex, 1);
-			}
-		else {
-			//proper error handling
-			return false;
-			}
-		$scope.treeCleartmp();
-		};
+
 	/************** RATES ****************/
-		$scope.API.getRates = function() {
+	$scope.API.getRates = function() {
 		$log.log('TreeAdminCtrl.getRates() calling get(' + cfg.rates.SVC_URI + ')');
 		$http.get(cfg.rates.SVC_URI)
 			.success(function (data, status) {
@@ -233,8 +159,7 @@ angular.module('time')
 	// TODO:	_rate.currency = $scope.ratesTMP.tmpobj.currency;
 		$log.log('TreeAdminCtrl.rateSave() of rate: ' + angular.toJson(_ratesData, 4));
 		if($scope.ratesTMP.edit) {		// update  -> put
-			$log.log('TreeAdminCtrl.rateSave() calling put(' + cfg.rates.SVC_URI + ', '  
-				+ angular.toJson(_ratesData) + ')');
+			$log.log('TreeAdminCtrl.rateSave() calling put(' + cfg.rates.SVC_URI + ', ' + angular.toJson(_ratesData) + ')');
 			$http.put(cfg.rates.SVC_URI, _ratesData)
 			.success(function(data, status) {
 				$log.log('updated successfully');
@@ -247,8 +172,7 @@ angular.module('time')
 			});
 		}
 		else {		// create -> post
-			$log.log('TreeAdminCtrl.rateSave() calling post(' + cfg.rates.SVC_URI + ', ' 
-				+ angular.toJson(_ratesData) + ')');
+			$log.log('TreeAdminCtrl.rateSave() calling post(' + cfg.rates.SVC_URI + ', ' + angular.toJson(_ratesData) + ')');
 			$http.post(cfg.rates.SVC_URI, _ratesData)
 			.success(function(data, status) {
 				$log.log('created successfully');
@@ -288,6 +212,9 @@ angular.module('time')
 		$scope.ratesTMP.view=dir;
 		};
 	$scope.rateFormreset = function(){
-		$scope.ratesTMP={'view':false, 'edit':false, 'index':0, 'tmpobj':{'id':'', 'title':'', 'rate':'', 'description':''}};
-		};			
+		$scope.ratesTMP.tmpobj={'id':'', 'title':'', currency:'', 'rate':'', 'description':''};		
+		};	
+	$scope.rateRestore = function(){
+		$scope.ratesTMP={ratesEdit:0, 'view':0, 'edit':0, 'index':0, 'tmpobj':{'id':'', 'title':'', currency:'', 'rate':'', 'description':''}};
+	};	
   });

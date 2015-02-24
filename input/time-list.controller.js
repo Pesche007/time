@@ -5,20 +5,7 @@ angular.module('time')
 	cfg.GENERAL.CURRENT_APP = 'time';
 	$log.log('TimeListCtrl/cfg = ' + JSON.stringify(cfg, null, '\t'));
 	
-	$scope.treeOPT=
-	{
-		addeditShow: false, 
-		deleteShow: false, 
-		tmpobj: '', 
-		tmpindex: 0, 
-		tmppeople: [], 
-		peopleselect: [], 
-		catName: '', 
-		treeitemDesc: '', 
-		treeAction: '', 
-		treePeopleView: 0, 
-		items: {}
-	};
+	$scope.treeOPT=	{editItems:0, items: {}};
 
 	$scope.getTree = function() {
 		/*
@@ -45,17 +32,20 @@ angular.module('time')
 			$log.log('ERROR: TimeListCtrl.getTree() returned with status ' + status);
 		});
 	};
-
+ 
 	$scope.getTree();
-	$scope.treeCompany=[];
+	$scope.selectedCompany=null;
 	$scope.treeNew=[];
 	$scope.timeUpdate = function(item){
-		$scope.timeCompany=item;
+		$scope.selectedCompany=[item];
 		$scope.treeTable = item.categories;
 		};
 	$scope.treeNewentry = function (item) {
-		$scope.treeNew.push({'cmpid':$scope.timeCompany.id, 'cmptitle':$scope.timeCompany.title, 'prjid':item.id, 'prjtitle':item.title, 'date':'','time':'', 'comment':''});
+		$scope.treeNew.push({'cmpid':$scope.selectedCompany[0].id, 'cmptitle':$scope.selectedCompany[0].title, 'prjid':item.id, 'prjtitle':item.title, 'date':'','time':'', 'comment':''});
 		};
+	$scope.resetTreeView = function(){
+		$scope.selectedCompany=null;
+	};
 	//Datepicker
 	$scope.opened=[];
 	$scope.open = function($event, openid) {
