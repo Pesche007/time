@@ -4,7 +4,8 @@ angular.module('time')
   .controller('TreeAdminCtrl', function ($scope, $log, $http, cfg, statePersistence) {
 	//API
 	$scope.API={};
-	$scope.API.getTree = function () {
+
+	/*$scope.API.getTree = function () {
 		/*
 		$log.log('TreeAdminCtrl.getTree() calling ' + cfg.wtt.SVC_URI);
 		$http
@@ -13,6 +14,7 @@ angular.module('time')
 				$log.log(data.toJSON());
 				return(data);
 			}); */
+	/*
 		var obj=[];
 		for(var i=0;i<2;i++) {
 			var tmp={id: 'CmpA'+i, title: 'Company A'+i, type:'company', children: [
@@ -28,8 +30,39 @@ angular.module('time')
 			obj.push(tmp);
 		}
 		return obj;
+		*/
 
+	//Options for tree - idea: 
+	// save all actions and objects handleded as tmp saves 
+	// and then act upon them (e.g. create subtree -> stores action "add", 
+	// then enter name and save -> tmp action "add" execute
+	$scope.treeOPT=
+		{
+			addeditShow:false,
+			deleteShow:false,
+			tmpobj:'',
+			tmpindex:0,
+			tmppeople:[],
+			peopleselect:[],
+			catName: '',
+			treeitemDesc:'',
+			treeAction:'',
+			treePeopleView:0, 
+			treeRatesView:0, 
+			items:[]
 		};
+	$scope.API.getTree = function () {
+		$log.log('TreeAdminCtrl.getTree() calling get(' + cfg.wtt.SVC_URI + ')');
+		$http.get(cfg.wtt.SVC_URI)
+		.success(function (data, status) {
+			$log.log('data=<' + angular.toJson(data.wttData, 4) + '>');
+			$scope.treeOPT.items = data.wttData;
+		})
+		.error(function(data, status, headers, config) {
+			$log.log('ERROR: TreeAdminCtrl.getTree() returned with status ' + status);
+		});
+	}; 
+	$scope.API.getTree();
 	$scope.API.getPeople = function(){
 		return [{'id':'007', 'firstname':'Peter', 'lastname':'Windemann'}, {'id':'001alpha', 'firstname':'Bruno', 'lastname':'Kaiser'}, {'id':'123-KK', 'firstname':'Thomas', 'lastname':'Huber'}];	
 		};
@@ -75,8 +108,6 @@ angular.module('time')
 		};
 					
 	//************************************** Tree **************************************
-	//Options for tree - idea: save all actions and objects handleded as tmp saves and then act upon them (e.g. create subtree -> stores action "add", then enter name and save -> tmp action "add" execute
-	$scope.treeOPT={addeditShow:false,deleteShow:false,tmpobj:'',tmpindex:0,tmppeople:[],peopleselect:[],catName: '',treeitemDesc:'',treeAction:'',treePeopleView:0, treeRatesView:0, items:$scope.API.getTree()};
 	//Sets and Shows tree for selected company
 	$scope.selectedComp=null;
 	$scope.editTreebranch = function(obj){

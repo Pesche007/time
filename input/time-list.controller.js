@@ -20,7 +20,16 @@ angular.module('time')
 	    	$log.log('time-list.controller: **** ERROR:  GET(' + _listUri + ') returns with ' + status);
 	    	// $log.log('data=<' + JSON.stringify(data) + '>');
 	  	});*/
-		$scope.treeOPT.items = [{ id: 'CmpA', title: 'UBS', type:'company', categories: [{ id: 'PjtA1', title: 'Project A1', type:'project', categories: [{ id: 'SPjtA11', title: 'Sub-Project A11', type:'project', 	categories: [	{ id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', categories: [], people:[] 	}], people: [{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]}, { id: 'SPjtA12', title: 'Sub-Project A12', type:'project', categories: [{ id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', categories: [], people:[ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]} ],  people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' } ]}]},]},{ id: 'CmpB', title: 'HRG', type:'company', categories: [{ id: 'PjtB1', title: 'Project B1', type:'project', 	categories: [], people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann'}	]}]}];
+		// $scope.treeOPT.items = [{ id: 'CmpA', title: 'UBS', type:'company', categories: [{ id: 'PjtA1', title: 'Project A1', type:'project', categories: [{ id: 'SPjtA11', title: 'Sub-Project A11', type:'project', 	categories: [	{ id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', categories: [], people:[] 	}], people: [{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]}, { id: 'SPjtA12', title: 'Sub-Project A12', type:'project', categories: [{ id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', categories: [], people:[ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]} ],  people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' } ]}]},]},{ id: 'CmpB', title: 'HRG', type:'company', categories: [{ id: 'PjtB1', title: 'Project B1', type:'project', 	categories: [], people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann'}	]}]}];
+		$log.log('TimeListCtrl.getTree() calling get(' + cfg.wtt.SVC_URI + ')');
+		$http.get(cfg.wtt.SVC_URI)
+		.success(function (data, status) {
+			$log.log('data=<' + angular.toJson(data.wttData, 4) + '>');
+			$scope.treeOPT.items = data.wttData;
+		})
+		.error(function(data, status, headers, config) {
+			$log.log('ERROR: TimeListCtrl.getTree() returned with status ' + status);
+		});
 	};
  
 	$scope.getTree();
