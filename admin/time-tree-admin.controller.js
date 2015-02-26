@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('time')
-  .controller('TreeAdminCtrl', function ($scope, $log, $http, cfg) {
+  .controller('TreeAdminCtrl', function ($scope, $log, $http, cfg, statePersistence) {
 	//API
 	$scope.API={};
 	$scope.API.getTree = function () {
@@ -14,7 +14,7 @@ angular.module('time')
 				return(data);
 			}); */
 		var obj=[];
-		for(var i=0;i<100;i++) {
+		for(var i=0;i<2;i++) {
 			var tmp={id: 'CmpA'+i, title: 'Company A'+i, type:'company', children: [
 					{id: 'PjtA1'+i, title: 'Project A1'+i, type:'project', people:[], children: [
 						 {id: 'SPjtA11'+i, title: 'Sub-Project A11'+i, type:'project', children:[
@@ -213,5 +213,16 @@ angular.module('time')
 		};	
 	$scope.rateRestore = function(){
 		$scope.ratesTMP={ratesEdit:0, 'view':0, 'edit':0, 'index':0, 'tmpobj':{'id':'', 'title':'', currency:'', 'rate':'', 'description':''}};
-	};	
+	};
+	
+	//Persistance
+    $scope.$on('$destroy', function(){
+		statePersistence.setState('time-admin', {treeOPT: $scope.treeOPT, selectedComp: $scope.selectedComp});
+		});
+    var persVar=statePersistence.getState('time-admin');
+    if(persVar) {
+    	for(var key in persVar){
+    		$scope[key]=persVar[key];
+    	}    	
+    }		
   });

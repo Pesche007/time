@@ -1,9 +1,8 @@
 'use strict';
 
 angular.module('time')
-  .controller('TimeListCtrl', function ($scope, $filter, $http, $log, cfg) {
+  .controller('TimeListCtrl', function ($scope, $filter, $http, $log, cfg, statePersistence) {
 	cfg.GENERAL.CURRENT_APP = 'time';
-	$log.log('TimeListCtrl/cfg = ' + JSON.stringify(cfg, null, '\t'));
 	
 	$scope.treeOPT=	{editItems:0, items: {}};
 
@@ -54,5 +53,16 @@ angular.module('time')
 		};
 	$scope.treeInputTableRemove = function(index){
 		$scope.treeNew.splice(index, 1);
-		};				
+		};	
+		
+	//Persistance
+    $scope.$on('$destroy', function(){
+		statePersistence.setState('time-list', {treeNew: $scope.treeNew, selectedCompany: $scope.selectedCompany});
+		});
+    var persVar=statePersistence.getState('time-list');
+      if(persVar) {
+    	for(var key in persVar){
+    		$scope[key]=persVar[key];
+    	}    	
+    }
   });

@@ -1,23 +1,10 @@
 'use strict';
 
 angular.module('time')
-  .controller('TimeTimerCtrl', function ($scope, $filter, $interval, $http, $log, cfg) {
+  .controller('TimeTimerCtrl', function ($scope, $filter, $interval, $http, $log, cfg, statePersistence) {
 	cfg.GENERAL.CURRENT_APP = 'time';
 	
-	$scope.treeOPT=
-	{
-		addeditShow: false, 
-		deleteShow: false, 
-		tmpobj: '', 
-		tmpindex: 0, 
-		tmppeople: [], 
-		peopleselect: [], 
-		catName: '', 
-		treeitemDesc: '', 
-		treeAction: '', 
-		treePeopleView: 0, 
-		items: {}
-	};
+	$scope.treeOPT=	{addeditShow: false, deleteShow: false, tmpobj: '', tmpindex: 0, tmppeople: [], peopleselect: [], catName: '', treeitemDesc: '', treeAction: '', treePeopleView: 0, items: {}};
 
 	$scope.getTree = function() {
 		/*
@@ -208,4 +195,15 @@ angular.module('time')
 			$scope.autoload();					
 		}
     });	
+
+    //Persistance
+    $scope.$on('$destroy', function(){
+		statePersistence.setState('time-timer', {treeNew: $scope.treeNew, selectedCompany: $scope.selectedCompany});
+		});
+    var persVar=statePersistence.getState('time-timer');
+      if(persVar) {
+    	for(var key in persVar){
+    		$scope[key]=persVar[key];
+    	}    	
+    }
   });
