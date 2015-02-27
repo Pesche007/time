@@ -2,8 +2,10 @@
 .ul-unstyled{list-style:none}
 .margin-left-L{margin-left:20px}
 .margin-right-L{margin-right:20px}
-.margin-left-M{margin-left:10px}
+.margin-left-M{margin-left:3px}
+.margin-left-S{margin-left:10px}
 .margin-right-M{margin-right:10px}
+.margin-right-L{margin-right:20px}
 .margin-top-M{margin-top:10px}
 .margin-bottom-S{margin-bottom:3px}
 .margin-bottom-M{margin-bottom:10px}
@@ -27,6 +29,7 @@
 .no-border, .no-border .list-group-item{border: none !important;}
 .border-left{border-left:1px solid #E7E7E7;}
 .border-right{border-right:1px solid #E7E7E7;}
+.float-left-border-right{margin-right:10px;padding-right:10px;border-right:1px solid #E7E7E7;}
 .leap-left-1{margin-left:-1px;}
 
 div.list-group-item-primary:hover{background-color: #F8F8F8;cursor: pointer}
