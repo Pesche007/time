@@ -27,7 +27,7 @@
                 <ul class="panel-header-actions border-light"> <!-- RATES Menu -->
                     <li>
                         <div class="dropdown">
-                            <span class="fa fa-gears fa-2x dropdown-toggle"></span>                        
+                            <button class="btn-none dropdown-toggle"><span class="fa fa-gears fa-2x"></span></button>                       
                             <ul class="dropdown-menu" role="menu">
                                 <li>
                                     <a href="javascript:void(0)" ng-click="addRate()"><span class="fa fa-plus"></span> New Rate</a>     
@@ -52,7 +52,7 @@
             </div>
             <div class="panel-body no-padding panel-list-group">        
             	<form name="addrateForm">
-                    <div class="animate-if paddingM" ng-if="ratesTMP.view">        	                    
+                    <div class="animate-if padding-M" ng-if="ratesTMP.view">        	                    
                         <input type="text" ng-model="ratesTMP.tmpobj.title" class="form-control" placeholder="Title" required>
                         <select class="form-control" ng-model="ratesTMP.tmpobj.currency" required>
                             <option value="" disabled selected>Currency</option>
@@ -91,7 +91,7 @@
                 <ul class="panel-header-actions border-light"> <!-- PROJECTS Menu -->
                     <li>
                         <div class="dropdown">
-                            <span class="fa fa-gears fa-2x dropdown-toggle"></span>                        
+                            <button class="btn-none dropdown-toggle"><span class="fa fa-gears fa-2x"></span></button>
                             <ul class="dropdown-menu" role="menu">
                                 <li>
                                     <a href="javascript:void(0)" ng-model="treeOpt.treePeopleView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
