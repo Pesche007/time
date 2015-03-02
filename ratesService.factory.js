@@ -4,25 +4,19 @@
  * a factory providing access to the rates REST service (RatesRS)
  */
 angular.module('time')
-.factory('RatesService', function($log, $http, $q, cfg) {
+.factory('RatesService', function($log, $http, cfg) {
 
 	return {
 		// list
 		list: function() {
 		    $log.log('RatesService.list() calling get(' + cfg.rates.SVC_URI + ')');	    
-			var deferred = $q.defer();
-			$http.get(cfg.rates.SVC_URI)
+			return $http.get(cfg.rates.SVC_URI)
 			.success(function (data, status) {
 				$log.log('data=<' + angular.toJson(data.ratesData, 4) + '>');
-				deferred.resolve({
-             		data:data.ratesData
-             	});
 			})
 			.error(function(data, status, headers, config) {
 				$log.log('ERROR: RatesService.list() returned with status ' + status);
-				deferred.reject(data);
 			});
-			return deferred.promise;
 		},
 		// create
 		post: function(rate) {
@@ -51,13 +45,15 @@ angular.module('time')
 		// update
 		put: function(rate) {
 			$log.log('RatesService.put() calling put(' + cfg.rates.SVC_URI + ', ' + angular.toJson(rate) + ')');
-			$http.put(cfg.rates.SVC_URI, rate)
+			var data = {ratesData:rate};
+			$http.put(cfg.rates.SVC_URI, data)
 			.success(function(data, status) {
 				$log.log('updated successfully');
 				return(rate);
 			})
 			.error(function(data, status, headers, config) {
 				$log.log('ERROR: RatesService.put() returned with Status ' + status);
+				return null;
 			});
 		},
 		// delete

@@ -136,10 +136,11 @@ angular.module('time')
 
 	/************** RATES ****************/
 	$scope.rates = [];
-	//RatesService.list();
    	RatesService.list().then(function(result) {
-       $scope.rates=result.data;
-   });	
+   		$scope.rates=result.data.ratesData;
+       	}, function(reason) {
+       		console.log(reason); 		
+  	}); 	
 
 	$scope.ratesTMP={'view':false, 'edit':false, 'index':0, 'tmpobj':{'id':'', 'title':'', 'rate':'', 'description':''}};
 	$scope.addRate=function(){
@@ -147,21 +148,13 @@ angular.module('time')
 		$scope.rateToggle(1);
 		};
 	$scope.rateSave = function(){
-
-		// TODO: add currency (selection box)
-		var _rate = {};
-		_rate.id = $scope.ratesTMP.tmpobj.id;
-		_rate.title = $scope.ratesTMP.tmpobj.title;
-		_rate.rate = $scope.ratesTMP.tmpobj.rate;
-		_rate.description = $scope.ratesTMP.tmpobj.description;
-
-		if($scope.ratesTMP.edit) {		// update  -> put
-			RatesService.put(_rate);
-			$scope.rates[$scope.ratesTMP.index] = _rate;
+		if($scope.ratesTMP.edit) {// update  -> put
+			RatesService.put($scope.ratesTMP.tmpobj);
+			$scope.rates[$scope.ratesTMP.index] = angular.copy($scope.ratesTMP.tmpobj);
 		}
-		else {		// create -> post
-			RatesService.post(_rate);
-			$scope.rates.push(_rate); 
+		else {// create -> post
+			RatesService.post($scope.ratesTMP.tmpobj);
+			$scope.rates.push(angular.copy($scope.ratesTMP.tmpobj)); 
 		}
 		$scope.rateToggle(0);
 		$scope.rateFormreset();
