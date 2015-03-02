@@ -135,29 +135,34 @@ angular.module('time')
 		};
 
 	/************** RATES ****************/
-	$scope.rates = [];
+	$scope.ratesTMP={rates:[], view:false, edit:false, index:0, tmpobj:{id:'', title:'', currency:'', rate:'', description:''}};
    	RatesService.list().then(function(result) {
-   		$scope.rates=result.data.ratesData;
-       	}, function(reason) {
+   		$scope.ratesTMP.rates=result.data.ratesData;
+       	}, function(reason) {//error
        		console.log(reason); 		
   	}); 	
 
-	$scope.ratesTMP={'view':false, 'edit':false, 'index':0, 'tmpobj':{'id':'', 'title':'', 'rate':'', 'description':''}};
 	$scope.addRate=function(){
 		$scope.rateFormreset();
 		$scope.rateToggle(1);
 		};
 	$scope.rateSave = function(){
 		if($scope.ratesTMP.edit) {// update  -> put
-			RatesService.put($scope.ratesTMP.tmpobj);
-			$scope.rates[$scope.ratesTMP.index] = angular.copy($scope.ratesTMP.tmpobj);
+			RatesService.put($scope.ratesTMP.tmpobj).then(function(result) {
+   				$scope.ratesTMP.rates[$scope.ratesTMP.index] = result.data.ratesData;
+   				$scope.rateCancel();
+       		}, function(reason) {//error
+       		console.log(reason); 		
+  			}); 			
 		}
 		else {// create -> post
-			RatesService.post($scope.ratesTMP.tmpobj);
-			$scope.rates.push(angular.copy($scope.ratesTMP.tmpobj)); 
+			RatesService.post($scope.ratesTMP.tmpobj).then(function(result) {
+   				$scope.ratesTMP.rates.push(result.data.ratesData);
+   				$scope.rateCancel();
+       		}, function(reason) {//error
+       		console.log(reason); 		
+  			}); 					
 		}
-		$scope.rateToggle(0);
-		$scope.rateFormreset();
 	};
 	$scope.rateCancel = function(){
 		$scope.rateToggle(0);
@@ -182,7 +187,10 @@ angular.module('time')
 		$scope.ratesTMP.tmpobj={'id':'', 'title':'', currency:'', 'rate':'', 'description':''};		
 		};	
 	$scope.rateRestore = function(){
-		$scope.ratesTMP={ratesEdit:0, 'view':0, 'edit':0, 'index':0, 'tmpobj':{'id':'', 'title':'', currency:'', 'rate':'', 'description':''}};
+		$scope.rateToggle(0);
+		$scope.rateFormreset();
+		$scope.ratesTMP.ratesEdit=false;
+		$scope.ratesTMP.view=false;
 	};
 	
 	//Persistance

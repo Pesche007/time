@@ -68,7 +68,7 @@
                     </div>
                 </form>
                 <div class="list-group">
-                    <div class="list-group-item" ng-repeat="rate in rates">
+                    <div class="list-group-item" ng-repeat="rate in ratesTMP.rates">
                         <h4 class="list-group-item-heading">{{rate.title}} <small>{{rate.currency}} {{rate.rate}}</small>
                             <div class="pull-right" ng-if="ratesTMP.ratesEdit">
                                 <button class="btn-none" ng-click="rateEdit(rate, $index)">

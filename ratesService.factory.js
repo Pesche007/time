@@ -21,10 +21,10 @@ angular.module('time')
 		// create
 		post: function(rate) {
 			$log.log('RatesService.post() calling post(' + cfg.rates.SVC_URI + ', ' + angular.toJson(rate) + ')');
-			$http.post(cfg.rates.SVC_URI, rate)
+			var data = {ratesData:rate};
+			return $http.post(cfg.rates.SVC_URI, data)
 			.success(function(data, status) {
 				$log.log('created successfully');
-				return rate;
 			})
 			.error(function(data, status, headers, config) {
 				$log.log('ERROR: RatesService.post() returned with status ' + status);
@@ -46,14 +46,12 @@ angular.module('time')
 		put: function(rate) {
 			$log.log('RatesService.put() calling put(' + cfg.rates.SVC_URI + ', ' + angular.toJson(rate) + ')');
 			var data = {ratesData:rate};
-			$http.put(cfg.rates.SVC_URI, data)
+			return $http.put(cfg.rates.SVC_URI, data)
 			.success(function(data, status) {
 				$log.log('updated successfully');
-				return(rate);
 			})
 			.error(function(data, status, headers, config) {
 				$log.log('ERROR: RatesService.put() returned with Status ' + status);
-				return null;
 			});
 		},
 		// delete
