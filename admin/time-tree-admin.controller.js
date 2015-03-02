@@ -5,16 +5,7 @@ angular.module('time')
 	//API
 	$scope.API={};
 
-	/*$scope.API.getTree = function () {
-		/*
-		$log.log('TreeAdminCtrl.getTree() calling ' + cfg.wtt.SVC_URI);
-		$http
-			.get(cfg.wtt.SVC_URI)
-			.success(function (data, status) {
-				$log.log(data.toJSON());
-				return(data);
-			}); */
-	/*
+	$scope.API.getTree = function () {	
 		var obj=[];
 		for(var i=0;i<2;i++) {
 			var tmp={id: 'CmpA'+i, title: 'Company A'+i, type:'company', children: [
@@ -30,7 +21,7 @@ angular.module('time')
 			obj.push(tmp);
 		}
 		return obj;
-		*/
+	}		
 
 	//Options for tree - idea: 
 	// save all actions and objects handleded as tmp saves 
@@ -51,17 +42,6 @@ angular.module('time')
 			treeRatesView:0, 
 			items:[]
 		};
-	$scope.API.getTree = function () {
-		$log.log('TreeAdminCtrl.getTree() calling get(' + cfg.wtt.SVC_URI + ')');
-		$http.get(cfg.wtt.SVC_URI)
-		.success(function (data, status) {
-			$log.log('data=<' + angular.toJson(data.wttData, 4) + '>');
-			$scope.treeOPT.items = data.wttData;
-		})
-		.error(function(data, status, headers, config) {
-			$log.log('ERROR: TreeAdminCtrl.getTree() returned with status ' + status);
-		});
-	}; 
 	$scope.API.getTree();
 	$scope.API.getPeople = function(){
 		return [{'id':'007', 'firstname':'Peter', 'lastname':'Windemann'}, {'id':'001alpha', 'firstname':'Bruno', 'lastname':'Kaiser'}, {'id':'123-KK', 'firstname':'Thomas', 'lastname':'Huber'}];	
@@ -155,7 +135,11 @@ angular.module('time')
 		};
 
 	/************** RATES ****************/
-	$scope.rates = RatesService.list();
+	$scope.rates = [];
+	//RatesService.list();
+   	RatesService.list().then(function(result) {
+       $scope.rates=result.data;
+   });	
 
 	$scope.ratesTMP={'view':false, 'edit':false, 'index':0, 'tmpobj':{'id':'', 'title':'', 'rate':'', 'description':''}};
 	$scope.addRate=function(){

@@ -4,20 +4,25 @@
  * a factory providing access to the rates REST service (RatesRS)
  */
 angular.module('time')
-.factory('RatesService', function($log, $http) {
+.factory('RatesService', function($log, $http, $q, cfg) {
 
 	return {
 		// list
 		list: function() {
-		    $log.log('RatesService.list() calling get(' + cfg.rates.SVC_URI + ')');
+		    $log.log('RatesService.list() calling get(' + cfg.rates.SVC_URI + ')');	    
+			var deferred = $q.defer();
 			$http.get(cfg.rates.SVC_URI)
 			.success(function (data, status) {
 				$log.log('data=<' + angular.toJson(data.ratesData, 4) + '>');
-				return data.ratesData;
+				deferred.resolve({
+             		data:data.ratesData
+             	});
 			})
 			.error(function(data, status, headers, config) {
 				$log.log('ERROR: RatesService.list() returned with status ' + status);
+				deferred.reject(data);
 			});
+			return deferred.promise;
 		},
 		// create
 		post: function(rate) {
