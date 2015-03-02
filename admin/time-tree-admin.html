@@ -42,7 +42,7 @@
                         </div>
                     </li> 
                     <li ng-if="ratesTMP.view">
-                        <button class="btn-none margin-right-M" ng-click="rateCancel()"><span class="fa fa-trash-o fa-2x"></span></button>
+                        <button class="btn-none margin-right-M" ng-click="rateCancel()"><span class="fa fa-times fa-2x"></span></button>
                         <button class="btn-none" ng-disabled="addrateForm.$invalid" ng-click="rateSave()"><span class="fa fa-check fa-2x"></span></button>                       
                     </li>                     
                     <li ng-if="ratesTMP.ratesEdit && !ratesTMP.view">
@@ -74,7 +74,7 @@
                                 <button class="btn-none" ng-click="rateEdit(rate, $index)">
                                     <span class="fa fa-pencil margin-right-S"></span>                        
                                 </button>
-                                <button class="btn-none" modal-confirm title="Confirm" text="Delete Rate &quot;{{rate.title}}&quot;?" function="rateDelete($index)">
+                                <button class="btn-none" modal-confirm title="Confirm" text="Delete Rate &quot;{{rate.title}}&quot;?" function="rateDelete(rate.id, $index)">
                                     <span class="fa fa-trash-o"></span>
                                 </button>                                
                             </div>

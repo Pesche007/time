@@ -57,7 +57,7 @@ angular.module('time')
 		// delete
 		delete: function(id) {
 			$log.log('RatesService.delete(' + id + ') calling delete(' + cfg.rates.SVC_URI + '/' + id + ')');
-			$http.delete(cfg.rates.SVC_URI + '/' + id)
+			return $http.delete(cfg.rates.SVC_URI + '/' + id)
 			.success(function(data, status) {
 				$log.log('deleted successfully');
 			})

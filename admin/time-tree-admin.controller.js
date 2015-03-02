@@ -175,16 +175,18 @@ angular.module('time')
 		$scope.ratesTMP.tmpobj=angular.copy(rate);
 	};
 	$scope.rateDelete = function(id, index) {
-		RatesService.delete(id);
-		$scope.rates.splice(index, 1);
-		$scope.rateToggle(0);
-		$scope.rateFormreset();
+		RatesService.delete(id).then(function(result) {
+			$scope.ratesTMP.rates.splice(index, 1);
+			$scope.rateCancel();
+   		}, function(reason) {//error
+   		console.log(reason); 		
+		}); 
 	};
 	$scope.rateToggle = function(dir){
 		$scope.ratesTMP.view=dir;
 		};
 	$scope.rateFormreset = function(){
-		$scope.ratesTMP.tmpobj={'id':'', 'title':'', currency:'', 'rate':'', 'description':''};		
+		$scope.ratesTMP.tmpobj={id:'', title:'', currency:'', rate:'', description:''};		
 		};	
 	$scope.rateRestore = function(){
 		$scope.rateToggle(0);
