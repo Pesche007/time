@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('time')
-  .controller('TreeAdminCtrl', function ($scope, $log, RatesService, cfg, statePersistence) {
+  .controller('TreeAdminCtrl', function ($scope, $log, RatesService, cfg, statePersistence, alertsManager) {
 	//API
 	$scope.API={};
 
@@ -139,7 +139,7 @@ angular.module('time')
    	RatesService.list().then(function(result) {
    		$scope.ratesTMP.rates=result.data.ratesData;
        	}, function(reason) {//error
-       		console.log(reason); 		
+       		alertsManager.addAlert('Could not get rate. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
   	}); 	
 
 	$scope.addRate=function(){
@@ -152,7 +152,7 @@ angular.module('time')
    				$scope.ratesTMP.rates[$scope.ratesTMP.index] = result.data.ratesData;
    				$scope.rateCancel();
        		}, function(reason) {//error
-       		console.log(reason); 		
+       		alertsManager.addAlert('Could not update rate. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
   			}); 			
 		}
 		else {// create -> post
@@ -160,7 +160,7 @@ angular.module('time')
    				$scope.ratesTMP.rates.push(result.data.ratesData);
    				$scope.rateCancel();
        		}, function(reason) {//error
-       		console.log(reason); 		
+       		alertsManager.addAlert('Could not create rate. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
   			}); 					
 		}
 	};
@@ -179,7 +179,7 @@ angular.module('time')
 			$scope.ratesTMP.rates.splice(index, 1);
 			$scope.rateCancel();
    		}, function(reason) {//error
-   		console.log(reason); 		
+   			alertsManager.addAlert('Could not delete rate. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);	
 		}); 
 	};
 	$scope.rateToggle = function(dir){
