@@ -1,56 +1,41 @@
 'use strict';
 
 angular.module('time')
-  .controller('TimeListCtrl', function ($scope, $filter, $http, $log, cfg, statePersistence) {
+  .controller('TimeListCtrl', function ($scope, $filter, $http, $log, cfg, statePersistence, ResourcesService) {
 	cfg.GENERAL.CURRENT_APP = 'time';
 	
-	$scope.treeOPT=	{editItems:0, items: {}};
+	$scope.treeOPT=	{editItems:0, companies:[], selectedComp:null, projects:null};
+	ResourcesService.listCompanies().then(function(result) {
+   		$scope.treeOPT.companies=result.data.companyData;
+       	}, function(reason) {//error
+       		alertsManager.addAlert('Could not get companies. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
+  	}); 
 
-	$scope.getTree = function() {
-		/*
-		var _listUri = '/api/wtt/getmockedtree';
-		$http.get(_listUri)
-		.success(function(data, status) {
-			$log.log('time-list.controller: **** SUCCESS: GET(' + _listUri + ') returns with ' + status);
-	    	// $log.log('data=<' + JSON.stringify(data) + '>');
-	    	$scope.treeOPT.items = data;
-		})
-		.error(function(data, status) {
-	  		// called asynchronously if an error occurs or server returns response with an error status.
-	    	$log.log('time-list.controller: **** ERROR:  GET(' + _listUri + ') returns with ' + status);
-	    	// $log.log('data=<' + JSON.stringify(data) + '>');
-	  	});*/
-		// $scope.treeOPT.items = [{ id: 'CmpA', title: 'UBS', type:'company', categories: [{ id: 'PjtA1', title: 'Project A1', type:'project', categories: [{ id: 'SPjtA11', title: 'Sub-Project A11', type:'project', 	categories: [	{ id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', categories: [], people:[] 	}], people: [{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]}, { id: 'SPjtA12', title: 'Sub-Project A12', type:'project', categories: [{ id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', categories: [], people:[ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]} ],  people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' } ]}]},]},{ id: 'CmpB', title: 'HRG', type:'company', categories: [{ id: 'PjtB1', title: 'Project B1', type:'project', 	categories: [], people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann'}	]}]}];
-		$log.log('TimeListCtrl.getTree() calling get(' + cfg.wtt.SVC_URI + ')');
-		$http.get(cfg.wtt.SVC_URI)
-		.success(function (data, status) {
-			$log.log('data=<' + angular.toJson(data.wttData, 4) + '>');
-			$scope.treeOPT.items = data.wttData;
-		})
-		.error(function(data, status, headers, config) {
-			$log.log('ERROR: TimeListCtrl.getTree() returned with status ' + status);
-		});
-	};
- 
-	$scope.getTree();
-	$scope.selectedCompany=null;
 	$scope.treeNew=[];
-	$scope.timeUpdate = function(item){
-		$scope.selectedCompany=[item];
-		$scope.treeTable = item.categories;
+	$scope.timeUpdate = function(obj){		
+		ResourcesService.listProjects(obj.id).then(function(result) {
+			$scope.treeOPT.selectedComp=obj;
+			$scope.treeOPT.projects=result.data.projectData;
+	       	}, function(reason) {//error
+	       		alertsManager.addAlert('Could not get projects. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
+	  	});		
+	};
+	//Open/hide tree
+	$scope.treeToggleChildren = function(obj) {		
+		obj.childrenVisible = !obj.childrenVisible;
 		};
 	$scope.treeNewentry = function (item) {
-		$scope.treeNew.push({'cmpid':$scope.selectedCompany[0].id, 'cmptitle':$scope.selectedCompany[0].title, 'prjid':item.id, 'prjtitle':item.title, 'date':'','time':'', 'comment':''});
+		$scope.treeNew.push({'cmpid':$scope.treeOPT.selectedComp.id, 'cmptitle':$scope.treeOPT.selectedComp.title, 'prjid':item.id, 'prjtitle':item.title, 'date':'','time':'', 'comment':''});
 		};
 	$scope.resetTreeView = function(){
-		$scope.selectedCompany=null;
+		$scope.treeOPT.selectedComp=null;
 	};
 	//Datepicker
 	$scope.opened=[];
 	$scope.open = function($event, openid) {
 		$event.preventDefault();
 		$event.stopPropagation();
-		$scope.opened[openid] = true;
+		$scope.opened[openid] = !$scope.opened[openid]
 		};	
 	$scope.formatedate = function (obj){
 		//Callend whenever a date is selected. Because the date is stored unformatted, when performing a row-copy, the datepicker date gets rewritten with unformatted date. 
@@ -66,7 +51,7 @@ angular.module('time')
 		
 	//Persistance
     $scope.$on('$destroy', function(){
-		statePersistence.setState('time-list', {treeNew: $scope.treeNew, selectedCompany: $scope.selectedCompany});
+		statePersistence.setState('time-list', {treeNew: $scope.treeNew});
 		});
     var persVar=statePersistence.getState('time-list');
       if(persVar) {

@@ -5,7 +5,6 @@
  */
 angular.module('time')
 .factory('RatesService', function($log, $http, cfg) {
-
 	return {
 		// list
 		list: function() {
