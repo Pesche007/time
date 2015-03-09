@@ -31,9 +31,8 @@ angular.module('time')
 		// create
 		post: function(companyID, projectID, project) {
 			$log.log('ResourcesService.post() calling post(' + cfg.wtt.SVC_URI + ', ' + angular.toJson(project) + ')');
-			var data = {projectData:project};
-			var addURL = projectID==='' ? '' : projectID + '/subproject';			
-			return $http.post(cfg.wtt.SVC_URI + '/' + companyID + '/project/' + addURL, data)
+			var data = {projectData:project};			
+			return $http.post(cfg.wtt.SVC_URI + '/' + companyID + '/project/' + projectID, data)
 			.success(function(data, status) {
 				$log.log('created successfully');
 			})

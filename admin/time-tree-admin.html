@@ -1,4 +1,26 @@
 <script type="text/ng-template" id="categoryTree">
+    <div class="treenode" ng-class="{'highlight':obj.id===treeOPT.tmpobj.id}">
+        <button ng-if="obj.projects.entry" class="btn-none" ng-click="treeToggleChildren(obj)">
+            <span class="fa" ng-class="{'fa-caret-down':obj.childrenVisible && obj.projects.entry,'fa-caret-right':!obj.childrenVisible && obj.projects.entry}"></span>
+        </button>        
+        <a href="javascript:void(0)" ng-click="editTreebranch(obj, 0)">{{ obj.title }}</a>
+        <div ng-if="obj.resources && treeOpt.treePeopleView">
+            <small class="clearfix" ng-repeat="person in obj.resources">
+                {{::person.firstName}} {{::person.lastName}}
+                <span ng-if="treeOpt.treeRatesView"> @
+                    <select ng-model="person.rate" ng-options="item.id as (item.title + ' ' + item.rate) for item in rates">
+                        <option value=''>Select Rate</option>
+                    </select>                
+                </span>
+            </small>
+        </div>
+    </div>        
+    <ul ng-if="obj.projects.entry && obj.childrenVisible">
+        <li ng-repeat="val in obj.projects.entry" ng-include="'categoryTree'" ng-init="obj=val.value"></li>
+    </ul>
+</script>
+<!--
+<script type="text/ng-template" id="categoryTree">
     <div class="treenode" ng-class="{'highlight':obj.id===treeOPT.tmpobj.id, 'background-grey':(obj.type==='company' && obj.id!==treeOPT.tmpobj.id)}">
         <button ng-if="obj.projects.length" class="btn-none" ng-click="treeToggleChildren(obj)">
             <span class="fa" ng-class="{'fa-caret-down':obj.childrenVisible && obj.projects.length,'fa-caret-right':!obj.childrenVisible && obj.projects.length}"></span>
@@ -19,6 +41,7 @@
         <li ng-repeat="obj in obj.projects" ng-include="'categoryTree'"></li>
     </ul>
 </script>
+-->
 <div class="row">    
     <div class="col-sm-3">
         <div class="panel panel-white no-border-radius">
