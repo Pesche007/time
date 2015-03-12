@@ -1,47 +1,3 @@
-<script type="text/ng-template" id="categoryTree">
-    <div class="treenode" ng-class="{'highlight':obj.id===treeOPT.tmpobj.id}">
-        <button ng-if="obj.projects.entry" class="btn-none" ng-click="treeToggleChildren(obj)">
-            <span class="fa" ng-class="{'fa-caret-down':obj.childrenVisible && obj.projects.entry,'fa-caret-right':!obj.childrenVisible && obj.projects.entry}"></span>
-        </button>        
-        <a href="javascript:void(0)" ng-click="editTreebranch(obj, 0)">{{ obj.title }}</a>
-        <div ng-if="obj.resources && treeOpt.treePeopleView">
-            <small class="clearfix" ng-repeat="person in obj.resources">
-                {{::person.firstName}} {{::person.lastName}}
-                <span ng-if="treeOpt.treeRatesView"> @
-                    <select ng-model="person.rate" ng-options="item.id as (item.title + ' ' + item.rate) for item in rates">
-                        <option value=''>Select Rate</option>
-                    </select>                
-                </span>
-            </small>
-        </div>
-    </div>        
-    <ul ng-if="obj.projects.entry && obj.childrenVisible">
-        <li ng-repeat="val in obj.projects.entry" ng-include="'categoryTree'" ng-init="obj=val.value"></li>
-    </ul>
-</script>
-<!--
-<script type="text/ng-template" id="categoryTree">
-    <div class="treenode" ng-class="{'highlight':obj.id===treeOPT.tmpobj.id, 'background-grey':(obj.type==='company' && obj.id!==treeOPT.tmpobj.id)}">
-        <button ng-if="obj.projects.length" class="btn-none" ng-click="treeToggleChildren(obj)">
-            <span class="fa" ng-class="{'fa-caret-down':obj.childrenVisible && obj.projects.length,'fa-caret-right':!obj.childrenVisible && obj.projects.length}"></span>
-        </button>        
-        <a href="javascript:void(0)" ng-click="editTreebranch(obj, 0)">{{ obj.title }}</a>
-        <div ng-if="obj.resources && treeOpt.treePeopleView">
-            <small class="clearfix" ng-repeat="person in obj.resources">
-                {{::person.firstName}} {{::person.lastName}}
-                <span ng-if="treeOpt.treeRatesView"> @
-                    <select ng-model="person.rate" ng-options="item.id as (item.title + ' ' + item.rate) for item in rates">
-                        <option value=''>Select Rate</option>
-                    </select>                
-                </span>
-            </small>
-        </div>
-    </div>        
-    <ul ng-if="obj.projects.length && obj.childrenVisible">
-        <li ng-repeat="obj in obj.projects" ng-include="'categoryTree'"></li>
-    </ul>
-</script>
--->
 <div class="row">    
     <div class="col-sm-3">
         <div class="panel panel-white no-border-radius">
@@ -136,24 +92,17 @@
                 </ul>           
             </div>
             <div class="panel-body">                 
-                <div comfort-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="showTree(item)" title="Company Name" icon="fa-building-o"></div>               
-                <div class="tree tree-list pull-left" ng-if="treeOPT.projects">
+                <div s-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="showTree(item)" title="Company Name" drop-menu="true" drop-icon="fa-building-o"></div>
+                <div class="tree tree-list pull-left min-width33" ng-if="treeOPT.selectedComp.projects">
                     <button type="button" class="tree-close" ng-click="resetTreeView()">&times;</button>
                     <ul>
-                        <li>
-                            <div class="treenode" ng-class="treeOPT.selectedComp.id===treeOPT.tmpobj.id ? 'highlight':'background-grey'">
-                                <a href="javascript:void(0)" ng-click="editTreebranch(treeOPT.selectedComp, 1)">{{treeOPT.selectedComp.title}}</a>
-                            </div>
-                            <ul ng-if="treeOPT.projects.length">
-                                <li ng-repeat="obj in treeOPT.projects track by $index" ng-include="'categoryTree'"></li>
-                            </ul>                            
-                        </li>
+                        <li clickable-tree source="treeOPT.selectedComp" selected="treeOPT.tmpobj.id" function="editTreebranch(source)"></li>
                     </ul>
-                </div>                
+                </div>               
                 <div class="animate-if padding-M margin-left-M pull-left min-width33 border position-relative" ng-if="treeOPT.addeditShow">                    
                     <button type="button" class="tree-close" ng-click="closeEditField()">&times;</button>
                     <tabset>
-                        <tab ng-if="!treeOPT.isCompany">                                <!-- EDIT -->
+                        <tab ng-if="!treeOPT.tmpobj.isCompany">                                <!-- EDIT -->
                             <tab-heading><i class="fa fa-pencil"></i></tab-heading>
                             <h4>Edit <small>{{treeOPT.tmpobj.title}}</small></h4>
                             <form name="editTitleForm" class="form-spacer">
@@ -180,7 +129,7 @@
 
                             </form>                            
                         </tab>                        
-                        <tab ng-if="!treeOPT.isCompany">                                <!-- People -->
+                        <tab ng-if="!treeOPT.tmpobj.isCompany">                                <!-- People -->
                             <tab-heading><i class="fa fa-user"></i></tab-heading>
                             <h4>Manage Collaborators on <small>{{treeOPT.tmpobj.title}}</small></h4>
                             <div class="form-inline margin-bottom-S">

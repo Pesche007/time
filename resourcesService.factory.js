@@ -8,10 +8,10 @@ angular.module('time')
 	return {
 		// list Companies
 		listCompanies: function() {
-		    $log.log('ResourcesService.list() calling get(' + cfg.wtt.SVC_URI + ')');	    
+		    //$log.log('ResourcesService.list() calling get(' + cfg.wtt.SVC_URI + ')');	    
 			return $http.get(cfg.wtt.SVC_URI)
 			.success(function (data, status) {
-				$log.log('data=<' + angular.toJson(data.companyData, 4) + '>');
+				//$log.log('data=<' + angular.toJson(data.companyData, 4) + '>');
 			})
 			.error(function(data, status, headers, config) {
 				$log.log('ERROR: ResourcesService.list() returned with status ' + status);
@@ -19,10 +19,10 @@ angular.module('time')
 		},	
 		// list Projects
 		listProjects: function(id) {
-		    $log.log('ResourcesService.list() calling get(' + cfg.wtt.SVC_URI + ')');	    
+		    //$log.log('ResourcesService.list() calling get(' + cfg.wtt.SVC_URI + ')');	    
 			return $http.get(cfg.wtt.SVC_URI + '/' + id + '/project/astree')
 			.success(function (data, status) {
-				$log.log('data=<' + angular.toJson(data.projectData, 4) + '>');
+				//$log.log('data=<' + angular.toJson(data.projectData, 4) + '>');
 			})
 			.error(function(data, status, headers, config) {
 				$log.log('ERROR: ResourcesService.list() returned with status ' + status);

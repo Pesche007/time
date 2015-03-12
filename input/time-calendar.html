@@ -1,65 +1,54 @@
-<script type="text/ng-template" id="calendarProjects">
-    <div ng-if="field.type=='company'" ng-click="field.childrenVisible=!field.childrenVisible" class="pointer">                                     
-        <span ng-show="!field.childrenVisible" class="fa fa-caret-right"></span>
-        <span ng-show="field.childrenVisible" class="fa fa-caret-down"></span>
-        {{field.title}}
-    </div>
-    <div ng-if="field.type=='project' && checkAssignedOnly(field)" ng-show="parentOBJ.childrenVisible" class='btn btn-primary btn-xs' data-drag='true' 
-    data-jqyoui-options='{revert: false, helper: "clone"}' jqyoui-draggable data-options='{"title":"{{field.title}}", "id":"{{field.id}}", "color":"#336699"}'>{{field.title}}</div>
-    <ul class="calendar-projects" ng-if="field.categories">
-        <li ng-repeat="field in field.categories" ng-include="'calendarProjects'">
-        </li>
-    </ul>               
-</script> 
 <div class="row">
-	<div class="col-sm-2">       
+	<div class="col-sm-3">       
         <div class="panel panel-white no-border-radius">
             <div class="panel-heading">
-            	<h4>Resources</h4>
-                <ul class="panel-header-actions border-light"> <!-- Resources Menu -->
+                <h4>Projects</h4> 
+                <ul class="panel-header-actions border-light"> <!-- PROJECTS Menu -->
                     <li>
                         <div class="dropdown">
-                            <span class="fa fa-gears fa-2x dropdown-toggle"></span>                        
+                            <button class="btn-none dropdown-toggle"><span class="fa fa-gears fa-2x"></span></button>
                             <ul class="dropdown-menu" role="menu">
                                 <li>
-                                    <a href="javascript:void(0)" ng-model="eventOPT.showmine" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false">
-                                        <span class="fa fa-user"></span>
-                                        <span ng-if="!eventOPT.showmine">Show only My Projects</span>
-                                        <span ng-if="eventOPT.showmine">Show all Projects</span>                              
-                                    </a>     
-                                </li>            
+                                    <a href="javascript:void(0)" ng-click="showAllProjects=0">
+                                        <span class="fa fa-check" ng-class="{'vis-hidden': showAllProjects}"></span>
+                                        Show only assigned projects
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" ng-click="showAllProjects=1">
+                                        <span class="fa fa-check" ng-class="{'vis-hidden': !showAllProjects}"></span>
+                                        Show all projects
+                                    </a>
+                                </li>             
                             </ul>
                         </div>
-                    </li>  
-                </ul> 
+                    </li> 
+                </ul>                    
             </div>
             <div class="panel-body">
-                <input type="text" placeholder="Filter" ng-model="searchClientProjects" class="form-control"> 
-                <ul class="calendar-projects">
-                    <li ng-repeat="field in clientprojects | filter:searchClientProjects" ng-include="'calendarProjects'" ng-init="parentOBJ=field"></li>            
-                </ul>
-                <ul class="calendar-projects">
-                    <li ng-repeat="field in internal | filter:searchClientProjects">
-                        <div ng-click="field.childrenVisible=!field.childrenVisible" class="pointer"> 					
-                            <span ng-show="!field.childrenVisible" class="fa fa-caret-right"></span>
-                            <span ng-show="field.childrenVisible" class="fa fa-caret-down"></span>
-                            {{field.title}}
-                        </div>
-                      	<div ng-repeat='item in field.categories' class='btn btn-info btn-xs margin-right-S' ng-show="field.childrenVisible" data-drag='true' 
-                        data-jqyoui-options='{revert: false, helper: "clone"}' jqyoui-draggable data-options='{"title":"{{item.title}}", "id":"{{item.id}}", "color":"#5BC0DE"}'>{{item.title}}</div>
-                    </li>            
-                </ul>                    
+                <div ng-if="!showAllProjects">  
+                    Assigned Projects
+                </div>
+                <div ng-if="showAllProjects">  
+                    <div s-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="timeUpdate(item)" title="Company Name" drop-menu="true" drop-icon="fa-building-o"></div>
+                    <div class="tree tree-list pull-left min-width33" ng-if="treeOPT.selectedComp.projects">
+                        <button type="button" class="tree-close" ng-click="resetTreeView()">&times;</button>
+                        <ul>
+                            <li clickable-tree source="treeOPT.selectedComp" drag-node="true"></li>
+                        </ul>
+                    </div>                
+                </div>            
             </div>
         </div>
     </div>
-    <div class="col-sm-8"> 
-        <div class="panel panel-white no-border-radius maxheight600">
+    <div class="col-sm-6"> 
+        <div class="panel panel-white no-border-radius">
             <div class="panel-heading">
             	<h4>Calendar</h4>
                 <ul class="panel-header-actions border-light"> <!-- Resources Menu -->
                     <li>
                         <div class="dropdown">
-                            <span class="fa fa-gears fa-2x dropdown-toggle"></span>                        
+                            <button class="btn-none dropdown-toggle"><span class="fa fa-gears fa-2x"></span></button>                       
                             <ul class="dropdown-menu" role="menu">
                                 <li>
                                     <a href="javascript:void(0)" ng-click="calendarSimplecontrol('today')"><span class="fa fa-dot-circle-o"></span> Today</a>
@@ -89,8 +78,8 @@
             </div>
         </div>  
     </div>
-    <div class="col-sm-2">  
-        <div class="panel panel-white no-border-radius maxheight600">
+    <div class="col-sm-3">  
+        <div class="panel panel-white no-border-radius">
             <div class="panel-heading">
             	<h4>Selected</h4>
                 <ul class="panel-header-actions border-light"  ng-if="eventfocus.visible"> <!-- RATES Menu -->
@@ -105,36 +94,27 @@
                                 </li>             
                             </ul>
                         </div>
-                    </li>                     
+                    </li>
+                    <li>
+                        <button class="btn-none" ng-click="eventdetailssave()"><span class="fa fa-check fa-2x"></span></button>
+                    </li> 
                 </ul>                
             </div>
             <div class="panel-body">
                 <div ng-if="eventfocus.visible">                                   
-                    <strong>{{eventfocus.title}}</strong>                 
-                    <form name="CalendarViewTimeFrom" class="form-inline" role="form">
+                    <h4>{{eventfocus.companyTitle}}</h4>
+                    <p><span class="label label-primary">{{eventfocus.title}}</span></p>
+                    <form name="CalendarView" role="form" class="form-inline margin-bottom-S">
+                        {{eventfocus.start | date:'EEE dd.MM.yyyy'}}
                         <div class="form-group">
-                            {{eventfocus.start | date:'EEE dd.MM.yyyy'}}
+                            <input type="text" name="CalendarViewTimeFromInput" ng-model="eventfocus.time" class="form-control" ng-pattern="/^\d{4}(\-)\d{4}$/" ng-blur="updateTime('fromto')"/>
+                            <div class="form-group alert alert-danger" role="alert" ng-show="CalendarView.CalendarViewTimeFromInput.$error.pattern">
+                                <span class="fa fa-times"></span> Format 1300-1800
+                            </div>      
+                            <input type="text" class="form-control width60" ng-model="eventfocus.decimaltime"  ng-blur="updateTime('hrs')"> hours
                         </div>
-                        <div class="form-group">
-                            <input type="text" name="CalendarViewTimeFromInput" ng-model="eventfocus.startTMP" class="form-control input-sm" ng-pattern="/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/"/>
-                            <div class="form-group alert alert-danger" role="alert" ng-show="CalendarViewTimeFrom.CalendarViewTimeFromInput.$error.pattern">
-                                24h-format (18:00)
-                            </div>                            
-                        </div>
-                    </form>     
-                   <form name="CalendarViewTimeTo" class="form-inline" role="form">
-                        <div class="form-group">
-                            {{eventfocus.end | date:'EEE dd.MM.yyyy'}}
-                        </div>
-                        <div class="form-group">
-                            <input type="text" name="CalendarViewTimeToInput" ng-model="eventfocus.endTMP" class="form-control input-sm" ng-pattern="/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/"/>
-                            <div class="form-group alert alert-danger" role="alert" ng-show="CalendarViewTimeTo.CalendarViewTimeToInput.$error.pattern">
-                               24h-format (18:00)
-                            </div>                             
-                        </div>
-                    </form>
-                    <strong>Comment</strong>:<br />
-                    <textarea class="form-control" rows="3" ng-model="eventfocus.comment"></textarea><br />
+                    </form>                    
+                    <textarea class="form-control" rows="3" ng-model="eventfocus.comment" placeholder="Comments"></textarea><br />
                     <div class="alert alert-danger" ng-if="eventfocus.error">{{eventfocus.error}}</div>
                 </div>                
             </div>

@@ -1,32 +1,43 @@
-<script type="text/ng-template" id="categoryTree">
-	<div class="treenode">
-        <button ng-if="obj.projects.length" class="btn-none" ng-click="treeToggleChildren(obj)">
-            <span class="fa" ng-class="{'fa-caret-down':obj.childrenVisible && obj.projects.length,'fa-caret-right':!obj.childrenVisible && obj.projects.length}"></span>
-        </button>     
-        <a href="javascript:void(0)" ng-click="treeNewentry(obj)">{{obj.title}}</a>
-    </div>
-	<ul ng-if="obj.projects.length && obj.childrenVisible">
-		<li ng-repeat="obj in obj.projects" ng-include="'categoryTree'"></li>	
-	</ul>	
-</script>
 <div class="row">
 	<div class="col-sm-3">
 		<div class="panel panel-white no-border-radius">
             <div class="panel-heading">
-            	<h4>Projects</h4>                  
+            	<h4>Projects</h4> 
+                <ul class="panel-header-actions border-light"> <!-- PROJECTS Menu -->
+                    <li>
+                        <div class="dropdown">
+                            <button class="btn-none dropdown-toggle"><span class="fa fa-gears fa-2x"></span></button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a href="javascript:void(0)" ng-click="showAllProjects=0">
+                                        <span class="fa fa-check" ng-class="{'vis-hidden': showAllProjects}"></span>
+                                        Show only assigned projects
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" ng-click="showAllProjects=1">
+                                        <span class="fa fa-check" ng-class="{'vis-hidden': !showAllProjects}"></span>
+                                        Show all projects
+                                    </a>
+                                </li>             
+                            </ul>
+                        </div>
+                    </li> 
+                </ul>                                 
             </div>
-            <div class="panel-body">    
-                <div comfort-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="timeUpdate(item)" title="Company Name" icon="fa-building-o"></div>
-                <div class="tree tree-list margin-top-M" ng-if="treeOPT.selectedComp">
-                    <button type="button" class="tree-close" ng-click="resetTreeView()">&times;</button>
-                    <ul>
-                        <li>
-                            <div class="treenode" ng-class="treeOPT.selectedComp.id===treeOPT.tmpobj.id ? 'highlight':'background-grey'">{{treeOPT.selectedComp.title}}</div>
-                            <ul ng-if="treeOPT.projects.length">
-                                <li ng-repeat="obj in treeOPT.projects track by $index" ng-include="'categoryTree'"></li>
-                            </ul>                            
-                        </li>
-                    </ul>
+            <div class="panel-body">  
+                <div ng-if="!showAllProjects">  
+                    Assigned Projects
+                </div>
+                <div ng-if="showAllProjects">                      
+                    <div s-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="timeUpdate(item)" title="Company Name" drop-menu="true" drop-icon="fa-building-o">
+                    </div>
+                    <div class="tree tree-list pull-left min-width33" ng-if="treeOPT.selectedComp.projects">
+                        <button type="button" class="tree-close" ng-click="resetTreeView()">&times;</button>
+                        <ul>
+                            <li clickable-tree source="treeOPT.selectedComp" selected="treeOPT.tmpobj.id" function="treeNewentry(source)"></li>
+                        </ul>
+                    </div>                
                 </div>
             </div>           
 		</div>
@@ -38,7 +49,7 @@
                 <ul class="panel-header-actions border-light"> <!-- TIME Menu -->
                     <li>
                         <div class="dropdown">
-                            <span class="fa fa-gears fa-2x dropdown-toggle"></span>                        
+                            <button class="btn-none dropdown-toggle"><span class="fa fa-gears fa-2x"></span></button>                       
                             <ul class="dropdown-menu" role="menu">
                                 <li>
                                     <a href="javascript:void(0)" ng-click="treeOPT.editItems=!treeOPT.editItems">
@@ -52,37 +63,37 @@
                     <li ng-if="treeOPT.editItems">
                         <button class="btn-none" ng-click="treeOPT.editItems=0"><span class="fa fa-check fa-2x"></span></button>
                     </li> 
+                    <li>
+                        <button class="btn-none" ng-click="loadDate(1)"><span class="fa fa-angle-right fa-2x"></span></button>                        
+                    </li> 
+                    <li>
+                        <input type="text" class="form-control width120 margin-top-minus-S" datepicker-popup="dd.MM.yyyy" ng-model="dt" ng-click="open($event, 0)" is-open="opened[0]">
+                    </li> 
+                    <li>
+                        <button class="btn-none" ng-click="loadDate(-1)"><span class="fa fa-angle-left fa-2x"></span></button>                        
+                    </li>                                         
                 </ul>                  
             </div>
-            <div class="panel-body">   
+            <div class="panel-body">                   
                 <div class="table-responsive">                        
-                    <table ng-if="treeNew.length" class="table table-bordered table-hover table-nonfluid table-vertical-middle">            
+                    <table ng-if="treeNew.length" class="table table-nonfluid table-vertical-middle">            
                         <thead>
-                            <tr><th>Company</th><th>Project</th><th>Date</th><th>Hours</th><th>Comments</th><th ng-if="treeOPT.editItems">Actions</th></tr>
+                            <tr>
+                                <th>Company</th>
+                                <th>Project</th>
+                                <th>Hours</th>
+                                <th>Comments</th>
+                                <th ng-if="treeOPT.editItems">Actions</th>
+                            </tr>
                         </thead>
                         <tbody>
-                             <tr ng-repeat="obj in treeNew track by $index">
+                             <tr ng-repeat="obj in treeNew track by $index" class="animate-enter">
                                 <td>{{obj.cmptitle}}</td>
                                 <td><span class="label label-primary">{{obj.prjtitle}}</span></td>
                                 <td>
-                                    <!--
-                                    <input type="text" class="form-control" placeholder="Date" datepicker-popup="dd.MM.yyyy" ng-model="obj.date" ng-change="formatedate(obj)" ng-click="open($event, $index)" is-open="opened[$index]">       
-                                    http://plnkr.co/edit/LyLdqurWyrRhrF7ZmoDB?p=preview                           
-                                    --> 
-                                    <div style="width:250px">
-                                        <p class="input-group position-relative">                                            
-                                            <input type="text" class="form-control date-picker-fix" ng-if="opened[$index]" datepicker-popup="dd.MM.yyyy" ng-model="obj.date" is-open="opened[$index]" 
-                                            datepicker-options="dateOptions" ng-change="formatedate(obj)"/>
-                                            <span class="form-control" ng-if="!opened[$index]" style="top:0px;">{{obj.date}}</span>
-                                            <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default" ng-click="open($event, $index)"><span class="fa fa-calendar"></span></button>
-                                            </span>
-                                        </p>
-                                    </div>                                    
-                                </td>
-                                <td>
                                     <form name="myform" class="form-inline"> 
-                                        <input type="text" class="form-control" name="price_field" ng-model="obj.time" ng-pattern="/(^\d{1,2}(?:\.\d{1})?$)|(^\d{4}(\-)\d{4})/" placeholder="Time">
+                                        <input type="text" class="form-control" name="price_field" ng-model="obj.time" ng-pattern="/(^\d{1,2}(?:\.\d{1,2})?$)|(^\d{4}(\-)\d{4})/" placeholder="Time"
+                                        ng-model-options="{ updateOn: 'blur' }">
                                         <div class="alert alert-info" role="alert" ng-show="myform.price_field.$error.pattern">
                                             Valid times:<br />
                                             1. Hours <strong>1.5</strong><br />2. From-To <strong>1000-1200</strong></span>
@@ -90,7 +101,8 @@
                                     </form>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" ng-model="obj.comment" placeholder="Comment"/>
+                                    <!--<input type="text" class="form-control" ng-model="obj.comment" placeholder="Comment"/>-->
+                                    <textarea class="form-control single-line" ng-model="obj.comment" placeholder="Comment"></textarea>
                                 </td>
                                 <td ng-if="treeOPT.editItems">
                                     <button type="button" ng-click="treeInputTableCopy(obj, $index)" class="btn-none">
@@ -101,6 +113,10 @@
                                         <span class="fa fa-trash-o"></span>
                                     </button> 
                                 </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td colspan="2">{{displaySum()}}</td>                                
                             </tr>
                         </tbody>
                     </table> 

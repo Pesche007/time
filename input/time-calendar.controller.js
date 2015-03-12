@@ -1,61 +1,48 @@
 'use strict';
 
 angular.module('time')
-  .controller('TimeCalendarCtrl', function ($scope, $filter, $http, $log, cfg) {
+  .controller('TimeCalendarCtrl', function ($scope, $filter, $http, $log, cfg, statePersistence, ResourcesService) {
 	cfg.GENERAL.CURRENT_APP = 'time';
 
+	//Options
+	$scope.treeOPT={companies:[], selectedComp:null};
+	$scope.showAllProjects=0;
+	$scope.eventOPT={editEntry:0, monthsloaded:[], viewfrom:'', viewto:''};
+	$scope.eventfocus={'visible': false, 'companyTitle':'', 'companyID':'', 'title':'', 'comment':'', 'time':'', 'decimaltime':'', 'error':false, 'calEvent':{}};
+
 	//API
+	ResourcesService.listCompanies().then(function(result) {
+   		$scope.treeOPT.companies=result.data.companyData;
+       	}, function(reason) {//error
+       		alertsManager.addAlert('Could not get companies. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
+  	}); 
+	//Project Tree
+	$scope.timeUpdate = function(obj){		
+		ResourcesService.listProjects(obj.id).then(function(result) {
+			$scope.treeOPT.selectedComp=obj;
+			$scope.treeOPT.selectedComp.disableClick=1;
+			$scope.treeOPT.selectedComp.projects=result.data.projectData;
+	       	}, function(reason) {//error
+	       		alertsManager.addAlert('Could not get projects. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
+	  	});		
+	};
+	$scope.resetTreeView = function(){
+		$scope.treeOPT.selectedComp=null;
+	};
+
+	//Calendar
     $scope.API={};
     $scope.clientprojects = {};
 	$scope.API.Addelements = function(month, year){
-			$log.log('Events added for month ' + month + ' year ' + year);
-			var data = [
-			  {'title': 'Test', 'start': new Date(year+'/'+month+'/10 10:00'), 'end': new Date(year+'/'+month+'/10 12:00'), 'allDay': false, 'comment':'', 'backgroundColor':'#996666'},
-			  {'title': 'Best', 'start': new Date(year+'/'+month+'/11 13:00'), 'end': new Date(year+'/'+month+'/11 14:00'), 'allDay': false, 'comment':'', 'backgroundColor':'#996666'},
-			  {'title': 'Zest', 'start': new Date(year+'/'+month+'/12 10:00'), 'end': new Date(year+'/'+month+'/12 12:00'), 'allDay': false, 'comment':'', 'backgroundColor':'#996666'}
-			  ];
-			for(var i = 0; i < data.length; ++i) { $scope.events.push(data[i]); }
-		};
-
-
-	$scope.API.GetTree = function() {
-		/*var _listUri = '/api/wtt/getmockedtree';
-		$http.get(_listUri)
-		.success(function(data, status) {
-			$log.log('time-calendar.controller: **** SUCCESS: GET(' + _listUri + ') returns with ' + status);
-	    	// $log.log('data=<' + JSON.stringify(data) + '>');
-	    	$scope.clientprojects = data;
-		})
-		.error(function(data, status) {
-	  		// called asynchronously if an error occurs or server returns response with an error status.
-	    	$log.log('time-calendar.controller: **** ERROR:  GET(' + _listUri + ') returns with ' + status);
-	    	// $log.log('data=<' + JSON.stringify(data) + '>');
-	  	});*/
-		$scope.clientprojects = [{ id: 'CmpA', title: 'UBS', type:'company', categories: [{ id: 'PjtA1', title: 'Project A1', type:'project', categories: [{ id: 'SPjtA11', title: 'Sub-Project A11', type:'project', 	categories: [	{ id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', categories: [], people:[] 	}], people: [{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]}, { id: 'SPjtA12', title: 'Sub-Project A12', type:'project', categories: [{ id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', categories: [], people:[ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]} ],  people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' } ]}]},]},{ id: 'CmpB', title: 'HRG', type:'company', categories: [{ id: 'PjtB1', title: 'Project B1', type:'project', 	categories: [], people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann'}	]}]}];
+		var data = [
+		  {'companyID':'abc', 'companyTitle':'Test Company', 'title': 'Test', 'start': new Date(year+'/'+month+'/10 10:00'), 'end': new Date(year+'/'+month+'/10 12:00'), 'allDay': false, 'comment':'', 'backgroundColor':'#996666'},
+		  {'companyID':'abc', 'companyTitle':'Test Company', 'title': 'Best', 'start': new Date(year+'/'+month+'/11 13:00'), 'end': new Date(year+'/'+month+'/11 14:00'), 'allDay': false, 'comment':'', 'backgroundColor':'#996666'},
+		  {'companyID':'abc', 'companyTitle':'Test Company', 'title': 'Zest', 'start': new Date(year+'/'+month+'/12 10:00'), 'end': new Date(year+'/'+month+'/12 12:00'), 'allDay': false, 'comment':'', 'backgroundColor':'#996666'}
+		  ];
+		for(var i = 0; i < data.length; ++i) { $scope.events.push(data[i]); }
 	};
-
-	$scope.API.GetInternal = function () {
-		return [{id: 'Int-Absence', title: 'Absences', type:'company', categories: [
-					{id: 'Sickness', title: 'Sickness', type:'project', categories: []},
-					{id: 'Sickness-Child', title: 'Sick Child', type:'project', categories: []},
-					{id: 'Maternity', title: 'Maternity', type:'project', categories: []},
-					
-					]},
-				{id: 'Int-Planning', title: 'Planning', type:'company', categories: [
-					{id: 'Vacation', title: 'Vacation', type:'project', categories: []},
-					{id: 'Military', title: 'Military', type:'project', categories: []},
-					{id: 'Overtime', title: 'Overtime', type:'project', categories: []}
-					]},					
-				];
-		};		
 	$scope.events=[];
 	$scope.eventSource=[$scope.events];
-	//Sets details for event in focus
-	$scope.eventfocus={'visible': false, 'title':'', 'start':'', 'end':'', 'comment':'', 'startTMP':'', 'endTMP':'', 'error':false, 'calEvent':{}};
-	//Options, like if projects should be shown for mapped people only
-	$scope.eventOPT={showmine:false, showid:'007', editEntry:0, monthsloaded:[], viewfrom:'', viewto:''};
-	$scope.API.GetTree();
-	$scope.internal = $scope.API.GetInternal();
 
 	//Change in month -> load new month data
 	$scope.loadIntoView = function(start, end){		
@@ -115,24 +102,23 @@ angular.module('time')
     };
 	//Set event detail window through -> eventfocus
 	$scope.eventdetailsset = function(calEvent){
-		var startVal=$scope.formatAddLeadingZero(calEvent.start.getHours()) + ':' + $scope.formatAddLeadingZero(calEvent.start.getMinutes());
-		var endVal=$scope.formatAddLeadingZero(calEvent.end.getHours()) + ':' + $scope.formatAddLeadingZero(calEvent.end.getMinutes());		
-		$scope.eventfocus={'visible': true, 'title':calEvent.title, 'start':calEvent.start, 'end':calEvent.end, 'comment':calEvent.comment, 'startTMP':startVal, 'endTMP':endVal, 'calEvent':calEvent}	;
+		var timeFrom=$scope.formatAddLeadingZero(calEvent.start.getHours()) + '' + $scope.formatAddLeadingZero(calEvent.start.getMinutes());
+		var timeTo=$scope.formatAddLeadingZero(calEvent.end.getHours()) + '' + $scope.formatAddLeadingZero(calEvent.end.getMinutes());
+		var time=timeFrom + '-' + timeTo;
+		var timeDecimal=$scope.calcTime(timeFrom, timeTo);
+		$scope.eventfocus={'visible': true, 'companyTitle':calEvent.companyTitle, 'title':calEvent.title, 'comment':calEvent.comment, 'time':time, 'decimaltime':timeDecimal, 'calEvent':calEvent};
 		};
 	//Save changes in entry details - check hours:minutes and save in OBJ
 	$scope.eventdetailssave = function(){
-		$scope.eventfocus.calEvent.comment = $scope.eventfocus.comment;
-		if($scope.checktimeHoursMinutes($scope.eventfocus.startTMP) && $scope.checktimeHoursMinutes($scope.eventfocus.endTMP)) {
-			var startArr=$scope.eventfocus.startTMP.split(':');
-			var endArr=$scope.eventfocus.endTMP.split(':');
-			if(!$scope.checktimeFromBiggerTo(startArr, endArr)){
-				$scope.eventfocus.calEvent.start.setHours(startArr[0], startArr[1], 0);
-				$scope.eventfocus.calEvent.end.setHours(endArr[0], endArr[1], 0);
-				$scope.cleareventfocus();			
-				}
-			else {
-				$scope.eventfocus.error='Start time bigger than end time.';
-				}
+		var time = $scope.eventfocus.time.split('-');
+		if(time[0] && time[0].length===4 && time[1] && time[1].length===4 && time[1]>time[0]){
+			$scope.eventfocus.calEvent.comment = $scope.eventfocus.comment;
+			$scope.eventfocus.calEvent.start.setHours(time[0].substr(0, 2), time[0].substr(2, 2), 0);
+			$scope.eventfocus.calEvent.end.setHours(time[1].substr(0, 2), time[1].substr(2, 2), 0);
+			$scope.cleareventfocus();			
+			}
+		else {
+			$scope.eventfocus.error='Start time bigger than end time.';
 			}
 		};
 	//Delete event from entry detail view, event is saved in eventfocus
@@ -140,14 +126,11 @@ angular.module('time')
 		$scope.deleteExistingMulti($scope.eventfocus.calEvent, $scope.events, '_id');
 		$scope.cleareventfocus();
 		};
-	//clear the entry details window	
-	$scope.cleareventfocus = function(){
-		$scope.eventfocus={'visible': false, 'title':'', 'start':'', 'end':'', 'comment':'', 'startTMP':'', 'endTMP':'', 'error':false, 'calEvent':{}};
-		$scope.eventOPT.editEntry=0;
-		};
 	//adds event, "eid" because "id" makes events double (i.e. resizing one resizes the other)	
    $scope.addEvent = function(date, eventoptions, showdetails) {
 		var newEvent = {
+			companyID:$scope.treeOPT.selectedComp.id,
+			companyTitle:$scope.treeOPT.selectedComp.title,
 			eid: eventoptions.id,
 			title: eventoptions.title,
 			start: date,
@@ -161,6 +144,42 @@ angular.module('time')
 		  $scope.eventdetailsset(newEvent);
 		  }
     	};
+	//clear the entry details window
+	$scope.cleareventfocus = function(){
+		$scope.eventfocus={'visible': false, 'companyTitle':'', 'companyID':'', 'title':'', 'comment':'', 'time':'', 'decimaltime':'', 'error':false, 'calEvent':{}};
+		$scope.eventOPT.editEntry=0;
+	};    	
+	//Time functions
+	$scope.updateTime = function(caller){
+		if(caller==='fromto'){
+			var parts=$scope.eventfocus.time.split('-');
+			if(parts[0] && parts[0].length===4 && parts[1] && parts[1].length===4){
+				$scope.eventfocus.decimaltime=$scope.calcTime(parts[0], parts[1], 0);
+				}
+		}
+		if(caller==='hrs'){
+			var parts=$scope.eventfocus.time.split('-');
+			if(parts[0] && parts[0].length===4 && parts[1] && parts[1].length===4 && !isNaN($scope.eventfocus.decimaltime)){
+				$scope.eventfocus.time=$scope.calcTime(parts[0], parts[1], 1);
+				}
+		}
+	};
+	$scope.calcTime = function(from, to, add){
+		if(add){
+			var decimal=($scope.eventfocus.decimaltime % 1).toFixed(2);
+			console.log(decimal)
+			var hour = Math.floor($scope.eventfocus.decimaltime - parseInt(decimal));
+			console.log(hour)
+			var toNew = parseInt(from) + parseInt(hour*100) + parseInt(decimal*60);
+			var res = from + '-' + toNew;
+		}
+		else {
+			var diff = to-from;
+			var hour=Math.floor(diff/100);			
+			var res = Math.round(100*(hour+(diff-hour*100)/60))/100;			
+		}
+		return res;
+	};    	
 	//Calendar control
 	$scope.calendarSimplecontrol = function(action){
 		$scope.myCalendar.fullCalendar(action);
@@ -172,41 +191,20 @@ angular.module('time')
 	 $scope.daterangefilter = function (item) {
         return (item.start >= $scope.eventOPT.viewfrom && item.end <= $scope.eventOPT.viewto);
     };	
-	//Filter -> check if field has people with same id	
-	$scope.checkAssignedOnly = function(field){
-		if($scope.eventOPT.showmine===false) {
-			return true;
-			}
-		else{
-			if(field.people) {
-				var checkPerson=field.people.some(function(entry) {
-					return entry.id===$scope.eventOPT.showid;
-					});
-				return checkPerson;
-				}
-			}
-		};
-	$scope.calendarSourceClear = function(){
-		$scope.events.splice(0);
-		};
-	$scope.calendarsave = function(){
-		$log.log($scope.events);
-		};
+
+
+	//Persistance
+    $scope.$on('$destroy', function(){
+		statePersistence.setState('time-calendar', {showAllProjects:$scope.showAllProjects});
+		});
+    var persVar=statePersistence.getState('time-calendar');
+      if(persVar) {
+    	for(var key in persVar){
+    		$scope[key]=persVar[key];
+    	}    	
+    }
+
 	//************ POSSIBLE FACTORIES ******************//
-	//Time functions
-	//Check if input is in 24h-time-format e.g. 14:00
-	$scope.checktimeHoursMinutes = function (input){
-		return /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(input);
-		};
-	//Check if from-input array (hours, minutes) is bigger than end input array
-	$scope.checktimeFromBiggerTo = function (inputFrom, inputTo) {
-		if(inputFrom.length===2 && inputTo.length===2) {
-			return (inputFrom[0]>inputTo[0] || (inputTo[0]===inputFrom[0] && inputFrom[1]>inputTo[1]));
-			}
-		else {
-			return false;
-			}
-		};
 	//Formats number with leading 0
 	$scope.formatAddLeadingZero = function(input){
 		return (input<10?'0':'')+input;

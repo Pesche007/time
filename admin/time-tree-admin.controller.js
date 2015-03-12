@@ -3,7 +3,7 @@
 angular.module('time')
   .controller('TreeAdminCtrl', function ($scope, $log, RatesService, ResourcesService, cfg, statePersistence, alertsManager) {
   	$scope.API={};
-	$scope.treeOPT=	{addeditShow:false,	isCompany:false, currProj:{projectName:''}, newProj:{title:'', description:''}, tmpobj:'',	tmpindex:0,	tmppeople:[], peopleselect:[], treePeopleView:0,  treeRatesView:0, companies:[], selectedComp:null, projects:null};
+	$scope.treeOPT=	{addeditShow:false, currProj:{projectName:''}, newProj:{title:'', description:''}, tmpobj:'', tmppeople:[], peopleselect:[], treePeopleView:0,  treeRatesView:0, companies:[], selectedComp:null};
 	ResourcesService.listCompanies().then(function(result) {
    		$scope.treeOPT.companies=result.data.companyData;
        	}, function(reason) {//error
@@ -59,15 +59,15 @@ angular.module('time')
 	$scope.showTree = function(obj){
 		ResourcesService.listProjects(obj.id).then(function(result) {
 			$scope.treeOPT.selectedComp=obj;
-			$scope.treeOPT.projects=result.data.projectData;
+			$scope.treeOPT.selectedComp.isCompany=1;
+			$scope.treeOPT.selectedComp.projects=result.data.projectData;
 	       	}, function(reason) {//error
 	       		alertsManager.addAlert('Could not get projects. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
 	  	});		
 	};	
-	$scope.editTreebranch = function(obj, isCompany){
+	$scope.editTreebranch = function(obj){
 		$scope.treeOPT.tmpobj=obj;
 		$scope.treeOPT.currProj.projectName = angular.copy(obj.title); //Avoid that title changes immediately on input in edit field
-		$scope.treeOPT.isCompany=isCompany;
 		$scope.treeOPT.addeditShow=true;
 	};
 	$scope.editProject = function(){
@@ -79,10 +79,10 @@ angular.module('time')
 	  	});
 	};
 	$scope.addNewProject = function(){
-		var porjectID=$scope.treeOPT.isCompany ? '' : $scope.treeOPT.tmpobj.id;
+		var porjectID=$scope.treeOPT.tmpobj.isCompany ? '' : $scope.treeOPT.tmpobj.id;
 		ResourcesService.post($scope.treeOPT.selectedComp.id, porjectID, $scope.treeOPT.newProj).then(function(result) {			
-			if($scope.treeOPT.isCompany){
-				$scope.treeOPT.projects.unshift(result.data.projectData);
+			if($scope.treeOPT.tmpobj.isCompany){
+				$scope.treeOPT.selectedComp.projects.unshift(result.data.projectData);
 			}
 			else {
 				if($scope.treeOPT.tmpobj.projects) {
@@ -112,14 +112,9 @@ angular.module('time')
 		$scope.treeOPT.newProj={title:'', description:''};
 	};
 	$scope.resetTreeView = function(){
-		$scope.treeOPT.projects=null;
+		$scope.treeOPT.selectedComp.projects=null;
 		$scope.closeEditField();
 	};
-
-	//Open/hide tree
-	$scope.treeToggleChildren = function(obj) {		
-		obj.childrenVisible = !obj.childrenVisible;
-		};
 
 	/************** RATES ****************/
 	$scope.ratesTMP={rates:[], view:false, edit:false, index:0, tmpobj:{id:'', title:'', currency:'', rate:'', description:''}};
@@ -180,16 +175,5 @@ angular.module('time')
 		$scope.rateFormreset();
 		$scope.ratesTMP.ratesEdit=false;
 		$scope.ratesTMP.view=false;
-	};
-	
-	//Persistance
-    $scope.$on('$destroy', function(){
-		statePersistence.setState('time-admin', {treeOPT: $scope.treeOPT, selectedComp: $scope.selectedComp});
-		});
-    var persVar=statePersistence.getState('time-admin');
-    if(persVar) {
-    	for(var key in persVar){
-    		//$scope[key]=persVar[key];
-    	}    	
-    }		
+	};		
   });
