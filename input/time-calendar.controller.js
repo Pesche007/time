@@ -7,6 +7,7 @@ angular.module('time')
 	//Options
 	$scope.treeOPT={companies:[], selectedComp:null};
 	$scope.showAllProjects=0;
+	$scope.showWeekend=false;
 	$scope.eventOPT={editEntry:0, monthsloaded:[], viewfrom:'', viewto:''};
 	$scope.eventfocus={'visible': false, 'companyTitle':'', 'companyID':'', 'title':'', 'comment':'', 'time':'', 'decimaltime':'', 'error':false, 'calEvent':{}};
 
@@ -60,46 +61,14 @@ angular.module('time')
 			$scope.eventOPT.monthsloaded[y].push(m);
 			}		
 		};
-	//calendar Config	
-    $scope.uiConfig = {
-      calendar:{
-        height: 500,
-        editable: true,
-		defaultView: 'agendaWeek',
-		firstDay:1, 
-		axisFormat: 'HH:mm',
-		timeFormat: 'HH:mm{ - HH:mm}',
-		scrollTime: '08:00:00', //v2
-		firstHour : 8, //v1
-        header:false,
-		columnFormat:{
-		    week: 'ddd d.M.',
-			day: 'dddd d.M.' 
-			},
-		businessHours:{
-			start: '08:00', 
-			end: '18:00', 		
-			dow: [ 1, 2, 3, 4, 5 ]
-			},
-		droppable: true,
-		drop: function (date, allDay, jsEvent, ui) {
-			var eventoptions = JSON.parse(ui.helper[0].getAttribute('data-options'));
-			$scope.addEvent(date, eventoptions, 1);
-			},
-		eventDragStop: function(calEvent){
-			$scope.eventdetailsset(calEvent);
-			},
-        eventClick: function(calEvent) {	
-			$scope.eventdetailsset(calEvent);
-	    	},
-		eventResize: function(calEvent) {
-			$scope.eventdetailsset(calEvent);
-			},
-		viewRender: function(view) {		
-			$scope.loadIntoView(view.start, view.end);
-			}
-     	}
-    };
+	$scope.toggleWeekends = function(dir){
+		if($scope.showWeekend!==dir){
+			$scope.showWeekend=!$scope.showWeekend;
+			$scope.myCalendar.fullCalendar('destroy');
+		 	$scope.uiConfig.calendar.weekends=$scope.showWeekend;
+			$scope.myCalendar.fullCalendar('render');
+		}
+	}
 	//Set event detail window through -> eventfocus
 	$scope.eventdetailsset = function(calEvent){
 		var timeFrom=$scope.formatAddLeadingZero(calEvent.start.getHours()) + '' + $scope.formatAddLeadingZero(calEvent.start.getMinutes());
@@ -195,7 +164,7 @@ angular.module('time')
 
 	//Persistance
     $scope.$on('$destroy', function(){
-		statePersistence.setState('time-calendar', {showAllProjects:$scope.showAllProjects});
+		statePersistence.setState('time-calendar', {showAllProjects:$scope.showAllProjects, showWeekend:$scope.showWeekend});
 		});
     var persVar=statePersistence.getState('time-calendar');
       if(persVar) {
@@ -204,18 +173,50 @@ angular.module('time')
     	}    	
     }
 
-	//************ POSSIBLE FACTORIES ******************//
 	//Formats number with leading 0
 	$scope.formatAddLeadingZero = function(input){
 		return (input<10?'0':'')+input;
 		};
-	//DUPLICATE FROM TIME - MAKE FActory	
-	$scope.deleteExistingMulti = function(data, model, selector) {
-		for (var i = 0, len = model.length; i < len; i++) {
-			if (model[i][selector]=== data[selector]) {
-				model.splice(i, 1);
-				break;
-				}
-			}	
-		};				
-	});
+
+	//Calendar Config	
+    $scope.uiConfig = {
+      calendar:{
+        height: 500,
+        editable: true,
+		defaultView: 'agendaWeek',
+		firstDay:1, 
+		axisFormat: 'HH:mm',
+		timeFormat: 'HH:mm{ - HH:mm}',
+		scrollTime: '08:00:00', //v2
+		firstHour : 8, //v1
+        header:false,
+        weekends:$scope.showWeekend,
+		columnFormat:{
+		    week: 'ddd d.M.',
+			day: 'dddd d.M.' 
+			},
+		businessHours:{
+			start: '08:00', 
+			end: '18:00', 		
+			dow: [ 1, 2, 3, 4, 5 ]
+			},
+		droppable: true,
+		drop: function (date, allDay, jsEvent, ui) {
+			var eventoptions = JSON.parse(ui.helper[0].getAttribute('data-options'));
+			$scope.addEvent(date, eventoptions, 1);
+			},
+		eventDragStop: function(calEvent){
+			$scope.eventdetailsset(calEvent);
+			},
+        eventClick: function(calEvent) {	
+			$scope.eventdetailsset(calEvent);
+	    	},
+		eventResize: function(calEvent) {
+			$scope.eventdetailsset(calEvent);
+			},
+		viewRender: function(view) {		
+			$scope.loadIntoView(view.start, view.end);
+			}
+     	}
+    };
+});
