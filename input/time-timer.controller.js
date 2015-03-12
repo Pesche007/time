@@ -1,54 +1,41 @@
 'use strict';
 
 angular.module('time')
-  .controller('TimeTimerCtrl', function ($scope, $filter, $interval, $http, $log, cfg, statePersistence) {
+  .controller('TimeTimerCtrl', function ($scope, $filter, $interval, $http, $log, cfg, statePersistence, ResourcesService) {
 	cfg.GENERAL.CURRENT_APP = 'time';
 	
-	$scope.treeOPT=	{addeditShow: false, deleteShow: false, tmpobj: '', tmpindex: 0, tmppeople: [], peopleselect: [], catName: '', treeitemDesc: '', treeAction: '', treePeopleView: 0, items: {}};
-
-	$scope.getTree = function() {
-		/*
-		var _listUri = '/api/wtt/getmockedtree';
-		$http.get(_listUri)
-		.success(function(data, status) {
-			$log.log('time-timer.controller: **** SUCCESS: GET(' + _listUri + ') returns with ' + status);
-	    	// $log.log('data=<' + JSON.stringify(data) + '>');
-	    	$scope.treeOPT.items = data;
-		})
-		.error(function(data, status) {
-	  		// called asynchronously if an error occurs or server returns response with an error status.
-	    	$log.log('time-timer.controller: **** ERROR:  GET(' + _listUri + ') returns with ' + status);
-	    	// $log.log('data=<' + JSON.stringify(data) + '>');
-	  	});*/
-		// $scope.treeOPT.items = [{ id: 'CmpA', title: 'UBS', type:'company', categories: [{ id: 'PjtA1', title: 'Project A1', type:'project', categories: [{ id: 'SPjtA11', title: 'Sub-Project A11', type:'project', 	categories: [	{ id: 'SSPjtA11', title: 'Sub-Sub-Project A111', type:'project', categories: [], people:[] 	}], people: [{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]}, { id: 'SPjtA12', title: 'Sub-Project A12', type:'project', categories: [{ id: 'SSPjtA12', title: 'Sub-Sub-Project A112', type:'project', categories: [], people:[ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' }]} ],  people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann' } ]}]},]},{ id: 'CmpB', title: 'HRG', type:'company', categories: [{ id: 'PjtB1', title: 'Project B1', type:'project', 	categories: [], people: [ 	{ id: '007', firstname: 'Peter', lastname: 'Windemann'}	]}]}];
-		$log.log('TimeTimerCtrl.getTree() calling get(' + cfg.wtt.SVC_URI + ')');
-		$http.get(cfg.wtt.SVC_URI)
-		.success(function (data, status) {
-			$log.log('data=<' + angular.toJson(data.wttData, 4) + '>');
-			$scope.treeOPT.items = data.wttData;
-		})
-		.error(function(data, status, headers, config) {
-			$log.log('ERROR: TimeTimerCtrl.getTree() returned with status ' + status);
-		});
-	};
-	
-	$scope.getTree();
-	$scope.selectedCompany=null;
+	$scope.treeOPT=	{editItems:0, companies:[], selectedComp:null};
+	$scope.showAllProjects=1;
+	$scope.showListControls=0;
 	$scope.treeNew=[];	
-	$scope.timeUpdate = function(item){
-		$scope.selectedCompany=[item];
-		$scope.treeTable = item.categories;
-		};
+
+	ResourcesService.listCompanies().then(function(result) {
+   		$scope.treeOPT.companies=result.data.companyData;
+       	}, function(reason) {//error
+       		alertsManager.addAlert('Could not get companies. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
+  	}); 
+
+	$scope.timeUpdate = function(obj){		
+		ResourcesService.listProjects(obj.id).then(function(result) {
+			$scope.treeOPT.selectedComp=obj;
+			$scope.treeOPT.selectedComp.disableClick=1;
+			$scope.treeOPT.selectedComp.projects=result.data.projectData;
+	       	}, function(reason) {//error
+	       		alertsManager.addAlert('Could not get projects. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
+	  	});		
+	};
+	$scope.resetTreeView = function(){
+		$scope.treeOPT.selectedComp=null;
+	};	
 	$scope.treeNewentry = function (item) {
 		$scope.treeNew.push(
-			{'cmpid':$scope.selectedCompany[0].id, 'cmptitle':$scope.selectedCompany[0].title, 'prjid':item.id, 'prjtitle':item.title, 'timer':{'start':'','stop':'', 'run':''}, 'state':0, 
+			{'cmpid':$scope.treeOPT.selectedComp.id, 'cmptitle':$scope.treeOPT.selectedComp.title, 'prjid':item.id, 'prjtitle':item.title, 'timer':{'start':'','stop':'', 'run':''}, 'state':0, 
 			'date': $filter('date')(new Date(), 'dd.MM.yyyy'), 'time':'', 'comment':''}
 			);
 		};
 	$scope.resetTreeView = function(){
 		$scope.selectedCompany=null;
 	};		
-	$scope.timeTimerOPT={'timeMultiple':0, 'timeAutosave':0, 'showmine':0, 'showid':'007'};
 	//Callend whenever a date is selected. Because the date is stored unformatted, when performing a row-copy, the datepicker date gets rewritten with unformatted date. 		
 	$scope.formatedate = function (obj){
 		obj.date = $filter('date')(obj.date, 'dd.MM.yyyy');
@@ -56,13 +43,11 @@ angular.module('time')
 	//Timer		
 	$scope.timeTimerstart = function(obj){
 		var newDate=new Date();		
-		if($scope.timeTimerOPT.timeMultiple===0) {
-			angular.forEach($scope.treeNew, function(value) {
-				if(value.state===1) {
-					$scope.timeTimerpause(value);
-					}
-				});
-			}		
+		angular.forEach($scope.treeNew, function(value) {
+			if(value.state===1) {
+				$scope.timeTimerpause(value);
+				}
+			});	
 		if(obj.state===0) {
 			obj.timer.start = newDate;
 			obj.timer.stop=newDate;
@@ -165,54 +150,30 @@ angular.module('time')
 		var hrs = (s - mins) / 60;	
 		return new Array(hrs, mins, secs);		
 		};
-	//DUPLICATE FROM Calendar
-	$scope.checkAssignedOnly = function(field){
-		if($scope.timeTimerOPT.showmine===0) {
-			return true;
-			}
-		else{
-			if(field.people) {
-				var checkPerson=field.people.some(function(entry) {
-					return entry.id===$scope.timeTimerOPT.showid;
-					});
-				return checkPerson;
-				}
-			}
-		};
-	//AUTOSAVE AUTOLOAD
-    angular.element(document).ready(function () {
-		if($scope.timeTimerOPT.timeAutosave) {
-			//AutoSave
-			$scope.autosave = $interval(function(){
-				localStorage.setItem('TimeTimerCtrl', JSON.stringify($scope.treeNew));
-				$log.log('autosave');
-				},10000);
-			//AutoLoad
-			$scope.autoload = function() {
-				$scope.autosaveitem = localStorage.getItem('TimeTimerCtrl');
-				if ($scope.autosaveitem !== null) {			
-					$scope.treeNew=JSON.parse($scope.autosaveitem);
-					localStorage.removeItem('TimeTimerCtrl');
-					$log.log('autoload');
-					angular.forEach($scope.treeNew, function(value) {
-						if(value.state===1) {
-							$scope.timeTimerpause(value);
-							}
-						});			
-					}				
-				};
-			$scope.autoload();					
-		}
-    });	
 
-    //Persistance
+	//Initie timer after peristance call
+	var timeTimerinit = function(){		
+		for(var i=0; i<$scope.treeNew.length; i++){
+			if($scope.treeNew[i].state===1){//Timer started
+				$scope.timeTimerstart($scope.treeNew[i]);
+			}
+			if($scope.treeNew[i].state===2){//Timer Paused
+			}	
+			if($scope.treeNew[i].state===3){//Timer Stoped
+			}
+		}
+	};
+    //Persistance    
     $scope.$on('$destroy', function(){
-		statePersistence.setState('time-timer', {treeNew: $scope.treeNew, selectedCompany: $scope.selectedCompany});
+		statePersistence.setState('time-timer', {treeNew: $scope.treeNew, showAllProjects:$scope.showAllProjects});
 		});
     var persVar=statePersistence.getState('time-timer');
       if(persVar) {
     	for(var key in persVar){
     		$scope[key]=persVar[key];
-    	}    	
+    	}    
+    	if($scope.treeNew.length) {
+    		timeTimerinit();
+    	}
     }
   });

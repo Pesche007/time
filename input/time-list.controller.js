@@ -16,16 +16,14 @@ angular.module('time')
 	$scope.timeUpdate = function(obj){		
 		ResourcesService.listProjects(obj.id).then(function(result) {
 			$scope.treeOPT.selectedComp=obj;
-			$scope.treeOPT.selectedComp.isCompany=1;
+			$scope.treeOPT.selectedComp.disableClick=1;
 			$scope.treeOPT.selectedComp.projects=result.data.projectData;
 	       	}, function(reason) {//error
 	       		alertsManager.addAlert('Could not get projects. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
 	  	});		
 	};
 	$scope.treeNewentry = function (item) {
-		if(!item.isCompany) {
-			$scope.treeNew.push({'cmpid':$scope.treeOPT.selectedComp.id, 'cmptitle':$scope.treeOPT.selectedComp.title, 'prjid':item.id, 'prjtitle':item.title, 'date':'','time':'', 'comment':''});
-			}
+		$scope.treeNew.push({'cmpid':$scope.treeOPT.selectedComp.id, 'cmptitle':$scope.treeOPT.selectedComp.title, 'prjid':item.id, 'prjtitle':item.title, 'date':'','time':'', 'comment':''});
 		};
 	$scope.resetTreeView = function(){
 		$scope.treeOPT.selectedComp=null;

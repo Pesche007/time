@@ -136,9 +136,7 @@ angular.module('time')
 	$scope.calcTime = function(from, to, add){
 		if(add){
 			var decimal=($scope.eventfocus.decimaltime % 1).toFixed(2);
-			console.log(decimal)
 			var hour = Math.floor($scope.eventfocus.decimaltime - parseInt(decimal));
-			console.log(hour)
 			var toNew = parseInt(from) + parseInt(hour*100) + parseInt(decimal*60);
 			var res = from + '-' + toNew;
 		}

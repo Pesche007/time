@@ -1,6 +1,6 @@
 'use strict';
 angular.module('core')
-.directive('timeQuickEntry', function($compile, $filter, ResourcesService){	
+.directive('timeQuickEntry', function($filter, ResourcesService){	
 	return {
 		restrict: "A",
 		replace:true,

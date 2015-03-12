@@ -121,9 +121,13 @@
                         <div class="form-group">
                             <input type="text" name="CalendarViewTimeFromInput" ng-model="eventfocus.time" class="form-control" ng-pattern="/^\d{4}(\-)\d{4}$/" ng-blur="updateTime('fromto')"/>
                             <div class="form-group alert alert-danger" role="alert" ng-show="CalendarView.CalendarViewTimeFromInput.$error.pattern">
-                                <span class="fa fa-times"></span> Format 1300-1800
+                                <span class="fa fa-times"></span> Format <strong>1300-1800</strong>
                             </div>      
-                            <input type="text" class="form-control width60" ng-model="eventfocus.decimaltime"  ng-blur="updateTime('hrs')"> hours
+                            <input type="text" name="CalendarViewTimeDecimal" class="form-control width60" ng-model="eventfocus.decimaltime" ng-blur="updateTime('hrs')" 
+                            ng-pattern="/^([0-9]|[0-9].\d|2[0-4])$/"> hours
+                            <div class="form-group alert alert-danger" role="alert" ng-show="CalendarView.CalendarViewTimeDecimal.$error.pattern">
+                                <span class="fa fa-times"></span> Format <strong>2.6</strong>, 1 - 24 hours
+                            </div>                              
                         </div>
                     </form>                    
                     <textarea class="form-control" rows="3" ng-model="eventfocus.comment" placeholder="Comments"></textarea><br />
