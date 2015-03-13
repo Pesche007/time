@@ -120,6 +120,9 @@ angular.module('time')
 	};    	
 	//Time functions
 	$scope.updateTime = function(caller){
+		if(!$scope.eventfocus.time){
+			return false;
+		}
 		if(caller==='fromto'){
 			var parts=$scope.eventfocus.time.split('-');
 			if(parts[0] && parts[0].length===4 && parts[1] && parts[1].length===4){

@@ -51,19 +51,7 @@
                         <div class="dropdown">
                             <button class="btn-none dropdown-toggle"><span class="fa fa-gears fa-2x"></span></button>                        
                             <ul class="dropdown-menu" role="menu">
-                                <li menu-enabled-disabled source="showListControls" text="Controls"></li>
-                                <!--<li>
-                                    <a href="javascript:void(0)" ng-click="showListControls=0">
-                                        <span class="fa fa-check" ng-class="{'vis-hidden': showListControls}"></span>
-                                        Show Controls
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0)" ng-click="showListControls=1">
-                                        <span class="fa fa-check" ng-class="{'vis-hidden': !showListControls}"></span>
-                                        Hide Controls
-                                    </a>
-                                </li> -->            
+                                <li menu-enabled-disabled source="showListControls" text="Controls"></li>           
                             </ul>
                         </div>
                     </li>  
@@ -73,10 +61,10 @@
                 <div class="table-responsive margin-top-M" ng-if="treeNew.length">                        
                     <table class="table table-nonfluid table-vertical-middle">            
                         <thead>
-                            <tr><th>Company</th><th>Project</th><th>Actions</th><th>Time</th><th>Comments</th></tr>
+                            <tr><th>Company</th><th>Project</th><th>Actions</th><th>Time</th><th>Comments</th><th></th></tr>
                         </thead>
                         <tbody>
-                             <tr ng-repeat="obj in treeNew track by $index">
+                             <tr ng-repeat="obj in treeNew track by $index" class="animate-enter">
                                 <td>{{obj.cmptitle}}</td>
                                 <td><span class="label label-primary">{{obj.prjtitle}}</span></td>
                                 <td>
@@ -86,7 +74,10 @@
                                 </td>
                                 <td>
                                     <span ng-if="obj.state!=3">{{calctime(obj)}}</span>
-                                    <input ng-if="obj.state==3" type="text" class="form-control width60" ng-model="obj.time" />
+                                    <form name="timerTimeForm" ng-if="obj.state==3">
+                                        <input name="timerTime" type="text" class="form-control width60" ng-model="obj.time" ng-pattern="/^([0-9]|[0-9].\d|2[0-4])$/" required/>
+                                        <div class="input-help"  ng-if="timerTimeForm.timerTime.$error.pattern">Format <strong>2.6</strong>, 1 - 24 hours</div> 
+                                    </form>
                                 </td>
                                 <td>
                                     <textarea class="form-control single-line" ng-model="obj.comment" placeholder="Comment"></textarea>

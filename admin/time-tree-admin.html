@@ -31,18 +31,18 @@
             </div>
             <div class="panel-body no-padding panel-list-group">        
             	<form name="addrateForm" class="form-spacer">
-                    <div class="animate-if padding-M" ng-if="ratesTMP.view">        	                    
-                        <input type="text" ng-model="ratesTMP.tmpobj.title" class="form-control" placeholder="Title" required>
-                        <select class="form-control" ng-model="ratesTMP.tmpobj.currency" required>
+                    <div class="animate-enter padding-M" ng-if="ratesTMP.view">        	                    
+                        <input name="rateTitle" type="text" ng-model="ratesTMP.tmpobj.title" class="form-control" placeholder="Title" required>
+                        <div class="input-help" ng-if="addrateForm.rateTitle.$error.required">Field is required</div>
+                        <select name="rateCurrency" class="form-control" ng-model="ratesTMP.tmpobj.currency" required>
                             <option value="" disabled selected>Currency</option>
                             <option value="CHF">CHF</option>
                             <option value="EUR">EUR</option>
                             <option value="USD">USD</option>
                         </select>
+                        <div class="input-help" ng-if="addrateForm.rateCurrency.$error.required">Field is required</div>
                         <input type="text" ng-model="ratesTMP.tmpobj.rate" class="form-control" name="R_Rate" placeholder="Rate" ng-pattern="/^[+]?\d+([.]\d+)?$/" required>
-                        <p class="text-danger" ng-show="addrateForm.R_Rate.$error.pattern">
-                            Only numbers allowed
-                        </p>
+                        <div class="input-help" ng-if="addrateForm.R_Rate.$error.pattern || addrateForm.R_Rate.$error.required">Only numbers - Field is Required</div>
                         <textarea name="R_Description" ng-model="ratesTMP.tmpobj.description" class="form-control" rows="2" placeholder="Description"></textarea>
                     </div>
                 </form>
@@ -93,20 +93,21 @@
             </div>
             <div class="panel-body">                 
                 <div s-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="showTree(item)" title="Company Name" drop-menu="true" drop-icon="fa-building-o"></div>
-                <div class="tree tree-list pull-left min-width33" ng-if="treeOPT.selectedComp.projects">
+                <div class="tree tree-list pull-left min-width33 animate-enter" ng-if="treeOPT.selectedComp.projects">
                     <button type="button" class="tree-close" ng-click="resetTreeView()">&times;</button>
                     <ul>
                         <li clickable-tree source="treeOPT.selectedComp" selected="treeOPT.tmpobj.id" function="editTreebranch(source)"></li>
                     </ul>
                 </div>               
-                <div class="animate-if padding-M margin-left-M pull-left min-width33 border position-relative" ng-if="treeOPT.addeditShow">                    
+                <div class="animate-enter padding-M margin-left-M pull-left min-width33 border position-relative" ng-if="treeOPT.addeditShow">                    
                     <button type="button" class="tree-close" ng-click="closeEditField()">&times;</button>
                     <tabset>
                         <tab ng-if="!treeOPT.tmpobj.isCompany">                                <!-- EDIT -->
-                            <tab-heading><i class="fa fa-pencil"></i></tab-heading>
+                            <tab-heading><i class="fa fa-pencil fa-lg"></i></tab-heading>
                             <h4>Edit <small>{{treeOPT.tmpobj.title}}</small></h4>
                             <form name="editTitleForm" class="form-spacer">
-                                <input type="text" class="form-control" ng-model="treeOPT.currProj.projectName" placeholder="Name" required>
+                                <input name="editTitle" type="text" class="form-control" ng-model="treeOPT.currProj.projectName" placeholder="Name" required>
+                                <div class="input-help" ng-if="editTitleForm.editTitle.$error.required">Field is required</div>
                                 <textarea class="form-control" ng-model="treeOPT.tmpobj.description" placeholder="Description"></textarea>
                             </form>   
                             <button class="btn btn-default pull-right margin-left-S" type="button" ng-click="editProject()" ng-disabled="editTitleForm.$invalid">
@@ -118,10 +119,11 @@
                             </button>                                                       
                         </tab>
                         <tab>
-                            <tab-heading><i class="fa fa-plus"></i></tab-heading>           <!-- ADD -->
+                            <tab-heading><i class="fa fa-sitemap fa-lg"></i></tab-heading>           <!-- ADD -->
                             <h4>Add Project to <small>{{treeOPT.tmpobj.title}}</small></h4>
                             <form name="newChildForm" class="form-spacer">
-                                <input type="text" ng-model="treeOPT.newProj.title" class="form-control" placeholder="Project Name" required>
+                                <input name="newChildTitle" type="text" ng-model="treeOPT.newProj.title" class="form-control" placeholder="Project Name" required>
+                                <div class="input-help" ng-if="newChildForm.newChildTitle.$error.required">Field is required</div>
                                 <textarea class="form-control" ng-model="treeOPT.newProj.description" placeholder="Description"></textarea>
                                 <button class="btn btn-default pull-right" type="button" ng-click="addNewProject()" ng-disabled="newChildForm.$invalid">
                                     <span class="fa fa-check"></span>
@@ -130,8 +132,8 @@
                             </form>                            
                         </tab>                        
                         <tab ng-if="!treeOPT.tmpobj.isCompany">                                <!-- People -->
-                            <tab-heading><i class="fa fa-user"></i></tab-heading>
-                            <h4>Manage Collaborators on <small>{{treeOPT.tmpobj.title}}</small></h4>
+                            <tab-heading><i class="fa fa-users fa-lg"></i></tab-heading>
+                            <h4>Collaborators on <small>{{treeOPT.tmpobj.title}}</small></h4>
                             <div class="form-inline margin-bottom-S">
                                 <input type="text" ng-model="treeOPT.peopleselect" placeholder="Person Name" typeahead-on-select="updatePeople($item, treeOPT.tmpobj.people, 'peopleselect')" typeahead="person as (person.firstname + ' ' + person.lastname) for person in people | filter:$viewValue" class="form-control">
                                 <div class="btn-group" dropdown>
@@ -154,6 +156,13 @@
                                 </li>
                             </ul>                                                
                         </tab>
+                        <tab ng-if="!treeOPT.tmpobj.isCompany">   <!-- Rates -->
+                            <tab-heading><i class="fa fa-money fa-lg"></i></tab-heading>
+                            <h4>Rates on <small>{{treeOPT.tmpobj.title}}</small></h4>
+                            <select class="form-control" ng-model="treeOPT.tmpobj.rate" ng-options="rate.id as (rate.title + ' - ' + rate.currency + ' ' + rate.rate) for rate in ratesTMP.rates">
+                                <option value='' disabled selected>Select Rate</option>
+                            </select>
+                        </tab>                        
                     </tabset>                                    
                 </div>                 
             </div>

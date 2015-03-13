@@ -32,7 +32,7 @@
                 <div ng-if="showAllProjects">                      
                     <div s-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="timeUpdate(item)" title="Company Name" drop-menu="true" drop-icon="fa-building-o">
                     </div>
-                    <div class="tree tree-list pull-left min-width33" ng-if="treeOPT.selectedComp.projects">
+                    <div class="tree tree-list pull-left min-width33 animate-enter" ng-if="treeOPT.selectedComp.projects">
                         <button type="button" class="tree-close" ng-click="resetTreeView()">&times;</button>
                         <ul>
                             <li clickable-tree source="treeOPT.selectedComp" selected="treeOPT.tmpobj.id" function="treeNewentry(source)"></li>
@@ -92,12 +92,8 @@
                                 <td><span class="label label-primary">{{obj.prjtitle}}</span></td>
                                 <td>
                                     <form name="myform" class="form-inline"> 
-                                        <input type="text" class="form-control" name="price_field" ng-model="obj.time" ng-pattern="/(^\d{1,2}(?:\.\d{1,2})?$)|(^\d{4}(\-)\d{4})/" placeholder="Time"
-                                        ng-model-options="{ updateOn: 'blur' }">
-                                        <div class="alert alert-info" role="alert" ng-show="myform.price_field.$error.pattern">
-                                            Valid times:<br />
-                                            1. Hours <strong>1.5</strong><br />2. From-To <strong>1000-1200</strong></span>
-                                        </div>
+                                        <input type="text" class="form-control" name="price_field" ng-model="obj.time" ng-pattern="/(^\d{1,2}(?:\.\d{1,2})?$)|(^\d{4}(\-)\d{4})$/" placeholder="Time" required>
+                                        <div class="input-help" ng-if="myform.price_field.$error.pattern">Format: 4.5 or 1000-1430</div>                                        
                                     </form>
                                 </td>
                                 <td>                                    
@@ -115,7 +111,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2"></td>
-                                <td colspan="2">{{displaySum()}}</td>                                
+                                <td colspan="2"><span class="doubleUnderline">{{displaySum()}}</span></td>                                
                             </tr>
                         </tbody>
                     </table> 
