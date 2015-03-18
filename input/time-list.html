@@ -4,24 +4,22 @@
             <div class="panel-heading">
             	<h4>Projects</h4> 
                 <ul class="panel-header-actions border-light"> <!-- PROJECTS Menu -->
-                    <li>
-                        <div class="dropdown">
-                            <button class="btn-none dropdown-toggle"><span class="fa fa-gears fa-2x"></span></button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="javascript:void(0)" ng-click="showAllProjects=0">
-                                        <span class="fa fa-check" ng-class="{'vis-hidden': showAllProjects}"></span>
-                                        Show only assigned projects
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0)" ng-click="showAllProjects=1">
-                                        <span class="fa fa-check" ng-class="{'vis-hidden': !showAllProjects}"></span>
-                                        Show all projects
-                                    </a>
-                                </li>             
-                            </ul>
-                        </div>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle dropdown-options"><span class="fa fa-ellipsis-v fa-2x"></span></a>  
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="javascript:void(0)" ng-click="showAllProjects=0">
+                                    <span class="fa fa-check" ng-class="{'vis-hidden': showAllProjects}"></span>
+                                    Show only assigned projects
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" ng-click="showAllProjects=1">
+                                    <span class="fa fa-check" ng-class="{'vis-hidden': !showAllProjects}"></span>
+                                    Show all projects
+                                </a>
+                            </li>             
+                        </ul>
                     </li> 
                 </ul>                                 
             </div>
@@ -47,18 +45,16 @@
             <div class="panel-heading">
                 <h4>Entries</h4>
                 <ul class="panel-header-actions border-light"> <!-- TIME Menu -->
-                    <li>
-                        <div class="dropdown">
-                            <button class="btn-none dropdown-toggle"><span class="fa fa-gears fa-2x"></span></button>                       
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="javascript:void(0)" ng-click="treeOPT.editItems=!treeOPT.editItems">
-                                        <span class="fa" ng-class="{'fa-pencil-square-o':!treeOPT.editItems, 'fa-check':treeOPT.editItems}"></span> 
-                                        <span ng-if="!treeOPT.editItems">Edit Time Items</span><span ng-if="treeOPT.editItems">Done Editing</span>
-                                    </a>                                 
-                                </li>             
-                            </ul>
-                        </div>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle dropdown-options"><span class="fa fa-ellipsis-v fa-2x"></span></a>                        
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="javascript:void(0)" ng-click="treeOPT.editItems=!treeOPT.editItems">
+                                    <span class="fa" ng-class="{'fa-pencil-square-o':!treeOPT.editItems, 'fa-check':treeOPT.editItems}"></span> 
+                                    <span ng-if="!treeOPT.editItems">Edit Time Items</span><span ng-if="treeOPT.editItems">Done Editing</span>
+                                </a>                                 
+                            </li>             
+                        </ul>                        
                     </li>                   
                     <li ng-if="treeOPT.editItems">
                         <button class="btn-none" ng-click="treeOPT.editItems=0"><span class="fa fa-check fa-2x"></span></button>

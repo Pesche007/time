@@ -23,11 +23,12 @@ angular.module('core')
 	        html+='           	<li ng-repeat="obj in projects" ng-class="{\'dropdown-submenu\':obj.projects.length}" ng-include="\'recursion.html\'"></li>';
 	        html+='			</ul>';
 	        html+='		</div>'
-	        html+='		<form name="quickTimeForm" ng-if="showDateTime" class="pull-left margin-bottom-S form-inline animate-enter">';
+	        html+='		<div class="clearfix"></div>';
+	        html+='		<form name="quickTimeForm" ng-if="showDateTime" class="margin-bottom-S form-inline animate-enter">';
 	        html+='			<input type="text" class="form-control width100 margin-bottom-S" datepicker-popup="dd.MM.yyyy" ng-model="entry.date" ng-click="open($event, 0)" is-open="opened[0]" placeholder="Date" required>';	    
-	        html+='			<div class="form-group has-feedback" ng-class="{\'has-error\':quickTimeForm.time_field.$error.pattern}">';
+	        html+='			<div class="form-group">';
 	        html+='				<input type="text" class="form-control width100 margin-bottom-S" name="time_field" ng-model="entry.time" ng-pattern="/(^\\\d{1,2}(?:\\\.\\\d{1,2})?$)|(^\\\d{4}(\\\-)\\\d{4})/" placeholder="Time" required>';            
-	        html+='				<span ng-if="quickTimeForm.time_field.$error.pattern" class="fa fa-times form-control-feedback"></span>';
+	        html+='				<div class="input-help" ng-if="quickTimeForm.time_field.$error.pattern">Format: 4.5 or 1000-1430</div>';	    
 	        html+='			</div>';
             html+='			<textarea class="form-control single-line margin-bottom-S" ng-model="entry.comment" placeholder="Comment"></textarea>';
 	        html+='			<button class="btn btn-primary" ng-disabled="quickTimeForm.$invalid" ng-click="submitForm()"><span class="fa fa-check"></span></button>';
