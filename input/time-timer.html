@@ -2,7 +2,7 @@
     <div class="col-sm-3">
         <div class="panel panel-white no-border-radius">
             <div class="panel-heading">
-                <h4>Projects</h4> 
+                <h4>Projekte</h4> 
                 <ul class="panel-header-actions border-light"> <!-- PROJECTS Menu -->
                     <li class="dropdown">
                         <a class="dropdown-toggle dropdown-options"><span class="fa fa-ellipsis-v fa-2x"></span></a>  
@@ -10,13 +10,13 @@
                             <li>
                                 <a href="javascript:void(0)" ng-click="showAllProjects=0">
                                     <span class="fa fa-check" ng-class="{'vis-hidden': showAllProjects}"></span>
-                                    Show only assigned projects
+                                     Nur meine Projekte zeigen
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" ng-click="showAllProjects=1">
                                     <span class="fa fa-check" ng-class="{'vis-hidden': !showAllProjects}"></span>
-                                    Show all projects
+                                    Alle Projekte zeigen
                                 </a>
                             </li>             
                         </ul>
@@ -25,12 +25,12 @@
             </div>
             <div class="panel-body">  
                 <div ng-if="!showAllProjects">  
-                    Assigned Projects
+                    Meine Projekte
                 </div>
                 <div ng-if="showAllProjects">                      
-                    <div s-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="timeUpdate(item)" title="Company Name" drop-menu="true" drop-icon="fa-building-o">
+                    <div s-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="timeUpdate(item)" title="Firma" drop-menu="true" drop-icon="fa-building-o">
                     </div>
-                    <div class="tree tree-list pull-left min-width33" ng-if="treeOPT.selectedComp.projects">
+                    <div class="tree tree-list pull-left min-width50" ng-if="treeOPT.selectedComp.projects">
                         <button type="button" class="tree-close" ng-click="resetTreeView()">&times;</button>
                         <ul>
                             <li clickable-tree source="treeOPT.selectedComp" selected="treeOPT.tmpobj.id" function="treeNewentry(source)"></li>
@@ -43,12 +43,12 @@
     <div class="col-sm-9">
         <div class="panel panel-white no-border-radius">
             <div class="panel-heading">
-                <h4>Timer</h4>
+                <h4>Stoppuhr</h4>
                 <ul class="panel-header-actions border-light"> <!-- Timer Menu -->
                     <li class="dropdown">
                         <a class="dropdown-toggle dropdown-options"><span class="fa fa-ellipsis-v fa-2x"></span></a>                          
                         <ul class="dropdown-menu" role="menu">
-                            <li menu-enabled-disabled source="showListControls" text="Controls"></li>           
+                            <li menu-enabled-disabled source="showListControls" text-show="Bearbeitung aktiv" text-hide="Bearbeitung inaktiv"></li>           
                         </ul>
                     </li>  
                 </ul>
@@ -57,7 +57,7 @@
                 <div class="table-responsive margin-top-M" ng-if="treeNew.length">                        
                     <table class="table table-nonfluid table-vertical-middle">            
                         <thead>
-                            <tr><th>Company</th><th>Project</th><th>Actions</th><th>Time</th><th>Comments</th><th></th></tr>
+                            <tr><th>Firma</th><th>Projekt</th><th>Aktionen</th><th>Zeit</th><th>Beschreibung</th><th></th></tr>
                         </thead>
                         <tbody>
                              <tr ng-repeat="obj in treeNew track by $index" class="animate-enter">
@@ -71,15 +71,15 @@
                                 <td>
                                     <span ng-if="obj.state!=3">{{calctime(obj)}}</span>
                                     <form name="timerTimeForm" ng-if="obj.state==3">
-                                        <input name="timerTime" type="text" class="form-control width60" ng-model="obj.time" ng-pattern="/^([0-9]|[0-9].\d|2[0-4])$/" required/>
+                                        <input name="timerTime" type="text" class="form-control width60" ng-model="obj.time" ng-pattern="/^([0-9]|[0-9].\d|2[0-4])$/" placeholder="Zeit" required/>
                                         <div class="input-help"  ng-if="timerTimeForm.timerTime.$error.pattern">Format <strong>2.6</strong>, 1 - 24 hours</div> 
                                     </form>
                                 </td>
                                 <td>
-                                    <textarea class="form-control single-line" ng-model="obj.comment" placeholder="Comment"></textarea>
+                                    <textarea class="form-control single-line" ng-model="obj.comment" placeholder="Beschreibung"></textarea>
                                 </td> 
                                 <td>
-                                    <button ng-if="showListControls" type="button" modal-confirm title="Confirm" text="Delete Entry?" function="itemRemove($index)" class="btn btn-default">
+                                    <button ng-if="showListControls" type="button" modal-confirm title="Löschen" text="Zeiteintrag auf Projekt &quot;{{obj.prjtitle}}&quot; wirklich löschen?" function="itemRemove($index)" class="btn btn-default">
                                         <span class="fa fa-trash-o"></span>
                                     </button>
                                 </td>                   

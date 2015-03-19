@@ -14,7 +14,7 @@ angular.module('core')
 			html+='				<li ng-repeat="obj in obj.projects" ng-class="{\'dropdown-submenu\':obj.projects.length}" ng-include="\'recursion.html\'"></li>';
 			html+='			</ul>'
 			html+='		</script>';
-			html+='		<input type="text" class="form-control width150 pull-left margin-right-S margin-bottom-S" ng-model="company" typeahead="company as company.title for company in companies | filter:$viewValue | limitTo:8" typeahead-min-length="3" typeahead-on-select="loadProjects($item)" placeholder="Company">';			
+			html+='		<input type="text" class="form-control width150 pull-left margin-right-S margin-bottom-S" ng-model="company" typeahead="company as company.title for company in companies | filter:$viewValue | limitTo:8" typeahead-min-length="3" typeahead-on-select="loadProjects($item)" placeholder="Firma">';
 	        html+='     <div class="dropdown pull-left margin-right-S margin-bottom-S" ng-if="projects">';
 	        html+='			<button type="button" class="btn btn-default dropdown-toggle">';
 	        html+='				{{projectTitle}} <span class="caret" ng-if="projects.length"></span>';
@@ -27,10 +27,10 @@ angular.module('core')
 	        html+='		<form name="quickTimeForm" ng-if="showDateTime" class="margin-bottom-S form-inline animate-enter">';
 	        html+='			<input type="text" class="form-control width100 margin-bottom-S" datepicker-popup="dd.MM.yyyy" ng-model="entry.date" ng-click="open($event, 0)" is-open="opened[0]" placeholder="Date" required>';	    
 	        html+='			<div class="form-group">';
-	        html+='				<input type="text" class="form-control width100 margin-bottom-S" name="time_field" ng-model="entry.time" ng-pattern="/(^\\\d{1,2}(?:\\\.\\\d{1,2})?$)|(^\\\d{4}(\\\-)\\\d{4})/" placeholder="Time" required>';            
-	        html+='				<div class="input-help" ng-if="quickTimeForm.time_field.$error.pattern">Format: 4.5 or 1000-1430</div>';	    
+	        html+='				<input type="text" class="form-control width100 margin-bottom-S" name="time_field" ng-model="entry.time" ng-pattern="/(^\\\d{1,2}(?:\\\.\\\d{1,2})?$)|(^\\\d{4}(\\\-)\\\d{4})/" placeholder="Zeit" required>';            
+	        html+='				<div class="input-help" ng-if="quickTimeForm.time_field.$error.pattern">Format: 4.5 | 1000-1430</div>';	    
 	        html+='			</div>';
-            html+='			<textarea class="form-control single-line margin-bottom-S" ng-model="entry.comment" placeholder="Comment"></textarea>';
+            html+='			<textarea class="form-control single-line margin-bottom-S" ng-model="entry.comment" placeholder="Beschreibung"></textarea>';
 	        html+='			<button class="btn btn-primary" ng-disabled="quickTimeForm.$invalid" ng-click="submitForm()"><span class="fa fa-check"></span></button>';
 	        html+='		</form>';
 	        html+='</div>';
@@ -51,11 +51,11 @@ angular.module('core')
 				ResourcesService.listProjects(obj.id).then(function(result) {
 					$scope.projects = result.data.projectData;
 					if($scope.projects.length){
-						$scope.projectTitle= 'Projects';
+						$scope.projectTitle= 'Projekte';
 						$scope.entry.cmpid=obj.id;	
 					}
 					else {
-						$scope.projectTitle= 'No Projects found';
+						$scope.projectTitle= 'Keine Projekte';
 					}
 					$scope.showDateTime=false;
 					emptyForm();
@@ -77,7 +77,7 @@ angular.module('core')
 		  	$scope.submitForm=function(){
 		  		console.log('submit');
 		  		emptyForm();
-				$scope.projectTitle= 'Projects';
+				$scope.projectTitle= 'Projekte';
 				$scope.entry.prjid=null;		  		
 		  		$scope.showDateTime=false;
 		  	};

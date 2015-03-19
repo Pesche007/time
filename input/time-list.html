@@ -2,7 +2,7 @@
 	<div class="col-sm-3">
 		<div class="panel panel-white no-border-radius">
             <div class="panel-heading">
-            	<h4>Projects</h4> 
+            	<h4>Projekte</h4> 
                 <ul class="panel-header-actions border-light"> <!-- PROJECTS Menu -->
                     <li class="dropdown">
                         <a class="dropdown-toggle dropdown-options"><span class="fa fa-ellipsis-v fa-2x"></span></a>  
@@ -10,13 +10,13 @@
                             <li>
                                 <a href="javascript:void(0)" ng-click="showAllProjects=0">
                                     <span class="fa fa-check" ng-class="{'vis-hidden': showAllProjects}"></span>
-                                    Show only assigned projects
+                                    Nur meine Projekte zeigen
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" ng-click="showAllProjects=1">
                                     <span class="fa fa-check" ng-class="{'vis-hidden': !showAllProjects}"></span>
-                                    Show all projects
+                                    Alle Projekte zeigen
                                 </a>
                             </li>             
                         </ul>
@@ -25,12 +25,12 @@
             </div>
             <div class="panel-body">  
                 <div ng-if="!showAllProjects">  
-                    Assigned Projects
+                    Meine Projekte
                 </div>
                 <div ng-if="showAllProjects">                      
-                    <div s-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="timeUpdate(item)" title="Company Name" drop-menu="true" drop-icon="fa-building-o">
+                    <div s-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="timeUpdate(item)" title="Firma" drop-menu="true" drop-icon="fa-building-o">
                     </div>
-                    <div class="tree tree-list pull-left min-width33 animate-enter" ng-if="treeOPT.selectedComp.projects">
+                    <div class="tree tree-list pull-left min-width50 animate-enter" ng-if="treeOPT.selectedComp.projects">
                         <button type="button" class="tree-close" ng-click="resetTreeView()">&times;</button>
                         <ul>
                             <li clickable-tree source="treeOPT.selectedComp" selected="treeOPT.tmpobj.id" function="treeNewentry(source)"></li>
@@ -43,7 +43,7 @@
     <div class="col-sm-9">
         <div class="panel panel-white no-border-radius">
             <div class="panel-heading">
-                <h4>Entries</h4>
+                <h4>Einträge</h4>
                 <ul class="panel-header-actions border-light"> <!-- TIME Menu -->
                     <li class="dropdown">
                         <a class="dropdown-toggle dropdown-options"><span class="fa fa-ellipsis-v fa-2x"></span></a>                        
@@ -51,7 +51,7 @@
                             <li>
                                 <a href="javascript:void(0)" ng-click="treeOPT.editItems=!treeOPT.editItems">
                                     <span class="fa" ng-class="{'fa-pencil-square-o':!treeOPT.editItems, 'fa-check':treeOPT.editItems}"></span> 
-                                    <span ng-if="!treeOPT.editItems">Edit Time Items</span><span ng-if="treeOPT.editItems">Done Editing</span>
+                                    <span ng-if="!treeOPT.editItems">Einträge bearbeiten</span><span ng-if="treeOPT.editItems">Bearbeitung beenden</span>
                                 </a>                                 
                             </li>             
                         </ul>                        
@@ -75,11 +75,11 @@
                     <table ng-if="treeNew.length" class="table table-nonfluid table-vertical-middle">            
                         <thead>
                             <tr>
-                                <th>Company</th>
-                                <th>Project</th>
-                                <th>Hours</th>
-                                <th>Comments</th>
-                                <th ng-if="treeOPT.editItems">Actions</th>
+                                <th>Firma</th>
+                                <th>Projekt</th>
+                                <th>Zeit</th>
+                                <th>Beschreibung</th>
+                                <th ng-if="treeOPT.editItems">Aktionen</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -88,18 +88,18 @@
                                 <td><span class="label label-primary">{{obj.prjtitle}}</span></td>
                                 <td>
                                     <form name="myform" class="form-inline"> 
-                                        <input type="text" class="form-control" name="price_field" ng-model="obj.time" ng-pattern="/(^\d{1,2}(?:\.\d{1,2})?$)|(^\d{4}(\-)\d{4})$/" placeholder="Time" required>
+                                        <input type="text" class="form-control" name="price_field" ng-model="obj.time" ng-pattern="/(^\d{1,2}(?:\.\d{1,2})?$)|(^\d{4}(\-)\d{4})$/" placeholder="Zeit" required>
                                         <div class="input-help" ng-if="myform.price_field.$error.pattern">Format: 4.5 or 1000-1430</div>                                        
                                     </form>
                                 </td>
                                 <td>                                    
-                                    <textarea class="form-control single-line" ng-model="obj.comment" placeholder="Comment"></textarea>
+                                    <textarea class="form-control single-line" ng-model="obj.comment" placeholder="Beschreibung"></textarea>
                                 </td>
                                 <td ng-if="treeOPT.editItems">
                                     <button type="button" ng-click="treeInputTableCopy(obj, $index)" class="btn-none">
                                         <span class="fa fa-files-o"></span>
                                     </button>                                
-                                    <button type="button" modal-confirm title="Confirm" text="Delete Time Entry for Company {{obj.cmptitle}} and <strong>Project {{obj.prjtitle}}</strong>?" 
+                                    <button type="button" modal-confirm title="Löschen" text="Eintrag auf Firma {{obj.cmptitle}} und <strong>Projekt {{obj.prjtitle}}</strong> wirklich löschen?" 
                                     function="treeInputTableRemove($index)" class="btn-none">
                                         <span class="fa fa-trash-o"></span>
                                     </button> 

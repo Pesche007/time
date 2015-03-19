@@ -2,7 +2,7 @@
 	<div class="col-sm-3">       
         <div class="panel panel-white no-border-radius">
             <div class="panel-heading">
-                <h4>Projects</h4> 
+                <h4>Projekte</h4> 
                 <ul class="panel-header-actions border-light"> <!-- PROJECTS Menu -->
                     <li class="dropdown">
                         <a class="dropdown-toggle dropdown-options"><span class="fa fa-ellipsis-v fa-2x"></span></a>  
@@ -10,13 +10,13 @@
                             <li>
                                 <a href="javascript:void(0)" ng-click="showAllProjects=0">
                                     <span class="fa fa-check" ng-class="{'vis-hidden': showAllProjects}"></span>
-                                    Show only assigned projects
+                                    Nur meine Projekte zeigen
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" ng-click="showAllProjects=1">
                                     <span class="fa fa-check" ng-class="{'vis-hidden': !showAllProjects}"></span>
-                                    Show all projects
+                                    Alle Projekte zeigen
                                 </a>
                             </li>             
                         </ul>
@@ -25,11 +25,11 @@
             </div>
             <div class="panel-body">
                 <div ng-if="!showAllProjects">  
-                    Assigned Projects
+                    Meine Projekte
                 </div>
                 <div ng-if="showAllProjects">  
-                    <div s-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="timeUpdate(item)" title="Company Name" drop-menu="true" drop-icon="fa-building-o"></div>
-                    <div class="tree tree-list pull-left min-width33" ng-if="treeOPT.selectedComp.projects">
+                    <div s-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="timeUpdate(item)" title="Firma" drop-menu="true" drop-icon="fa-building-o"></div>
+                    <div class="tree tree-list pull-left min-width50" ng-if="treeOPT.selectedComp.projects">
                         <button type="button" class="tree-close" ng-click="resetTreeView()">&times;</button>
                         <ul>
                             <li clickable-tree source="treeOPT.selectedComp" drag-node="true"></li>
@@ -42,34 +42,35 @@
     <div class="col-sm-6"> 
         <div class="panel panel-white no-border-radius">
             <div class="panel-heading">
-            	<h4>Calendar</h4>
+            	<h4>Kalender</h4>
                 <ul class="panel-header-actions border-light"> <!-- CAlendar Menu -->
                     <li class="dropdown">
                         <a class="dropdown-toggle dropdown-options"><span class="fa fa-ellipsis-v fa-2x"></span></a>                       
                         <ul class="dropdown-menu" role="menu">
                             <li>
-                                <a href="javascript:void(0)" ng-click="calendarSimplecontrol('today')"><span class="fa fa-dot-circle-o"></span> Today</a>
+                                <a href="javascript:void(0)" ng-click="calendarSimplecontrol('today')"><span class="fa fa-dot-circle-o"></span> Heute</a>
+                            </li>
+                            <li class="dropdown-header">Ansicht</li>
+                            <li>
+                                <a href="javascript:void(0)" ng-click="calendarAdvancedcontrol('changeView', 'agendaDay')"><span class="fa fa-calendar-o"></span> Tag</a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" ng-click="calendarAdvancedcontrol('changeView', 'agendaDay')"><span class="fa fa-calendar-o"></span> Day</a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" ng-click="calendarAdvancedcontrol('changeView', 'agendaWeek')"><span class="fa fa-columns"></span> Week</a>
+                                <a href="javascript:void(0)" ng-click="calendarAdvancedcontrol('changeView', 'agendaWeek')"><span class="fa fa-columns"></span> Woche</a>
                             </li>   
                             <li>
-                                <a href="javascript:void(0)" ng-click="calendarAdvancedcontrol('changeView', 'month')"><span class="fa fa-calendar"></span> Month</a>
+                                <a href="javascript:void(0)" ng-click="calendarAdvancedcontrol('changeView', 'month')"><span class="fa fa-calendar"></span> Monat</a>
                             </li> 
                             <li class="divider"></li>
                             <li>
                                 <a href="javascript:void(0)" ng-click="toggleWeekends(true)">
                                     <span class="fa fa-check" ng-class="{'vis-hidden': !showWeekend}"></span>
-                                    Show Weekends
+                                    Wochenenden anzeigen
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:void(0)" ng-click="toggleWeekends(false)">
                                     <span class="fa fa-check" ng-class="{'vis-hidden': showWeekend}"></span>
-                                    Hide Weekends
+                                    Wochenenden verbergen
                                 </a>
                             </li>                                                                      
                         </ul>
@@ -91,18 +92,11 @@
         <form name="calendarForm"> 
             <div class="panel panel-white no-border-radius">
                 <div class="panel-heading">
-                	<h4>Selected</h4>
+                	<h4>Ausgewählt</h4>
                     <ul class="panel-header-actions border-light"  ng-if="eventfocus.visible"> <!-- Selected Menu -->
-                        <li class="dropdown">
-                            <a class="dropdown-toggle dropdown-options"><span class="fa fa-ellipsis-v fa-2x"></span></a>                         
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                <a href="javascript:void(0)" modal-confirm title="Confirm" text="Delete Selected Entry?" function="eventdetailsdelete()">
-                                    <span class="fa fa-trash-o"></span> Delete Entry
-                                </a>
-                                </li>             
-                            </ul>
-                        </li>
+                        <li>
+                            <button class="btn-none" modal-confirm title="Löschen" text="Ausgewählten Eintrag wirklich löschen?" function="eventdetailsdelete()"><span class="fa fa-trash-o fa-2x"></span></button>
+                        </li> 
                         <li>
                             <button class="btn-none" ng-click="eventdetailssave()" ng-disabled="calendarForm.$invalid"><span class="fa fa-check fa-2x"></span></button>
                         </li> 
@@ -115,16 +109,16 @@
                             <div class="form-inline margin-bottom-S">
                             {{eventfocus.start | date:'EEE dd.MM.yyyy'}}
                                 <div class="form-group">
-                                    <input type="text" name="calendarFormTime" ng-model="eventfocus.time" class="form-control" ng-pattern="/^\d{4}(\-)\d{4}$/" ng-blur="updateTime('fromto')" required>    
+                                    <input type="text" name="calendarFormTime" ng-model="eventfocus.time" class="form-control" ng-pattern="/^\d{4}(\-)\d{4}$/" ng-blur="updateTime('fromto')" required placeholder="Zeit">    
                                     <div class="input-help" ng-if="calendarForm.calendarFormTime.$error.pattern">Format <strong>1300-1800</strong></div>
                                 </div>                  
                                 <div class="form-group">                  
                                     <input type="text" name="calendarFormDecimal" class="form-control width60" ng-model="eventfocus.decimaltime" ng-blur="updateTime('hrs')" 
-                                    ng-pattern="/^([0-9]|[0-9].\d|2[0-4])$/" required> hours
+                                    ng-pattern="/^([0-9]|[0-9].\d|2[0-4])$/" required> Stunden
                                     <div class="input-help" role="alert" ng-if="calendarForm.calendarFormDecimal.$error.pattern">Format <strong>2.6</strong>, 1 - 24 hours</div>
                                 </div>
                             </div>
-                        <textarea class="form-control" rows="3" ng-model="eventfocus.comment" placeholder="Comments"></textarea><br />
+                        <textarea class="form-control" rows="3" ng-model="eventfocus.comment" placeholder="Beschreibung"></textarea><br />
                         <div class="alert alert-danger" ng-if="eventfocus.error">{{eventfocus.error}}</div>
                     </div>                
                 </div>

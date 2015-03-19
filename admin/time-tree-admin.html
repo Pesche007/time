@@ -2,18 +2,18 @@
     <div class="col-sm-3">
         <div class="panel panel-white no-border-radius">
             <div class="panel-heading">
-            	<h4>Rates</h4>
+            	<h4>Stundensätze</h4>
                 <ul class="panel-header-actions border-light"> <!-- RATES Menu -->
                     <li class="dropdown">
                         <a class="dropdown-toggle dropdown-options"><span class="fa fa-ellipsis-v fa-2x"></span></a>   
                         <ul class="dropdown-menu" role="menu">
                             <li>
-                                <a href="javascript:void(0)" ng-click="addRate()"><span class="fa fa-plus"></span> New Rate</a>     
+                                <a href="javascript:void(0)" ng-click="addRate()"><span class="fa fa-plus"></span> Neuer Stundensatz</a>     
                             </li>
                             <li>
                                 <a href="javascript:void(0)" ng-click="ratesTMP.ratesEdit=!ratesTMP.ratesEdit">
                                     <span class="fa" ng-class="{'fa-pencil-square-o':!ratesTMP.ratesEdit, 'fa-check':ratesTMP.ratesEdit}"></span> 
-                                    <span ng-if="!ratesTMP.ratesEdit">Edit Rates</span><span ng-if="ratesTMP.ratesEdit">Done Editing</span>
+                                    <span ng-if="!ratesTMP.ratesEdit">Stundensätze bearbeiten</span><span ng-if="ratesTMP.ratesEdit">Bearbeiten beenden</span>
                                 </a>                                 
                             </li>             
                         </ul>
@@ -51,7 +51,7 @@
                                 <button class="btn-none" ng-click="rateEdit(rate, $index)">
                                     <span class="fa fa-pencil margin-right-S"></span>                        
                                 </button>
-                                <button class="btn-none" modal-confirm title="Confirm" text="Delete Rate &quot;{{rate.title}}&quot;?" function="rateDelete(rate.id, $index)">
+                                <button class="btn-none" modal-confirm title="Löschen" text="Stundensatz &quot;{{rate.title}}&quot; wirklich löschen?" function="rateDelete(rate.id, $index)">
                                     <span class="fa fa-trash-o"></span>
                                 </button>                                
                             </div>
@@ -64,31 +64,10 @@
     <div class="col-sm-9">
         <div class="panel panel-white no-border-radius">
             <div class="panel-heading">
-            	<h4>Projects</h4>
-                <ul class="panel-header-actions border-light"> <!-- PROJECTS Menu -->
-                    <li class="dropdown">                    
-                        <a class="dropdown-toggle dropdown-options"><span class="fa fa-ellipsis-v fa-2x"></span></a>                            
-                        <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a href="javascript:void(0)" ng-model="treeOpt.treePeopleView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
-                                    <span class="fa fa-user"></span>
-                                    <span ng-if="!treeOpt.treePeopleView">Show Assigned People</span>
-                                    <span ng-if="treeOpt.treePeopleView">Hide Assigned People</span>     
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" ng-model="treeOpt.treeRatesView" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
-                                    <span class="fa fa-usd"></span>
-                                    <span ng-if="!treeOpt.treeRatesView">Show Rates</span>
-                                    <span ng-if="treeOpt.treeRatesView">Hide Rates</span>     
-                                </a>                               
-                            </li>             
-                        </ul>
-                    </li> 
-                </ul>           
+            	<h4>Projekte</h4>          
             </div>
             <div class="panel-body">                 
-                <div s-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="showTree(item)" title="Company Name" drop-menu="true" drop-icon="fa-building-o"></div>
+                <div s-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="showTree(item)" title="Firma" drop-menu="true" drop-icon="fa-building-o"></div>
                 <div class="tree tree-list pull-left min-width33 animate-enter" ng-if="treeOPT.selectedComp.projects">
                     <button type="button" class="tree-close" ng-click="resetTreeView()">&times;</button>
                     <ul>
@@ -100,11 +79,11 @@
                     <tabset>
                         <tab ng-if="!treeOPT.tmpobj.isCompany">                                <!-- EDIT -->
                             <tab-heading><i class="fa fa-pencil fa-lg"></i></tab-heading>
-                            <h4>Edit <small>{{treeOPT.tmpobj.title}}</small></h4>
+                            <h4>Bearbeiten <small>{{treeOPT.tmpobj.title}}</small></h4>
                             <form name="editTitleForm" class="form-spacer">
                                 <input name="editTitle" type="text" class="form-control" ng-model="treeOPT.currProj.projectName" placeholder="Name" required>
-                                <div class="input-help" ng-if="editTitleForm.editTitle.$error.required">Field is required</div>
-                                <textarea class="form-control" ng-model="treeOPT.tmpobj.description" placeholder="Description"></textarea>
+                                <div class="input-help" ng-if="editTitleForm.editTitle.$error.required">Eingabe ist erforderlich</div>
+                                <textarea class="form-control" ng-model="treeOPT.tmpobj.description" placeholder="Beschreibung"></textarea>
                             </form>   
                             <button class="btn btn-default pull-right margin-left-S" type="button" ng-click="editProject()" ng-disabled="editTitleForm.$invalid">
                                 <span class="fa fa-check"></span>
@@ -116,11 +95,11 @@
                         </tab>
                         <tab>
                             <tab-heading><i class="fa fa-sitemap fa-lg"></i></tab-heading>           <!-- ADD -->
-                            <h4>Add Project to <small>{{treeOPT.tmpobj.title}}</small></h4>
+                            <h4>Neues Teil-Projekt <small>{{treeOPT.tmpobj.title}}</small></h4>
                             <form name="newChildForm" class="form-spacer">
-                                <input name="newChildTitle" type="text" ng-model="treeOPT.newProj.title" class="form-control" placeholder="Project Name" required>
-                                <div class="input-help" ng-if="newChildForm.newChildTitle.$error.required">Field is required</div>
-                                <textarea class="form-control" ng-model="treeOPT.newProj.description" placeholder="Description"></textarea>
+                                <input name="newChildTitle" type="text" ng-model="treeOPT.newProj.title" class="form-control" placeholder="Projekt" required>
+                                <div class="input-help" ng-if="newChildForm.newChildTitle.$error.required">Eingabe ist erforderlich</div>
+                                <textarea class="form-control" ng-model="treeOPT.newProj.description" placeholder="Beschreibung"></textarea>
                                 <button class="btn btn-default pull-right" type="button" ng-click="addNewProject()" ng-disabled="newChildForm.$invalid">
                                     <span class="fa fa-check"></span>
                                 </button>
@@ -129,9 +108,9 @@
                         </tab>                        
                         <tab ng-if="!treeOPT.tmpobj.isCompany">                                <!-- People -->
                             <tab-heading><i class="fa fa-users fa-lg"></i></tab-heading>
-                            <h4>Collaborators on <small>{{treeOPT.tmpobj.title}}</small></h4>
+                            <h4>Mitarbeiter <small>{{treeOPT.tmpobj.title}}</small></h4>
                             <div class="form-inline margin-bottom-S">
-                                <input type="text" ng-model="treeOPT.peopleselect" placeholder="Person Name" typeahead-on-select="updatePeople($item, treeOPT.tmpobj.people, 'peopleselect')" typeahead="person as (person.firstname + ' ' + person.lastname) for person in people | filter:$viewValue" class="form-control">
+                                <input type="text" ng-model="treeOPT.peopleselect" placeholder="Person" typeahead-on-select="updatePeople($item, treeOPT.tmpobj.people, 'peopleselect')" typeahead="person as (person.firstname + ' ' + person.lastname) for person in people | filter:$viewValue" class="form-control">
                                 <div class="btn-group" dropdown>
                                     <button type="button" class="btn btn-default dropdown-toggle">
                                         <span class="fa fa-user"></span> <span class="caret"></span>
@@ -154,9 +133,9 @@
                         </tab>
                         <tab ng-if="!treeOPT.tmpobj.isCompany">   <!-- Rates -->
                             <tab-heading><i class="fa fa-money fa-lg"></i></tab-heading>
-                            <h4>Rates on <small>{{treeOPT.tmpobj.title}}</small></h4>
+                            <h4>Stundensätze <small>{{treeOPT.tmpobj.title}}</small></h4>
                             <select class="form-control" ng-model="treeOPT.tmpobj.rate" ng-options="rate.id as (rate.title + ' - ' + rate.currency + ' ' + rate.rate) for rate in ratesTMP.rates">
-                                <option value='' disabled selected>Select Rate</option>
+                                <option value='' disabled selected>Stundensatz wählen</option>
                             </select>
                         </tab>                        
                     </tabset>                                    
