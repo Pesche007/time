@@ -8,7 +8,7 @@ angular.module('time')
 	$scope.showAllProjects=0;
 
 	ResourcesService.listCompanies().then(function(result) {
-   		$scope.treeOPT.companies=result.data.companyData;
+   		$scope.treeOPT.companies=result.data.companyModel;
        	}, function(reason) {//error
        		alertsManager.addAlert('Could not get companies. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
   	}); 
@@ -17,7 +17,7 @@ angular.module('time')
 		ResourcesService.listProjects(obj.id).then(function(result) {
 			$scope.treeOPT.selectedComp=obj;
 			$scope.treeOPT.selectedComp.disableClick=1;
-			$scope.treeOPT.selectedComp.projects=result.data.projectData;
+			$scope.treeOPT.selectedComp.projects=result.data.projectModel;
 	       	}, function(reason) {//error
 	       		alertsManager.addAlert('Could not get projects. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
 	  	});		

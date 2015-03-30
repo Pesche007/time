@@ -31,7 +31,7 @@ angular.module('time')
 		// create
 		post: function(companyID, projectID, project) {
 			$log.log('ResourcesService.post() calling post(' + cfg.wtt.SVC_URI + ', ' + angular.toJson(project) + ')');
-			var data = {projectData:project};			
+			var data = {projectModel:project};			
 			return $http.post(cfg.wtt.SVC_URI + '/' + companyID + '/project/' + projectID, data)
 			.success(function(data, status) {
 				$log.log('created successfully');
@@ -43,7 +43,7 @@ angular.module('time')
 		// update
 		put: function(companyID, project) {
 			$log.log('ResourcesService.put() calling put(' + cfg.wtt.SVC_URI + ', ' + angular.toJson(project) + ')');
-			var data = {projectData:project};
+			var data = {projectModel:project};
 			return $http.put(cfg.wtt.SVC_URI + '/' + companyID + '/project', data)
 			.success(function(data, status) {
 				$log.log('updated successfully');

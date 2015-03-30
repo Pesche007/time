@@ -43,13 +43,13 @@ angular.module('core')
  			$scope.showDateTime=false;
  			$scope.entry={cmpid:null, prjid:null, date:$filter('date')(new Date(), 'yyyy-MM-dd'), time:null, comment:null};
 				ResourcesService.listCompanies().then(function(result) {
-			   		$scope.companies = result.data.companyData;
+			   		$scope.companies = result.data.companyModel;
 			   		}, function(reason) {//error
 				       		
 			  	});				
 		  	$scope.loadProjects=function(obj)	{
 				ResourcesService.listProjects(obj.id).then(function(result) {
-					$scope.projects = result.data.projectData;
+					$scope.projects = result.data.projectModel;
 					if($scope.projects.length){
 						$scope.projectTitle= 'Projekte';
 						$scope.entry.cmpid=obj.id;	

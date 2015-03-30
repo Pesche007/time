@@ -5,7 +5,7 @@ angular.module('time')
   	$scope.API={};
 	$scope.treeOPT=	{addeditShow:false, currProj:{projectName:''}, newProj:{title:'', description:''}, tmpobj:'', tmppeople:[], peopleselect:[], treePeopleView:0,  treeRatesView:0, companies:[], selectedComp:null};
 	ResourcesService.listCompanies().then(function(result) {
-   		$scope.treeOPT.companies=result.data.companyData;
+   		$scope.treeOPT.companies=result.data.companyModel;
        	}, function(reason) {//error
        		alertsManager.addAlert('Could not get companies. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
   	}); 
@@ -60,7 +60,7 @@ angular.module('time')
 		ResourcesService.listProjects(obj.id).then(function(result) {
 			$scope.treeOPT.selectedComp=obj;
 			$scope.treeOPT.selectedComp.isCompany=1;
-			$scope.treeOPT.selectedComp.projects=result.data.projectData;
+			$scope.treeOPT.selectedComp.projects=result.data.projectModel;
 	       	}, function(reason) {//error
 	       		alertsManager.addAlert('Could not get projects. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
 	  	});		
@@ -82,14 +82,14 @@ angular.module('time')
 		var porjectID=$scope.treeOPT.tmpobj.isCompany ? '' : $scope.treeOPT.tmpobj.id;
 		ResourcesService.post($scope.treeOPT.selectedComp.id, porjectID, $scope.treeOPT.newProj).then(function(result) {			
 			if($scope.treeOPT.tmpobj.isCompany){
-				$scope.treeOPT.selectedComp.projects.unshift(result.data.projectData);
+				$scope.treeOPT.selectedComp.projects.unshift(result.data.projectModel);
 			}
 			else {
 				if($scope.treeOPT.tmpobj.projects) {
-					$scope.treeOPT.tmpobj.projects.unshift(result.data.projectData);
+					$scope.treeOPT.tmpobj.projects.unshift(result.data.projectModel);
 				}
 				else{
-					$scope.treeOPT.tmpobj.projects=[result.data.projectData];
+					$scope.treeOPT.tmpobj.projects=[result.data.projectModel];
 				}
 			}
 			$scope.treeOPT.tmpobj.childrenVisible=1;
@@ -119,7 +119,7 @@ angular.module('time')
 	/************** RATES ****************/
 	$scope.ratesTMP={rates:[], view:false, edit:false, index:0, tmpobj:{id:'', title:'', currency:'', rate:'', description:''}};
    	RatesService.list().then(function(result) {
-   		$scope.ratesTMP.rates=result.data.ratesData;
+   		$scope.ratesTMP.rates=result.data.ratesModel;
        	}, function(reason) {//error
        		alertsManager.addAlert('Could not get rate. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
   	}); 	
@@ -131,7 +131,7 @@ angular.module('time')
 	$scope.rateSave = function(){
 		if($scope.ratesTMP.edit) {// update  -> put
 			RatesService.put($scope.ratesTMP.tmpobj).then(function(result) {
-   				$scope.ratesTMP.rates[$scope.ratesTMP.index] = result.data.ratesData;
+   				$scope.ratesTMP.rates[$scope.ratesTMP.index] = result.data.ratesModel;
    				$scope.rateCancel();
        		}, function(reason) {//error
        		alertsManager.addAlert('Could not update rate. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
@@ -139,7 +139,7 @@ angular.module('time')
 		}
 		else {// create -> post
 			RatesService.post($scope.ratesTMP.tmpobj).then(function(result) {
-   				$scope.ratesTMP.rates.push(result.data.ratesData);
+   				$scope.ratesTMP.rates.push(result.data.ratesModel);
    				$scope.rateCancel();
        		}, function(reason) {//error
        		alertsManager.addAlert('Could not create rate. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		

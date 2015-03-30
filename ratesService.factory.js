@@ -20,7 +20,7 @@ angular.module('time')
 		// create
 		post: function(rate) {
 			$log.log('RatesService.post() calling post(' + cfg.rates.SVC_URI + ', ' + angular.toJson(rate) + ')');
-			var data = {ratesData:rate};
+			var data = {ratesModel:rate};
 			return $http.post(cfg.rates.SVC_URI, data)
 			.success(function(data, status) {
 				$log.log('created successfully');
@@ -44,7 +44,7 @@ angular.module('time')
 		// update
 		put: function(rate) {
 			$log.log('RatesService.put() calling put(' + cfg.rates.SVC_URI + ', ' + angular.toJson(rate) + ')');
-			var data = {ratesData:rate};
+			var data = {ratesModel:rate};
 			return $http.put(cfg.rates.SVC_URI, data)
 			.success(function(data, status) {
 				$log.log('updated successfully');
