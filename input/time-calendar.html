@@ -98,27 +98,29 @@
                             <button class="btn-none" modal-confirm title="Löschen" text="Ausgewählten Eintrag wirklich löschen?" function="eventdetailsdelete()"><span class="fa fa-trash-o fa-2x"></span></button>
                         </li> 
                         <li>
-                            <button class="btn-none" ng-click="eventdetailssave()" ng-disabled="calendarForm.$invalid"><span class="fa fa-check fa-2x"></span></button>
+                            <button class="btn-none" ng-click="eventdetailssave()" ng-disabled="calendarForm.$invalid">
+                                <span class="icon-save-status" ng-class="eventfocus.status!==2 ? 'icon-saved' : 'icon-unsaved'"></span>
+                            </button>
                         </li> 
                     </ul>                
                 </div>
                 <div class="panel-body">
                     <div ng-if="eventfocus.visible">                                   
-                        <h4>{{eventfocus.companyTitle}}</h4>
+                        <h4>{{eventfocus.companyTitle}} - {{eventfocus.status}}</h4>
                         <p><span class="label label-primary">{{eventfocus.title}}</span></p>
-                            <div class="form-inline margin-bottom-S">
-                            {{eventfocus.start | date:'EEE dd.MM.yyyy'}}
+                        {{eventfocus.start | date:'EEE dd.MM.yyyy'}}
+                            <div class="form-inline margin-bottom-S">                            
                                 <div class="form-group">
-                                    <input type="text" name="calendarFormTime" ng-model="eventfocus.time" class="form-control" ng-pattern="/^\d{4}(\-)\d{4}$/" ng-blur="updateTime('fromto')" required placeholder="Zeit">    
+                                    <input type="text" name="calendarFormTime" ng-model="eventfocus.time" class="form-control" ng-pattern="/^\d{4}(\-)\d{4}$/" ng-blur="updateTime('fromto')" required placeholder="Zeit" ng-change="changeStatus(eventfocus)">    
                                     <div class="input-help" ng-if="calendarForm.calendarFormTime.$error.pattern">Format <strong>1300-1800</strong></div>
                                 </div>                  
                                 <div class="form-group">                  
-                                    <input type="text" name="calendarFormDecimal" class="form-control width60" ng-model="eventfocus.decimaltime" ng-blur="updateTime('hrs')" 
-                                    ng-pattern="/^([0-9]|[0-9].\d|2[0-4])$/" required> Stunden
+                                    <input type="text" name="calendarFormDecimal" class="form-control width60" ng-model="eventfocus.decimaltime" ng-blur="updateTime('hrs')" ng-pattern="/^([0-9]|[0-9].\d|2[0-4])$/" ng-change="changeStatus(eventfocus)" required> Stunden
                                     <div class="input-help" role="alert" ng-if="calendarForm.calendarFormDecimal.$error.pattern">Format <strong>2.6</strong>, 1 - 24 hours</div>
                                 </div>
                             </div>
-                        <textarea class="form-control" rows="3" ng-model="eventfocus.comment" placeholder="Beschreibung"></textarea><br />
+                        <textarea class="form-control" rows="3" ng-model="eventfocus.comment" placeholder="Beschreibung"></textarea><br>
+                        <input id="id_{{$index}}" type="checkbox" ng-model="eventfocus.isBillable" ng-change="changeStatus(eventfocus)"><label class="customCheckbox" for="id_{{$index}}">Verrechenbar</label><br>
                         <div class="alert alert-danger" ng-if="eventfocus.error">{{eventfocus.error}}</div>
                     </div>                
                 </div>

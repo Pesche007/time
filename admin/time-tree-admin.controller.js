@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('time')
-  .controller('TreeAdminCtrl', function ($scope, $log, RatesService, ResourcesService, cfg, statePersistence, alertsManager) {
+  .controller('TreeAdminCtrl', function ($scope, $log, $timeout, RatesService, ResourcesService, cfg, statePersistence, alertsManager) {
   	$scope.API={};
 	$scope.treeOPT=	{addeditShow:false, currProj:{projectName:''}, newProj:{title:'', description:''}, tmpobj:'', tmppeople:[], peopleselect:[], treePeopleView:0,  treeRatesView:0, companies:[], selectedComp:null};
 	ResourcesService.listCompanies().then(function(result) {
@@ -117,7 +117,7 @@ angular.module('time')
 	};
 
 	/************** RATES ****************/
-	$scope.ratesTMP={rates:[], view:false, edit:false, index:0, tmpobj:{id:'', title:'', currency:'', rate:'', description:''}};
+	$scope.ratesTMP={rates:[], view:false, edit:false, rateSaved:0, index:0, tmpobj:{title:'', currency:'', rate:'', description:''}};
    	RatesService.list().then(function(result) {
    		$scope.ratesTMP.rates=result.data.ratesModel;
        	}, function(reason) {//error
@@ -127,20 +127,23 @@ angular.module('time')
 	$scope.addRate=function(){
 		$scope.rateFormreset();
 		$scope.rateToggle(1);
+		$scope.ratesTMP.rateSaved=0;
 		};
 	$scope.rateSave = function(){
 		if($scope.ratesTMP.edit) {// update  -> put
 			RatesService.put($scope.ratesTMP.tmpobj).then(function(result) {
+				$scope.ratesTMP.rateSaved=1;
    				$scope.ratesTMP.rates[$scope.ratesTMP.index] = result.data.ratesModel;
-   				$scope.rateCancel();
+   				$timeout( function(){ $scope.rateCancel(); }, 500);
        		}, function(reason) {//error
        		alertsManager.addAlert('Could not update rate. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
   			}); 			
 		}
 		else {// create -> post
 			RatesService.post($scope.ratesTMP.tmpobj).then(function(result) {
+				$scope.ratesTMP.rateSaved=1;
    				$scope.ratesTMP.rates.push(result.data.ratesModel);
-   				$scope.rateCancel();
+   				$timeout( function(){ $scope.rateCancel(); }, 500);
        		}, function(reason) {//error
        		alertsManager.addAlert('Could not create rate. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
   			}); 					
@@ -151,6 +154,7 @@ angular.module('time')
 		$scope.rateFormreset();
 	};
 	$scope.rateEdit = function(rate, i){
+		$scope.ratesTMP.rateSaved=1;
 		$scope.rateToggle(1);
 		$scope.ratesTMP.edit=true;
 		$scope.ratesTMP.index=i;
@@ -168,7 +172,7 @@ angular.module('time')
 		$scope.ratesTMP.view=dir;
 		};
 	$scope.rateFormreset = function(){
-		$scope.ratesTMP.tmpobj={id:'', title:'', currency:'', rate:'', description:''};		
+		$scope.ratesTMP.tmpobj={title:'', currency:'', rate:'', description:''};		
 		};	
 	$scope.rateRestore = function(){
 		$scope.rateToggle(0);

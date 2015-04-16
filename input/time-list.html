@@ -55,7 +55,7 @@
                                 </a>                                 
                             </li>             
                         </ul>                        
-                    </li>                   
+                    </li>                                       
                     <li ng-if="treeOPT.editItems">
                         <button class="btn-none" ng-click="treeOPT.editItems=0"><span class="fa fa-check fa-2x"></span></button>
                     </li> 
@@ -67,7 +67,12 @@
                     </li> 
                     <li>
                         <button class="btn-none" ng-click="loadDate(-1)"><span class="fa fa-angle-left fa-2x"></span></button>                        
-                    </li>                                         
+                    </li>                   
+                    <li ng-if="treeNew.length">
+                        <button class="btn-none" ng-click="treeSave()">
+                            <span class="icon-save-status" ng-class="treeOPT.treeNewSaved ? 'icon-saved' : 'icon-unsaved'"></span>
+                        </button>
+                    </li> 
                 </ul>                  
             </div>
             <div class="panel-body">                   
@@ -79,35 +84,39 @@
                                 <th>Projekt</th>
                                 <th>Zeit</th>
                                 <th>Beschreibung</th>
-                                <th ng-if="treeOPT.editItems">Aktionen</th>
+                                <th>Verrechenbar</th>
+                                <th ng-if="treeOPT.editItems"></th>
                             </tr>
                         </thead>
                         <tbody>
-                             <tr ng-repeat="obj in treeNew track by $index" class="animate-enter">
+                             <tr ng-repeat="obj in treeNew track by $index" class="animate-enter" ng-class="{'state-changed':obj.status===3 || obj.status===2, 'state-saved':obj.status===4}">                                
                                 <td>{{obj.cmptitle}}</td>
                                 <td><span class="label label-primary">{{obj.prjtitle}}</span></td>
                                 <td>
                                     <form name="myform" class="form-inline"> 
-                                        <input type="text" class="form-control" name="price_field" ng-model="obj.time" ng-pattern="/(^\d{1,2}(?:\.\d{1,2})?$)|(^\d{4}(\-)\d{4})$/" placeholder="Zeit" required>
+                                        <input type="text" class="form-control" name="price_field" ng-model="obj.time" ng-pattern="/(^\d{1,2}(?:\.\d{1,2})?$)|(^\d{4}(\-)\d{4})$/" placeholder="Zeit" ng-change="changeStatus(obj)" required>
                                         <div class="input-help" ng-if="myform.price_field.$error.pattern">Format: 4.5 or 1000-1430</div>                                        
                                     </form>
                                 </td>
                                 <td>                                    
-                                    <textarea class="form-control single-line" ng-model="obj.comment" placeholder="Beschreibung"></textarea>
+                                    <textarea class="form-control single-line" ng-model="obj.comment" placeholder="Beschreibung" ng-change="changeStatus(obj)"></textarea>
                                 </td>
+                                <td>
+                                    <input id="id_{{$index}}" type="checkbox" ng-model="obj.isBillable" ng-change="changeStatus(obj)"><label class="customCheckbox" for="id_{{$index}}"></label>
+                                </td>                                
                                 <td ng-if="treeOPT.editItems">
-                                    <button type="button" ng-click="treeInputTableCopy(obj, $index)" class="btn-none">
-                                        <span class="fa fa-files-o"></span>
+                                    <button type="button" ng-click="treeInputTableCopy(obj, $index)" class="btn btn-primary btn-sm">
+                                        <i class="fa fa-files-o padding-right-M"></i>Duplizieren
                                     </button>                                
-                                    <button type="button" modal-confirm title="Löschen" text="Eintrag auf Firma {{obj.cmptitle}} und <strong>Projekt {{obj.prjtitle}}</strong> wirklich löschen?" 
-                                    function="treeInputTableRemove($index)" class="btn-none">
-                                        <span class="fa fa-trash-o"></span>
+                                    <button type="button" modal-confirm title="Löschen" text="Eintrag auf Firma {{obj.cmptitle}} und <strong>Projekt {{obj.prjtitle}}</strong> wirklich löschen?" function="treeDelete(obj, $index)" class="btn btn-primary btn-sm">
+                                        <i class="fa fa-trash-o padding-right-M"></i>Löschen
                                     </button> 
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2"></td>
-                                <td colspan="2"><span class="doubleUnderline">{{displaySum()}}</span></td>                                
+                                <td colspan="3"><span class="doubleUnderline">{{displaySum()}}</span></td>   
+                                <td ng-if="treeOPT.editItems"></td>                             
                             </tr>
                         </tbody>
                     </table> 

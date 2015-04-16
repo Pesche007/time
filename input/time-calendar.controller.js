@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('time')
-  .controller('TimeCalendarCtrl', function ($scope, $filter, $http, $log, cfg, statePersistence, ResourcesService) {
+  .controller('TimeCalendarCtrl', function ($scope, $filter, $http, $log, cfg, statePersistence, ResourcesService, WorkrecordService, TimeService) {
 	cfg.GENERAL.CURRENT_APP = 'time';
 
 	//Options
@@ -35,12 +35,16 @@ angular.module('time')
     $scope.API={};
     $scope.clientprojects = {};
 	$scope.API.Addelements = function(month, year){
-		var data = [
-		  {'companyID':'abc', 'companyTitle':'Test Company', 'title': 'Test', 'start': new Date(year+'/'+month+'/10 10:00'), 'end': new Date(year+'/'+month+'/10 12:00'), 'allDay': false, 'comment':'', 'backgroundColor':'#996666'},
-		  {'companyID':'abc', 'companyTitle':'Test Company', 'title': 'Best', 'start': new Date(year+'/'+month+'/11 13:00'), 'end': new Date(year+'/'+month+'/11 14:00'), 'allDay': false, 'comment':'', 'backgroundColor':'#996666'},
-		  {'companyID':'abc', 'companyTitle':'Test Company', 'title': 'Zest', 'start': new Date(year+'/'+month+'/12 10:00'), 'end': new Date(year+'/'+month+'/12 12:00'), 'allDay': false, 'comment':'', 'backgroundColor':'#996666'}
-		  ];
-		for(var i = 0; i < data.length; ++i) { $scope.events.push(data[i]); }
+	   	WorkrecordService.list().then(function(result) {
+	   		for(var i=0; i<result.data.workRecordData.length;i++){
+	   			var current=result.data.workRecordData[i];
+	   			var startTime=new Date(current.startAt);
+				var endTime=new Date(startTime.getTime() + (current.durationHours*60+current.durationMinutes)*60000);
+	   			$scope.events.push({'id':current.id, 'companyID':'a1', 'companyTitle':'Firma', 'prjid':current.projectId, 'resourceId':current.resourceId, 'title':'Projekt', 'start':startTime, 'end':endTime, rateId:current.rateId, 'allDay':false, 'comment':'', 'isBillable':current.isBillable, 'status':1});	
+	   			}	   		
+	     	}, function(reason) {//error
+	       		alertsManager.addAlert('Could not get work records. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
+	  	});			
 	};
 	$scope.events=[];
 	$scope.eventSource=[$scope.events];
@@ -75,7 +79,11 @@ angular.module('time')
 		var timeTo=$scope.formatAddLeadingZero(calEvent.end.getHours()) + '' + $scope.formatAddLeadingZero(calEvent.end.getMinutes());
 		var time=timeFrom + '-' + timeTo;
 		var timeDecimal=$scope.calcTime(timeFrom, timeTo);
-		$scope.eventfocus={'visible': true, 'companyTitle':calEvent.companyTitle, 'title':calEvent.title, 'comment':calEvent.comment, 'time':time, 'decimaltime':timeDecimal, 'calEvent':calEvent};
+		$scope.eventfocus=angular.copy(calEvent);
+		$scope.eventfocus.visible=true;
+		$scope.eventfocus.time=time;
+		$scope.eventfocus.decimaltime=timeDecimal;
+		$scope.eventfocus.calEvent=calEvent;
 		};
 	//Save changes in entry details - check hours:minutes and save in OBJ
 	$scope.eventdetailssave = function(){
@@ -84,7 +92,7 @@ angular.module('time')
 			$scope.eventfocus.calEvent.comment = $scope.eventfocus.comment;
 			$scope.eventfocus.calEvent.start.setHours(time[0].substr(0, 2), time[0].substr(2, 2), 0);
 			$scope.eventfocus.calEvent.end.setHours(time[1].substr(0, 2), time[1].substr(2, 2), 0);
-			$scope.cleareventfocus();			
+			$scope.eventUpdate($scope.eventfocus.calEvent);					
 			}
 		else {
 			$scope.eventfocus.error='Start time bigger than end time.';
@@ -95,8 +103,18 @@ angular.module('time')
 		$scope.deleteExistingMulti($scope.eventfocus.calEvent, $scope.events, '_id');
 		$scope.cleareventfocus();
 		};
+	$scope.eventUpdate = function(calEvent){
+		var diff = calEvent.end-calEvent.start;
+		var timeObj=TimeService.msToHoursMinutes(diff);						
+		WorkrecordService.put(calEvent.id, calEvent.prjid, calEvent.resourceId, calEvent.start, timeObj.h, timeObj.m, calEvent.rateId, calEvent.isBillable).then(function(result) {
+			calEvent.status=4;
+   			}, function(reason) {//error
+   			alertsManager.addAlert('Could not update work record. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
+			}); 
+	};
 	//adds event, "eid" because "id" makes events double (i.e. resizing one resizes the other)	
    $scope.addEvent = function(date, eventoptions, showdetails) {
+   		console.log(eventoptions)
 		var newEvent = {
 			companyID:$scope.treeOPT.selectedComp.id,
 			companyTitle:$scope.treeOPT.selectedComp.title,
@@ -113,11 +131,16 @@ angular.module('time')
 		  $scope.eventdetailsset(newEvent);
 		  }
     	};
-	//clear the entry details window
+	//clear the entry details window 
 	$scope.cleareventfocus = function(){
 		$scope.eventfocus={'visible': false, 'companyTitle':'', 'companyID':'', 'title':'', 'comment':'', 'time':'', 'decimaltime':'', 'error':false, 'calEvent':{}};
 		$scope.eventOPT.editEntry=0;
-	};    	
+	};
+	$scope.changeStatus = function(obj){
+		if(obj.status===1 || obj.status===4){
+			obj.status=2;			
+		}		
+	};
 	//Time functions
 	$scope.updateTime = function(caller){
 		if(!$scope.eventfocus.time){
@@ -146,7 +169,7 @@ angular.module('time')
 		else {
 			var diff = to-from;
 			var hour=Math.floor(diff/100);			
-			var res = Math.round(100*(hour+(diff-hour*100)/60))/100;			
+			var res = Math.round(10*(hour+(diff-hour*100)/60))/10;			
 		}
 		return res;
 	};    	
@@ -206,14 +229,14 @@ angular.module('time')
 			var eventoptions = JSON.parse(ui.helper[0].getAttribute('data-options'));
 			$scope.addEvent(date, eventoptions, 1);
 			},
-		eventDragStop: function(calEvent){
-			$scope.eventdetailsset(calEvent);
+		eventDragStop: function(calEvent){			
+			$scope.eventUpdate(calEvent);
 			},
         eventClick: function(calEvent) {	
 			$scope.eventdetailsset(calEvent);
 	    	},
 		eventResize: function(calEvent) {
-			$scope.eventdetailsset(calEvent);
+			$scope.eventUpdate(calEvent);
 			},
 		viewRender: function(view) {		
 			$scope.loadIntoView(view.start, view.end);

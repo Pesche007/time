@@ -20,7 +20,9 @@
                     </li> 
                     <li ng-if="ratesTMP.view">
                         <button class="btn-none margin-right-M" ng-click="rateCancel()"><span class="fa fa-times fa-2x"></span></button>
-                        <button class="btn-none" ng-disabled="addrateForm.$invalid" ng-click="rateSave()"><span class="fa fa-check fa-2x"></span></button>                       
+                        <button class="btn-none" ng-disabled="addrateForm.$invalid" ng-click="rateSave()">
+                            <span class="icon-save-status" ng-class="ratesTMP.rateSaved ? 'icon-saved' : 'icon-unsaved'"></span>
+                        </button>                       
                     </li>                     
                     <li ng-if="ratesTMP.ratesEdit && !ratesTMP.view">
                         <button class="btn-none" ng-click="rateRestore()"><span class="fa fa-check fa-2x"></span></button>
@@ -30,18 +32,18 @@
             <div class="panel-body no-padding panel-list-group">        
             	<form name="addrateForm" class="form-spacer">
                     <div class="animate-enter padding-M" ng-if="ratesTMP.view">        	                    
-                        <input name="rateTitle" type="text" ng-model="ratesTMP.tmpobj.title" class="form-control" placeholder="Title" required>
+                        <input name="rateTitle" type="text" ng-model="ratesTMP.tmpobj.title" class="form-control" placeholder="Title" ng-change="ratesTMP.rateSaved=0" required>
                         <div class="input-help" ng-if="addrateForm.rateTitle.$error.required">Field is required</div>
-                        <select name="rateCurrency" class="form-control" ng-model="ratesTMP.tmpobj.currency" required>
+                        <select name="rateCurrency" class="form-control" ng-model="ratesTMP.tmpobj.currency" ng-change="ratesTMP.rateSaved=0" required>
                             <option value="" disabled selected>Currency</option>
                             <option value="CHF">CHF</option>
                             <option value="EUR">EUR</option>
                             <option value="USD">USD</option>
                         </select>
                         <div class="input-help" ng-if="addrateForm.rateCurrency.$error.required">Field is required</div>
-                        <input type="text" ng-model="ratesTMP.tmpobj.rate" class="form-control" name="R_Rate" placeholder="Rate" ng-pattern="/^[+]?\d+([.]\d+)?$/" required>
+                        <input type="text" ng-model="ratesTMP.tmpobj.rate" class="form-control" name="R_Rate" placeholder="Rate" ng-pattern="/^[+]?\d+([.]\d+)?$/" ng-change="ratesTMP.rateSaved=0" required>
                         <div class="input-help" ng-if="addrateForm.R_Rate.$error.pattern || addrateForm.R_Rate.$error.required">Only numbers - Field is Required</div>
-                        <textarea name="R_Description" ng-model="ratesTMP.tmpobj.description" class="form-control" rows="2" placeholder="Description"></textarea>
+                        <textarea name="R_Description" ng-model="ratesTMP.tmpobj.description" class="form-control" rows="2" placeholder="Description" ng-change="ratesTMP.rateSaved=0"></textarea>
                     </div>
                 </form>
                 <div class="list-group">
@@ -86,7 +88,7 @@
                                 <textarea class="form-control" ng-model="treeOPT.tmpobj.description" placeholder="Beschreibung"></textarea>
                             </form>   
                             <button class="btn btn-default pull-right margin-left-S" type="button" ng-click="editProject()" ng-disabled="editTitleForm.$invalid">
-                                <span class="fa fa-check"></span>
+                                <span class="fa fa-cloud-upload"></span>
                             </button>
                             <button class="btn btn-default pull-right" modal-confirm icon="fa-trash-o" title="Confirm" function="deleteSubProjects()"
                             text="Delete Project <strong>{{treeOPT.tmpobj.title}}</strong> with {{treeOPT.tmpobj.projects.length || 'no'}} Sub-Projects?">
@@ -101,7 +103,7 @@
                                 <div class="input-help" ng-if="newChildForm.newChildTitle.$error.required">Eingabe ist erforderlich</div>
                                 <textarea class="form-control" ng-model="treeOPT.newProj.description" placeholder="Beschreibung"></textarea>
                                 <button class="btn btn-default pull-right" type="button" ng-click="addNewProject()" ng-disabled="newChildForm.$invalid">
-                                    <span class="fa fa-check"></span>
+                                    <span class="fa fa-cloud-upload"></span>
                                 </button>
 
                             </form>                            
