@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('time', ['core', 'ui.calendar', 'ngDragDrop'])
+angular.module('time', ['core', 'ui.grid', 'ui.grid.treeView', 'ui.calendar', 'ngDragDrop'])
 .config(function ($stateProvider) {
 	$stateProvider
 	.state('time-list', {
@@ -31,10 +31,10 @@ angular.module('time', ['core', 'ui.calendar', 'ngDragDrop'])
 		authenticate: true,
 		parent: 'common'
 	})	
-	.state('time-timer', {
-		url: '/time-timer',
-		controller: 'TimeTimerCtrl',
-		templateUrl: 'app/time/input/time-timer.html',
+	.state('time-playground', {
+		url: '/time-playground',
+		controller: 'TimePlaygroundCtrl',
+		templateUrl: 'app/time/input/time-playground.html',
 		authenticate: true,
 		parent: 'common'
 	})

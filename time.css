@@ -6,3 +6,18 @@
 .calendar-wrapper{}
 .calendar-projects-wrapper{max-height:500px;overflow:auto;margin-top:10px;background:#F7F7F7;border:1px solid #DDD;border-radius:3px;padding:0px 10px 10px 10px}
 .calendar-projects{list-style:none;margin:5px 0px 5px 10px}
+
+/********************************************/
+/*********** UI-Grid **********************/
+/*******************************************/
+.ui-grid-header-cell:last-child{border-right:1px solid #DDD !important;}
+
+/*Grid Dimensions*/
+.uiGrid{width:700px; height:350px; }
+/*Grid Custom Header*/
+.grid-header-custom{padding:10px 15px; 	border-left:1px solid #DDD; border-top:1px solid #DDD; border-right:1px solid #DDD;width:702px;}
+.grid-header-custom span{font-size:133%;}
+.grid-header-custom button{margin-left:10px;}
+
+/*Grid Make Expand buttons in Treeview pointer*/
+.ui-grid-icon-plus-squared, .ui-grid-icon-minus-squared{cursor:pointer;}
