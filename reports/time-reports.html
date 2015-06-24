@@ -1,0 +1,8 @@
+<div class="row" ng-controller="TimeReportCtrl">    
+    <div class="col-md-6">
+        <div ng-if="reportsOPT.dataLoaded" arbalo-bar-chart source="chart" chart-stacked="true"></div>
+    </div>               
+    <div class="col-md-6">
+        <pre class="code">{{chart | json}}</pre>
+    </div>
+</div>  

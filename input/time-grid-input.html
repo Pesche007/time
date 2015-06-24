@@ -1,0 +1,57 @@
+<div class="row" ng-controller="TimeGridinputCtrl">
+    <div class="panel panel-white no-border-radius">
+        <div class="panel-heading clearfix">
+            <div class="pull-left">
+                <h4>Einträge</h4>
+            </div> 
+            <div class="pull-right panel-right-actions">
+                <a ng-click="saveGrid(0)" class="text-black margin-left-L"><i class="fa fa-floppy-o"></i></a>
+                <a ng-click="projectsAddRow()" class="text-black margin-left-L"><i class="fa fa-plus"></i></a>
+                <a ng-click="loadDate(-1)" class="text-black margin-left-L"><i class="fa fa-angle-left"></i></a>
+                <a ng-click="loadDate(-7)" class="text-black margin-left-L"><i class="fa fa-angle-double-left"></i></a>
+                <div class="margin-left-L"><input type="text" class="form-control" datepicker-options="dateOptions" datepicker-append-to-body="true" datepicker-popup="dd.MM.yyyy" ng-model="dt" ng-click="open($event, 0)" is-open="opened[0]" ng-change="saveGrid(1)"></div>
+                <a ng-click="loadDate(7)" class="text-black margin-left-L"><i class="fa fa-angle-double-right"></i></a>
+                <a ng-click="loadDate(1)" class="text-black margin-left-L"><i class="fa fa-angle-right"></i></a>
+                <div class="dropdown pull-right margin-top-SM margin-left-L" dropdown>
+                    <a class="dropdown-options" dropdown-toggle><span class="fa fa-ellipsis-v fa-lg"></span></a>  
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="javascript:void(0)" ng-click="gridOPT.showDays=5"><span class="fa fa-check" ng-class="{'vis-hidden': gridOPT.showDays===7}"></span>Wochenende verbergen</a></li>
+                        <li><a href="javascript:void(0)" ng-click="gridOPT.showDays=7"><span class="fa fa-check" ng-class="{'vis-hidden': gridOPT.showDays===5}"></span>Wochenende anzeigen</a></li>             
+                    </ul>                
+                </div>
+            </div>                             
+        </div>
+        <div class="panel-body">  
+            <!--TIME-->
+            <div class="pull-left padding-M width200"><strong>Projekte</strong></div>
+            <div ng-repeat="sum in gridOPT.sumtime track by $index" class="pull-left padding-M width200">                                                
+                <div ng-if="$index < gridOPT.showDays" class="clearfix">
+                    <div class="pull-left" ng-class="{'bg-primary padding-left-S padding-right-S': dt.getTime()===gridOPT.projectInput[0].inputs[$index][0].date.getTime()}">
+                        {{gridOPT.projectInput[0].inputs[$index][0].date | date:'EEE dd.MM.yyyy'}}
+                    </div>
+                    <div class="pull-right padding-right-M"><strong>{{sum}}</strong></div>
+                </div>
+            </div>
+            <!--/TIME-->       
+            <div class="clearfix"></div>
+            <div ng-repeat="row in gridOPT.projectInput track by $index" class="clearfix border-top">               
+                <div ng-repeat="day in row.inputs">
+                    <div ng-if="$first" class="pull-left padding-top-M padding-right-M width200">
+                        <div arbalo-project-select company="row.company" project="row.project"></div>
+                        <br>
+                    </div>
+                    <div ng-if="$last" class="pull-left padding-top-ML padding-left-M">
+                        <strong>{{row.sumtime}}</strong>
+                    </div>                    
+                    <div ng-if="$index < gridOPT.showDays" class="pull-left padding-M width200">   
+                        <div ng-repeat="item in day" ng-class="{'margin-bottom-M' : !item.$$deleted}">                    
+                            <div ng-if="!item.$$deleted" arbalo-time-input time-change-fn="sumTime(item, attr)" time-change-attr="row" model="item" time-delete="true"></div>
+                            <div class="text-center margin-top-SM" ng-if="$last"><button class="btn btn-primary btn-xs" ng-click="addTimeSlot(day)"><i class="fa fa-plus"></i></button></div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>            
+           <!--<pre class="code">{{gridOPT.projectInput | json}}</pre>-->
+        </div>                    
+    </div>
+</div>

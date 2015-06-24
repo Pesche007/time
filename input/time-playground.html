@@ -1,22 +1,6 @@
-<div class="row">
-    <div class="col-md-12">
-        <tabset class="tab-container">
-            <tab ng-repeat="tab in tabs" active="tab.active">
-                <tab-heading>
-                    <span>{{tab.title}}</span> <i class="glyphicon glyphicon-remove" ng-click="removeTab($event, $index)"></i>
-                </tab-heading>
-                    <div ng-if="tab.temp==='gridTemp'" ng-include="'gridTemp1'"></div>
-                    <div ng-if="tab.temp==='gridTemp2'" ng-include="'gridTemp2'"></div>
-                </tab>
-            <button class="btn btn-default" ng-click="addTab()"></button>
-        </tabset>
-    </div>
+<div class="row" ng-controller="TimePlaygroundCtrl">
+     <div class="col-md-6">  
+     </div>
+     <div class="col-md-6">
+     </div>     
 </div>
-
-<script type="text/ng-template" id="gridTemp1">    
-    <div ui-grid="gridOptions" ui-grid-tree-view class="uiGrid"></div>
-</script>
-<script type="text/ng-template" id="gridTemp2">
-    <div class="grid-header-custom"><span>Mitarbeiter</span><button type="button" class="btn btn-xs btn-primary" ng-click="grid.appScope.gridAction(0, 1)"><i class="fa fa-plus"></i></button></div>
-    <div ui-grid="gridOptions2" ui-grid-tree-view class="uiGrid"></div>
-</script>

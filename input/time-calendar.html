@@ -1,11 +1,11 @@
-<div class="row">
+<div class="row" ng-controller="TimeCalendarCtrl">
 	<div class="col-sm-3">       
         <div class="panel panel-white no-border-radius">
             <div class="panel-heading">
                 <h4>Projekte</h4> 
                 <ul class="panel-header-actions border-light"> <!-- PROJECTS Menu -->
-                    <li class="dropdown">
-                        <a class="dropdown-toggle dropdown-options"><span class="fa fa-ellipsis-v fa-2x"></span></a>  
+                    <li class="dropdown" dropdown>
+                        <a class="dropdown-options" dropdown-toggle><span class="fa fa-ellipsis-v fa-2x"></span></a>  
                         <ul class="dropdown-menu" role="menu">
                             <li>
                                 <a href="javascript:void(0)" ng-click="showAllProjects=0">
@@ -24,15 +24,15 @@
                 </ul>                    
             </div>
             <div class="panel-body">
-                <div ng-if="!showAllProjects">  
-                    Meine Projekte
+                <div ng-if="!treeOPT.showAllProjects">  
+                    Meine projekte
                 </div>
-                <div ng-if="showAllProjects">  
-                    <div s-select model="timeCompany.title" source="treeOPT.companies" source-display="title" function="timeUpdate(item)" title="Firma" drop-menu="true" drop-icon="fa-building-o"></div>
+                <div ng-if="treeOPT.showAllProjects">  
+                    <div s-select model="treeOPT.selectedComp" source="treeOPT.companies" source-display="title" function="timeUpdate(item)" title="Firma" drop-menu="true" drop-icon="fa-building-o"></div>
                     <div class="tree tree-list pull-left min-width50" ng-if="treeOPT.selectedComp.projects">
                         <button type="button" class="tree-close" ng-click="resetTreeView()">&times;</button>
                         <ul>
-                            <li clickable-tree source="treeOPT.selectedComp" drag-node="true"></li>
+                            <li clickable-tree source="treeOPT.selectedComp.projects" selected="treeOPT.selectedComp.id" drag-node="true"></li>
                         </ul>
                     </div>                
                 </div>            
@@ -44,8 +44,8 @@
             <div class="panel-heading">
             	<h4>Kalender</h4>
                 <ul class="panel-header-actions border-light"> <!-- CAlendar Menu -->
-                    <li class="dropdown">
-                        <a class="dropdown-toggle dropdown-options"><span class="fa fa-ellipsis-v fa-2x"></span></a>                       
+                    <li class="dropdown" dropdown>
+                        <a class="dropdown-options" dropdown-toggle><span class="fa fa-ellipsis-v fa-2x"></span></a>                       
                         <ul class="dropdown-menu" role="menu">
                             <li>
                                 <a href="javascript:void(0)" ng-click="calendarSimplecontrol('today')"><span class="fa fa-dot-circle-o"></span> Heute</a>
@@ -84,43 +84,28 @@
                 </ul> 
             </div>
             <div class="panel-body">
-               	<div ui-calendar="uiConfig.calendar" ng-model="eventSource" class="calendar-wrapper" calendar="myCalendar"></div>             		
+               	<div ui-calendar="uiConfig.calendar" ng-model="eventSource" class="calendar-wrapper" calendar="myCalendar"></div>        
             </div>
         </div>  
     </div>
     <div class="col-sm-3"> 
         <form name="calendarForm"> 
             <div class="panel panel-white no-border-radius">
-                <div class="panel-heading">
-                	<h4>Ausgewählt</h4>
-                    <ul class="panel-header-actions border-light"  ng-if="eventfocus.visible"> <!-- Selected Menu -->
-                        <li>
-                            <button class="btn-none" modal-confirm title="Löschen" text="Ausgewählten Eintrag wirklich löschen?" function="eventdetailsdelete()"><span class="fa fa-trash-o fa-2x"></span></button>
-                        </li> 
-                        <li>
-                            <button class="btn-none" ng-click="eventdetailssave()" ng-disabled="calendarForm.$invalid">
-                                <span class="icon-save-status" ng-class="eventfocus.status!==2 ? 'icon-saved' : 'icon-unsaved'"></span>
-                            </button>
-                        </li> 
-                    </ul>                
+                <div class="panel-heading clearfix">
+                    <div class="pull-left">
+                        <h4>Ausgewählt</h4>
+                    </div>                
+                    <div class="pull-right panel-right-actions" ng-if="eventfocus.visible">
+                        <a ng-click="eventdetailssave()" class="text-black margin-left-L"><i class="fa fa-floppy-o"></i></a>
+                        <a modal-confirm title="Löschen" text="Ausgewählten Eintrag wirklich löschen?" function="eventdetailsdelete()" class="text-black margin-left-L"><i class="fa fa-trash-o"></i></a>
+                    </div>             
                 </div>
                 <div class="panel-body">
                     <div ng-if="eventfocus.visible">                                   
-                        <h4>{{eventfocus.companyTitle}} - {{eventfocus.status}}</h4>
-                        <p><span class="label label-primary">{{eventfocus.title}}</span></p>
-                        {{eventfocus.start | date:'EEE dd.MM.yyyy'}}
-                            <div class="form-inline margin-bottom-S">                            
-                                <div class="form-group">
-                                    <input type="text" name="calendarFormTime" ng-model="eventfocus.time" class="form-control" ng-pattern="/^\d{4}(\-)\d{4}$/" ng-blur="updateTime('fromto')" required placeholder="Zeit" ng-change="changeStatus(eventfocus)">    
-                                    <div class="input-help" ng-if="calendarForm.calendarFormTime.$error.pattern">Format <strong>1300-1800</strong></div>
-                                </div>                  
-                                <div class="form-group">                  
-                                    <input type="text" name="calendarFormDecimal" class="form-control width60" ng-model="eventfocus.decimaltime" ng-blur="updateTime('hrs')" ng-pattern="/^([0-9]|[0-9].\d|2[0-4])$/" ng-change="changeStatus(eventfocus)" required> Stunden
-                                    <div class="input-help" role="alert" ng-if="calendarForm.calendarFormDecimal.$error.pattern">Format <strong>2.6</strong>, 1 - 24 hours</div>
-                                </div>
-                            </div>
-                        <textarea class="form-control" rows="3" ng-model="eventfocus.comment" placeholder="Beschreibung"></textarea><br>
-                        <input id="id_{{$index}}" type="checkbox" ng-model="eventfocus.isBillable" ng-change="changeStatus(eventfocus)"><label class="customCheckbox" for="id_{{$index}}">Verrechenbar</label><br>
+                        <h4>{{eventfocus.companyTitle}}</h4>
+                        <p><span class="label label-primary">{{eventfocus.projectTitle}}</span></p>
+                        {{eventfocus.start | date:'dd.MM.yyyy'}}
+                        <div arbalo-time-input model="eventfocus" watch="true"></div>
                         <div class="alert alert-danger" ng-if="eventfocus.error">{{eventfocus.error}}</div>
                     </div>                
                 </div>

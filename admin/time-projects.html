@@ -1,0 +1,29 @@
+<div class="row" ng-controller="TimeProjectCtrl">    
+    <div class="col-md-6">
+        <div ng-if="companyOPT.companyLoaded" s-select model="companyOPT.selectedCompany" source="companyOPT.companies" source-display="title" function="selectCompany(item)" title="Firma" drop-menu="true" drop-icon="fa-building-o"></div>
+        <div ng-if="projectsOPT.projectsLoaded">
+            <div 
+                arbalo-grid 
+                tree-view="true"
+                tree-nodereload="false" 
+                title="Projekte" 
+                source="projectsOPT.projects" 
+                structure="projectsStructure" 
+                actions="AED" 
+                fn="projectsFunction(action, param, data)" 
+                new-get="getSubProjects(param)" 
+                new-save="projectNewSave(param, parentRow)" 
+                edit-save="projectsEditSave(param)" 
+                edit-remove="projectsEditRemove(param)"
+                custom-action-settings="{icon:'fa-user', template:'app/time/admin/templates/test1.html', controller:'TestCtrl'}" 
+                custom-action-function="projectManagePeople(param)" 
+                >
+            </div>
+        </div>
+    </div>               
+    <div class="col-md-6">
+        <pre>{{companyOPT.companies || json}}</pre>
+        <pre>{{companyOPT.selectedCompany || json}}</pre>        
+        <pre>{{projectsOPT.projects || json}}</pre> 
+    </div>
+</div>  

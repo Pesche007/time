@@ -13,11 +13,39 @@
 .ui-grid-header-cell:last-child{border-right:1px solid #DDD !important;}
 
 /*Grid Dimensions*/
-.uiGrid{width:700px; height:350px; }
+.uiGrid{height:350px; }
 /*Grid Custom Header*/
-.grid-header-custom{padding:10px 15px; 	border-left:1px solid #DDD; border-top:1px solid #DDD; border-right:1px solid #DDD;width:702px;}
-.grid-header-custom span{font-size:133%;}
+.ui-grid-header-cell .ui-grid-cell-contents .ui-grid-tree-view-row-header-buttons{visibility: hidden;}
+.grid-header-custom{border-left:1px solid #DDD; border-top:1px solid #DDD; border-right:1px solid #DDD; font-size: 18px;position: relative;line-height:60px}
 .grid-header-custom button{margin-left:10px;}
+.grid-header-custom-text{padding-left:15px;}
+.grid-header-custom-icons{font-size:20px;line-height:60px;padding-right: 20px}
+.ui-grid-row .ui-grid-cell.ui-grid-row-header-cell {background-color: #FAFAFA;}
+.ui-grid-cell-contents{line-height:30px;font-size:16px;}
+.ui-grid-click:before{position:absolute;font-family: FontAwesome;content: "\f105";font-size:20px;margin-top:5px;right:10px;}
+.ui-grid-icon-cancel{display: none;}
+
 
 /*Grid Make Expand buttons in Treeview pointer*/
 .ui-grid-icon-plus-squared, .ui-grid-icon-minus-squared{cursor:pointer;}
+
+/*Grid folder icons*/
+.ui-grid-icon-minus-squared{font-family: FontAwesome !important;}
+.ui-grid-icon-minus-squared:before{content:"\f07c";}
+.ui-grid-icon-plus-squared{font-family: FontAwesome !important;}
+.ui-grid-icon-plus-squared:before{content:"\f07b";}
+i[class^="ui-grid-icon"]:before, i[class*=" ui-grid-icon"]:before {font-family: FontAwesome !important;color:#999;}
+/*Grid paddings first line*/
+.padding-left-10{padding-left:10px;}
+.padding-left-20{padding-left:20px;}
+.padding-left-30{padding-left:30px;}
+.padding-left-40{padding-left:40px;}
+.padding-left-50{padding-left:50px;}
+.padding-left-60{padding-left:60px;}
+.padding-left-70{padding-left:70px;}
+.padding-left-80{padding-left:80px;}
+.padding-left-90{padding-left:90px;}
+
+/*Grid Actions*/
+.grid-action:first-child{margin-left: 0px}
+.grid-action{margin-left:10px;font-size:15px;}

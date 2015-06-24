@@ -1,0 +1,17 @@
+<div class="row" ng-controller="TimeRatesCtrl">  
+    <div class="col-md-6">           
+        <div ng-if="ratesOPT.ratesLoaded">
+            <div 
+                arbalo-grid 
+                title="Übersicht Stundensätze" 
+                source="ratesOPT.rates" 
+                structure="ratesStructure" 
+                actions="AED" 
+                fn="ratesFunction(action, param, data)"                
+            ></div>
+        </div>
+    </div>
+    <div class="col-md-6">
+
+    </div>   
+</div>  
