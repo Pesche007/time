@@ -196,7 +196,7 @@ angular.module('time')
 		}
 	})
 	
-	/*
+	
 	//Adressbook + Contact
 	var adressbook = {addressbookModel : {'name':'Privates Adressbuch'}};
 	$http.post('http://localhost:8080/opentdc-services-test/api/addressbooks', adressbook).success(function(result) {	

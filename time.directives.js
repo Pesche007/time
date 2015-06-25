@@ -298,7 +298,9 @@ angular.module('core')
 			customHeaderSettings:'=',
 			customHeaderAction:'&',
 			customActionSettings:'=',
-			customActionFunction:'&'			
+			customActionFunction:'&',
+			rowDraggable:'@',
+			rowDroppable:'@'
 		},
 		template: function(e, attr){					
 			var html='';
@@ -341,7 +343,7 @@ angular.module('core')
 				$scope.$watch("source", function(newValue, oldValue){ //Watch because link to parent scope via source not working
 	    			$scope.gridOptions.data=newValue;
 				});	
-			}		
+			}	
 			$scope.toggleEdit=function(){
 				$scope.editGrid = !$scope.editGrid;
 				var colIndex=$scope.colStructure.length - 1;
@@ -374,7 +376,26 @@ angular.module('core')
 			};
 			//Row Click Template
 			if($scope.isRowClick){
-				$scope.gridOptions.rowTemplate='<div ng-click="grid.appScope.rowClickTransmit(row)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell pointer" ng-class="{\'ui-grid-row-header-cell\': col.isRowHeader, \'ui-grid-click\': !grid.appScope.editGrid }" ui-grid-cell></div>';
+				$scope.gridOptions.rowTemplate='<div ';
+				if($scope.rowDraggable)	{ //DRAG
+					$scope.gridOptions.rowTemplate+='data-drag="true" data-jqyoui-options="{appendTo: \'body\',  helper: \'clone\'}" ng-model="row" jqyoui-draggable="{placeholder:\'keep\'}" ';
+				}
+				if($scope.rowDroppable)	{ //DROP
+					$scope.dropOBJ={drag:null, drop:null};
+					$scope.assignDrop=function(e){
+						$scope.dropOBJ.drop=e;
+					}					
+					$scope.$watch("dropOBJ.drag", function(newValue, oldValue){					
+						if(newValue && newValue.entity){
+							$scope.fn({action:5, param:$scope.dropOBJ, data:0});	
+						}
+					});	
+					$scope.gridOptions.rowTemplate+='data-drop="true" ng-model="grid.appScope.dropOBJ.drag" jqyoui-droppable="{onDrop:grid.appScope.assignDrop(row)}" '; //HACK: without \'\' otherwise drop is not firing, $scope.watch neccessary as onDrop executed before ng-model updates
+				}	
+				if($scope.isRowClick){
+					$scope.gridOptions.rowTemplate+='ng-click="grid.appScope.rowClickTransmit(row)"	';
+				}			
+				$scope.gridOptions.rowTemplate+='ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell pointer" ng-class="{\'ui-grid-row-header-cell\': col.isRowHeader, \'ui-grid-click\': !grid.appScope.editGrid }" ui-grid-cell></div>';
 				$scope.gridOptions.enableRowSelection = true;
 				$scope.gridOptions.enableRowHeaderSelection = false;
 				$scope.gridOptions.multiSelect = false;
@@ -562,45 +583,61 @@ angular.module('core')
 		if(structure.inputType==='select'){
 			HTML+='<select class="form-control" ng-options="item for item in structure.dataSource" ng-model="data">';
 		}		
-		if(structure.inputType==='custom-dropdown'){
-			HTML+='<form class="form-inline pull-left margin-right-M margin-bottom-S" ng-repeat="item in data track by $index" ng-init="i=$index" ng-if="!item.deleted">';
-			HTML+='<div class="dropdown pull-left margin-right-S" dropdown>';
-			HTML+='<div class="padding-SM pointer" ng-if="dropOPT.customInput !== i" dropdown-toggle>{{item.type}} <i class="fa fa-caret-down"></i></div>';
-			HTML+='<div ng-if="dropOPT.customInput === i" class="input-group">';
-			HTML+='<input class="form-control" ng-model="item.type">';
-            HTML+='<span class="input-group-btn">';
-            HTML+='<button class="btn btn-default" ng-disabled="item.type===\'\'" ng-click="dropOPT.customInput=-1"><span class="fa fa-check"></span></button>';
-            HTML+='</span>';
-            HTML+='</div>';
-			HTML+='<ul class="dropdown-menu text-left" role="menu">';
-            HTML+='<li ng-repeat="type in dropOPT.dropItems">';
-            HTML+='<a ng-click="dropSelectItem(item, type)">{{type}}</a>';
-            HTML+='</li>';
-            HTML+='<li class="divider"></li>';
-            HTML+='<li><a ng-click="setCustomDropdown(i)">Benutzerdefiniert</a></li>';
-            HTML+='</ul>'
-			HTML+='</div>';
-			//Multiple fields
-			HTML+='<div ng-if="dropOPT.structure.length > 1">';
-			HTML+='<button ng-if="dropOPT.customInput!==i" class="btn btn-default pull-right margin-right-SM" ng-click="removeElement(item, i)"><i class="fa fa-trash-o"></i></button>';
-			HTML+='<div class="clearfix padding-S"></div>';
-			HTML+='<div ng-repeat="e in dropOPT.structure" class="row">';			
-            HTML+='<div class="col-sm-3"><label>{{e.label}}</label></div>';
-            HTML+='<div class="col-sm-7"><div arbalo-input data="item[e.model]" structure="e"></div></div>';
-			HTML+='</div>';
-			HTML+='</div>';
-			//Single
-			HTML+='<div ng-if="dropOPT.structure.length === 1" class="clearfix">';
-			HTML+='<div class="input-group" ng-repeat="e in dropOPT.structure">';
-			HTML+='<div arbalo-input data="item[e.model]" structure="e"></div>';
-			HTML+='<span class="input-group-btn"><button class="btn btn-default" ng-click="removeElement(item, i)"><i class="fa fa-trash-o"></i></button></span>';
-			HTML+='</div>';
-			HTML+='</div>';
+		if(structure.inputType==='custom-dropdown'){	
+			//Single Type	
+			HTML+='<div ng-if="dropOPT.structure.length === 1" class="clearfix">';	
+			HTML+='	<div ng-repeat="item in data track by $index" ng-init="i=$index" ng-if="!item.deleted" class="input-group margin-bottom-S">';
+		    HTML+='  <div class="input-group-btn" dropdown>';
+		    HTML+='    <button type="button" class="btn btn-default" ng-if="dropOPT.customInput !== i" dropdown-toggle>{{item.type}} <span class="caret"></span></button>';
+			HTML+='		<div ng-if="dropOPT.customInput === i" class="input-group">';
+			HTML+='			<input class="form-control width100" ng-model="item.type">';
+            HTML+='			<span class="input-group-btn">';
+            HTML+='				<button class="btn btn-default" ng-disabled="item.type===\'\'" ng-click="dropOPT.customInput=-1"><span class="fa fa-check"></span></button>';
+            HTML+='			</span>';
+            HTML+='		</div>';		    
+		    HTML+='    <ul class="dropdown-menu">';
+		    HTML+='      <li ng-repeat="type in dropOPT.dropItems"><a ng-click="dropSelectItem(item, type)">{{type}}</a></li>';
+		    HTML+='      <li role="separator" class="divider"></li>';
+		    HTML+='      <li><a ng-click="setCustomDropdown(i)">Benutzerdefiniert</a></li>';
+		    HTML+='    </ul>';
+		    HTML+='  </div>';
+		    HTML+='  <div arbalo-input data="item[dropOPT.structure[0].model]" structure="dropOPT.structure[0]"></div>';
+		    HTML+=' <span class="input-group-btn">';
+		    HTML+='    <button class="btn btn-default" type="button" ng-click="removeElement(item, i)"><i class="fa fa-trash-o"></i></button>';
+		    if(structure.dropdownMulti===1){
+		    	HTML+='    <button class="btn btn-default" type="button" ng-click="newDropMenu()"><i class="fa fa-plus"></i></button>';
+		    }
+		    HTML+='  </span>';
+		    HTML+='	</div>';
+		    HTML+='</div>';
 
-			HTML+='</form>';			
+		    //Multiple Fields
+			HTML+='<div ng-if="dropOPT.structure.length > 1"  class="clearfix">';
+			HTML+='	<div ng-repeat="item in data track by $index" ng-init="i=$index" ng-if="!item.deleted" class="margin-bottom-S">';
+		    HTML+='  <div class="input-group-btn padding-bottom-S" dropdown>';
+		    HTML+='    <button type="button" class="btn btn-default" ng-if="dropOPT.customInput !== i" dropdown-toggle>{{item.type}} <span class="caret"></span></button>';
+			HTML+='		<div ng-if="dropOPT.customInput === i" class="input-group">';
+			HTML+='			<input class="form-control width100" ng-model="item.type">';
+            HTML+='			<span class="input-group-btn">';
+            HTML+='				<button class="btn btn-default" ng-disabled="item.type===\'\'" ng-click="dropOPT.customInput=-1"><span class="fa fa-check"></span></button>';
+            HTML+='			</span>';
+            HTML+='		</div>';		    
+		    HTML+='    <ul class="dropdown-menu">';
+		    HTML+='      <li ng-repeat="type in dropOPT.dropItems"><a ng-click="dropSelectItem(item, type)">{{type}}</a></li>';
+		    HTML+='      <li role="separator" class="divider"></li>';
+		    HTML+='      <li><a ng-click="setCustomDropdown(i)">Benutzerdefiniert</a></li>';
+		    HTML+='    </ul>';
+			HTML+='		<button ng-if="dropOPT.customInput !== i" class="btn btn-default" ng-click="removeElement(item, i)"><i class="fa fa-trash-o"></i></button>';
 			if(structure.dropdownMulti===1){
-				HTML+='<button class="btn btn-primary pull-right" ng-click="newDropMenu()"><i class="fa fa-plus"></i></button>';
-			}			
+		    	HTML+='    	<button ng-if="dropOPT.customInput !== i" class="btn btn-default" type="button" ng-click="newDropMenu()"><i class="fa fa-plus"></i></button>';
+		    }		    		   
+		    HTML+='  </div>';			
+			HTML+='		<div ng-repeat="e in dropOPT.structure" class="row">';			
+            HTML+='			<div class="col-sm-3"><label>{{e.label}}</label></div>';
+            HTML+='			<div class="col-sm-9"><div arbalo-input data="item[e.model]" structure="e"></div></div>';
+			HTML+='		</div>';
+			HTML+='	</div>';
+			HTML+='</div>';
         }		
 		HTML+='</div>';
 		return HTML;
