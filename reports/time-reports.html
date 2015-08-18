@@ -3,6 +3,7 @@
         <div ng-if="reportsOPT.dataLoaded" arbalo-bar-chart source="chart" chart-stacked="true"></div>
     </div>               
     <div class="col-md-6">
-        <pre class="code">{{chart | json}}</pre>
+    	<pre class="code" ng-if="sharedProperties.debug">{{reportsOPT | json}}</pre>
+        <pre class="code" ng-if="sharedProperties.debug">{{chart | json}}</pre>
     </div>
 </div>  

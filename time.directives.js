@@ -1,7 +1,7 @@
 'use strict';
 angular.module('core')
 //Quick Entry of Time
-.directive('timeQuickEntry', function($filter, ResourcesService){	
+.directive('timeQuickEntry', function(ResourcesService, alertsManager){	
 	return {
 		restrict: "A",
 		replace:true,
@@ -15,28 +15,28 @@ angular.module('core')
 			html+='				<li ng-repeat="obj in obj.projects" ng-class="{\'dropdown-submenu\':obj.projects.length}" ng-include="\'recursion.html\'"></li>';
 			html+='			</ul>'
 			html+='		</script>';
-			html+='		<input type="text" class="form-control width150 pull-left margin-right-S margin-bottom-S" ng-model="company" typeahead="company as company.title for company in companies | filter:$viewValue | limitTo:8" typeahead-min-length="3" typeahead-on-select="loadProjects($item)" placeholder="Firma">';
-	        html+='     <div class="dropdown pull-left margin-right-S margin-bottom-S" ng-if="projects" dropdown>';
-	        html+='			<button type="button" class="btn btn-default" dropdown-toggle>';
-	        html+='				{{projectTitle}} <span class="caret" ng-if="projects.length"></span>';
-	        html+='			</button>';
-	        html+='        	<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">';
-	        html+='           	<li ng-repeat="obj in projects" ng-class="{\'dropdown-submenu\':obj.projects.length}" ng-include="\'recursion.html\'"></li>';
-	        html+='			</ul>';
-	        html+='		</div>'	        
+			html+='		<div class="clearfix">';
+			html+='			<input type="text" class="form-control width150 pull-left margin-right-S margin-bottom-S" ng-model="company" typeahead="company as company.title for company in companies | filter:$viewValue | limitTo:8" typeahead-min-length="3" typeahead-on-select="loadProjects($item)" placeholder="Firma">';
+	        html+='     	<div class="dropdown pull-left margin-right-S margin-bottom-S" ng-if="projects" dropdown>';
+	        html+='				<button type="button" class="btn btn-default" dropdown-toggle>{{projectTitle}} <span class="caret" ng-if="projects.length"></span></button>';
+	        html+='        		<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">';
+	        html+='           		<li ng-repeat="obj in projects" ng-class="{\'dropdown-submenu\':obj.projects.length}" ng-include="\'recursion.html\'"></li>';
+	        html+='				</ul>';
+	        html+='			</div>'	        
+	        html+='		</div>';
 	        html+='		<form name="quickTimeForm" ng-if="showDateTime" class="margin-bottom-S form-inline animate-enter">';
-	        html+='			<input type="text" class="form-control width100 margin-bottom-S" datepicker-popup="dd.MM.yyyy" ng-model="entry.date" ng-click="open($event, 0)" is-open="opened[0]" placeholder="Date" required>';	    
-	        html+='			<div class="pull-left">';
+	        html+='			<input type="text" class="form-control width100 margin-bottom-S pull-left" datepicker-popup="dd.MM.yyyy" ng-model="entry.date" ng-click="open($event, 0)" is-open="opened[0]" placeholder="Datum" required>';
+	        html+='			<div class="pull-left margin-left-S">';
 	        html+='				<div arbalo-time-input model="entry" time-required="true"></div>';
 	        html+='			</div>';
-	        html+='			<button class="btn btn-primary" ng-disabled="quickTimeForm.$invalid" ng-click="submitForm()"><span class="fa fa-check"></span></button>';
+	        html+='			<button class="btn btn-primary margin-left-S" ng-disabled="quickTimeForm.$invalid" ng-click="submitForm()"><span class="fa fa-check"></span></button>';
 	        html+='		</form>';
 	        html+='</div>';
 			return html;
 		},
 		controller: function($scope, ResourcesService){
  			$scope.quickentryOPT={companies:null, projects:null, projectTitle:'Projekte', showDateTime:false} 			 			 			
- 			$scope.entry={cmpid:null, prjid:null, date:$filter('date')(new Date(), 'yyyy-MM-dd'), time:'', comment:''};
+ 			$scope.entry={cmpid:null, prjid:null, date:'', time:'', comment:''};
 				ResourcesService.listCompanies().then(function(result) {
 			   		$scope.companies = result.data.companyModel;
 			   		}, function(reason) {//error
@@ -66,7 +66,7 @@ angular.module('core')
 		  		$scope.showDateTime=true;
 		  	};
 		  	var emptyForm=function(){
-		  		$scope.entry.date=$filter('date')(new Date(), 'yyyy-MM-dd');
+		  		$scope.entry.date=new Date();
 		  		$scope.entry.time='';
 		  		$scope.entry.comment='';		  				  	
 		  	};
@@ -76,6 +76,7 @@ angular.module('core')
 				$scope.projectTitle= 'Projekte';
 				$scope.entry.prjid=null;		  		
 		  		$scope.showDateTime=false;
+		  		alertsManager.addAlert('Eintrag gespeichert. ', 'success', 'fa-check', 1);
 		  	};
 		  	//Datepicker
 			$scope.opened=[];
@@ -116,9 +117,10 @@ angular.module('core')
 			html+='</div>';
 			html+='<div class="input-help" ng-if="obj.err"><strong>Format</strong><table><tr><td>Von-Bis</td><td>1000-1200 oder 10-12</td></tr><tr><td>Von Stunden</td><td>1000 2.5 oder 10 2.5</td></tr></table></div>';
 			html+='<div>';			
-			html+='<div ng-if="obj.$$more" class="background-light padding-S position-relative">';
-			html+='<textarea class="form-control margin-top-SM" ng-model="model.comment" placeholder="Kommentar"></textarea>';
-			html+='<br><input id="id_{{rand}}" type="checkbox" ng-model="model.isBillable"><label class="customCheckbox" for="id_{{rand}}">Verrechenbar</label>';
+			html+='<div ng-if="obj.$$more" class="position-relative">';
+			html+='<textarea class="form-control margin-top-S margin-bottom-S" ng-model="model.comment" placeholder="Kommentar"></textarea>';						
+			html+='<div arbalo-tags display="Tags" model="model.tagRef"></div>';			
+			html+='<input id="id_{{rand}}" type="checkbox" ng-model="model.isBillable"><label class="customCheckbox" for="id_{{rand}}">Verrechenbar</label>';
 			if(attr.timeDelete==='true'){
 				html+='<a class="position-bottom-right-S" ng-click="setDeleted(model)"><i class="fa fa-trash-o"></i></a>';
 			}
@@ -149,6 +151,9 @@ angular.module('core')
 				if($scope.timeChangeFn){
 					$scope.timeChangeFn({item:$scope.model, attr:$scope.timeChangeAttr});
 				}				
+			};
+			if($scope.model.time && $scope.model.time!==''){
+				$scope.validate($scope.model)
 			};
 			if($scope.watch){//If watch is enabled directive watches for model changes and updates (e.g. Calendar click on differnet events that change time)
 				$scope.$watch("model", function(newValue, oldValue){					
@@ -292,7 +297,6 @@ angular.module('core')
 			structure:'=',
 			actions:'@',
 			rowClick:'@',
-			rowClickFunction:'&',
 			fn:'&',
 			canUpdate:'@',
 			customHeaderSettings:'=',
@@ -309,20 +313,21 @@ angular.module('core')
 			html+='<div class="pull-left grid-header-custom-text">{{title}}</div>';		
 			html+='<div class="pull-right pointer grid-header-custom-icons">';
 			if(attr.treeView!=="true") {
-				html+='<a ng-click="toggleFiltering()" class="text-black"><i class="fa fa-search"></i></a>';
+				html+='<a ng-click="toggleFiltering()" class="text-black" title="Search"><i class="fa fa-search"></i></a>';
 			}	
+			html+='<a ng-if="editGrid" ng-click="exportCSV()" class="text-black margin-left-L" title="Download CSV"><i class="fa fa-download"></i></a>';			
 			if(attr.customHeaderSettings) {
-				html+='<a ng-click="customHeaderAction()" class="text-black margin-left-L"><i class="{{customHeaderSettings.icon}}"></i></a>';
+				html+='<a ng-repeat="header in customHeaderSettings" ng-click="header.action()" class="text-black margin-left-L" ng-class="{\'border-bottom-color\' : header.active}"><i ng-class="header.icon"></i></a>';
 			}
 			if(attr.actions.indexOf('A')!==-1){
-				html+='<a ng-if="editGrid" ng-click="gridAction(0, 1)" class="text-black margin-left-L"><i class="fa fa-plus"></i></a>';
+				html+='<a ng-if="editGrid" ng-click="gridAction(0, 1)" class="text-black margin-left-L" title="Add"><i class="fa fa-plus"></i></a>';
 			}			
 			if(attr.actions.indexOf('A')!==-1 || attr.actions.indexOf('E')!==-1 || attr.actions.indexOf('D')!==-1){
-				html+='<a ng-click="toggleEdit()" class="text-black margin-left-L"><i ng-if="editGrid" class="fa fa-toggle-on"></i><i ng-if="!editGrid" class="fa fa-toggle-off"></i><i class="margin-left-M fa fa-pencil"></i></a>';
+				html+='<a ng-click="toggleEdit()" class="text-black margin-left-L"  title="Toggle Edit"><i ng-if="editGrid" class="fa fa-toggle-on"></i><i ng-if="!editGrid" class="fa fa-toggle-off"></i><i class="margin-left-M fa fa-pencil"></i></a>';
 			}
 			html+='</div>';				
 			html+='</div>';
-			html+='<div ui-grid="gridOptions" class="uiGrid" ';
+			html+='<div ui-grid="gridOptions" class="uiGrid" ui-grid-exporter';
 			if(attr.treeView==="true") {
 				html+=' ui-grid-tree-view';
 			}
@@ -345,6 +350,10 @@ angular.module('core')
 				});	
 			}	
 			$scope.toggleEdit=function(){
+				if($scope.isRowClick){//Disable Row Click in Edit Mode
+					$scope.gridOptions.enableRowSelection = $scope.editGrid;
+					$scope.gridApi.core.notifyDataChange( uiGridConstants.dataChange.OPTIONS);
+				}
 				$scope.editGrid = !$scope.editGrid;
 				var colIndex=$scope.colStructure.length - 1;
 			    $scope.colStructure[colIndex].visible = !($scope.colStructure[colIndex].visible || $scope.colStructure[colIndex].visible === undefined);
@@ -353,7 +362,11 @@ angular.module('core')
 			$scope.toggleFiltering = function(){
 				$scope.gridOptions.enableFiltering = !$scope.gridOptions.enableFiltering;
 				$scope.gridApi.core.notifyDataChange( uiGridConstants.dataChange.COLUMN );
-			};		
+			};	
+			$scope.exportCSV = function(){
+		      var myElement = angular.element(document.querySelectorAll(".custom-csv-link-location"));
+		      $scope.gridApi.exporter.csvExport( 'all', 'all', myElement );				
+			};	
 			$scope.gridOptions={
 				enableColumnMenus: false,
 				treeViewIndent:20,
@@ -384,7 +397,7 @@ angular.module('core')
 					$scope.dropOBJ={drag:null, drop:null};
 					$scope.assignDrop=function(e){
 						$scope.dropOBJ.drop=e;
-					}					
+					}				
 					$scope.$watch("dropOBJ.drag", function(newValue, oldValue){					
 						if(newValue && newValue.entity){
 							$scope.fn({action:5, param:$scope.dropOBJ, data:0});	
@@ -401,7 +414,7 @@ angular.module('core')
 				$scope.gridOptions.multiSelect = false;
 			}
 			$scope.rowClickTransmit=function(row){
-				$scope.rowClickFunction({row:row});
+				$scope.fn({action:21, param:row, data:$scope.title});
 			}
 			//Structure
 			var structure = $scope.structure
@@ -448,6 +461,8 @@ angular.module('core')
 			//************* MODAL ****************
 		    $scope.gridAction = function(row, action){//0=custom, 1=add, 2=edit, 3=delete	
 		    	var customActionSettings=$scope.customActionSettings;
+		    	var actions = $scope.actions;
+		    	var fn = $scope.fn;
 		    	var SubProjects={};
 		    	if(row){
 		    		$scope.row=row.entity;	        
@@ -500,6 +515,20 @@ angular.module('core')
 			                $scope.ok = function(){
 			                    modalInstance.close($scope.data);                                                                                        
 			                };	
+			                $scope.addMultiple = function(){
+			                	$scope.close();			                	
+					        	var modalInstance = $modal.open({
+					        		size:'lg',
+					        		templateUrl:'app/time/admin/templates/multi.html',
+					        		controller: 'TimeMultiCtrl',
+						            resolve: {
+						                data: function () {return $scope.structureDirective;}
+						            }		        		
+					        	});			                	
+					        	modalInstance.result.then(function (data) {	
+					        		fn({action:5, param:data});
+					        	});
+			                };
 			            },
 			            resolve: {
 			                data: function () {return $scope.modalData;}
@@ -507,7 +536,7 @@ angular.module('core')
 			            template: function(){		            	
 			                var HTML='';
 			                if(action==1) {
-			                    HTML+=modalHeader('Neuer Eintrag');
+			                    HTML+=modalHeader('Neuer Eintrag');			                    
 			                    HTML+='<div class="form-group" ng-repeat="item in structure">';                
 			                    HTML+='<div class="col-sm-2"><label>{{item.name}}</label></div>';     
 			                    HTML+='<div class="col-sm-10"><div arbalo-input data="data[item.field]" structure="structureDirective[item.field]"></div></div>';   
@@ -516,17 +545,16 @@ angular.module('core')
 			                }                
 			                if(action==2) {
 								HTML+=modalHeader('Eintrag bearbeiten');
-			                    HTML+='<div class="form-group" ng-repeat="(key, value) in data" ng-if="key!==\'id\' && key!==\'createdAt\' && key!==\'createdBy\' && key!==\'modifiedAt\' && key!==\'modifiedBy\'">';                
-			                    HTML+='<div class="col-sm-2"><label>{{resolveName(key)}}</label></div>';     
-			                    HTML+='<div class="col-sm-10"><div arbalo-input data="data[key]" structure="structureDirective[key]"></div></div>';   
-			                    HTML+='</div>';
+			                    HTML+='<div class="form-group" ng-repeat="item in structure">';                
+			                    HTML+='<div class="col-sm-2"><label>{{item.name}}</label></div>';     
+			                    HTML+='<div class="col-sm-10"><div arbalo-input data="data[item.field]" structure="structureDirective[item.field]"></div></div>';   
 			                    HTML+=modalFooter();
 			                }
 			                if(action==3) {
 			                    HTML+=modalHeader('Eintrag löschen?');
-			                    HTML+='<div class="form-group" ng-repeat="(key, value) in data" ng-if="key!==\'id\' && key!==\'createdAt\' && key!==\'createdBy\' && key!==\'modifiedAt\' && key!==\'modifiedBy\'">';
-			                    HTML+='<div class="col-sm-2"><label>{{resolveName(key)}}</label></div>';
-			                    HTML+='<div class="col-sm-10">{{data[key]}}</div>';                    
+			                    HTML+='<div class="form-group" ng-repeat="item in structure">';
+			                    HTML+='<div class="col-sm-2"><label>{{item.name}}</label></div>';
+			                    HTML+='<div class="col-sm-10">{{data[item.field]}}</div>';                    
 			                    HTML+='</div>';
 			                    HTML+='<div ng-if="SubProjectsObj.length" class="bg-danger padding-M"><i class="fa fa-exclamation-triangle"></i> {{SubProjectsObj.length}} Unter-Elemente werden auch gelöscht:<ul class="list-normal"><li ng-repeat="e in SubProjectsObj">{{e}}</li></ul></div>';
 								HTML+=modalFooter();			                
@@ -547,7 +575,7 @@ angular.module('core')
 		            	}
            				$scope.fn(param);               			
 		            }            
-		            if(action==2) {
+		            if(action==2) {	            	
 		                $scope.fn({action:3, param:data, data:0});		                
 		            }
 		            if(action==3) {
@@ -582,17 +610,20 @@ angular.module('core')
 		}
 		if(structure.inputType==='select'){
 			HTML+='<select class="form-control" ng-options="item for item in structure.dataSource" ng-model="data">';
-		}		
+		}	
+		if(structure.inputType==='country-list'){
+			HTML+='<div get-country-list model="data"></div>';
+		}				
 		if(structure.inputType==='custom-dropdown'){	
 			//Single Type	
 			HTML+='<div ng-if="dropOPT.structure.length === 1" class="clearfix">';	
 			HTML+='	<div ng-repeat="item in data track by $index" ng-init="i=$index" ng-if="!item.deleted" class="input-group margin-bottom-S">';
 		    HTML+='  <div class="input-group-btn" dropdown>';
-		    HTML+='    <button type="button" class="btn btn-default" ng-if="dropOPT.customInput !== i" dropdown-toggle>{{item.type}} <span class="caret"></span></button>';
+		    HTML+='    <button type="button" class="btn btn-default" ng-if="dropOPT.customInput !== i" dropdown-toggle>{{item.attributeType}} <span class="caret"></span></button>';
 			HTML+='		<div ng-if="dropOPT.customInput === i" class="input-group">';
-			HTML+='			<input class="form-control width100" ng-model="item.type">';
+			HTML+='			<input class="form-control width100" ng-model="item.attributeType">';
             HTML+='			<span class="input-group-btn">';
-            HTML+='				<button class="btn btn-default" ng-disabled="item.type===\'\'" ng-click="dropOPT.customInput=-1"><span class="fa fa-check"></span></button>';
+            HTML+='				<button class="btn btn-default" ng-disabled="item.attributeType===\'\'" ng-click="dropOPT.customInput=-1"><span class="fa fa-check"></span></button>';
             HTML+='			</span>';
             HTML+='		</div>';		    
 		    HTML+='    <ul class="dropdown-menu">';
@@ -615,11 +646,11 @@ angular.module('core')
 			HTML+='<div ng-if="dropOPT.structure.length > 1"  class="clearfix">';
 			HTML+='	<div ng-repeat="item in data track by $index" ng-init="i=$index" ng-if="!item.deleted" class="margin-bottom-S">';
 		    HTML+='  <div class="input-group-btn padding-bottom-S" dropdown>';
-		    HTML+='    <button type="button" class="btn btn-default" ng-if="dropOPT.customInput !== i" dropdown-toggle>{{item.type}} <span class="caret"></span></button>';
+		    HTML+='    <button type="button" class="btn btn-default" ng-if="dropOPT.customInput !== i" dropdown-toggle>{{item.attributeType}} <span class="caret"></span></button>';
 			HTML+='		<div ng-if="dropOPT.customInput === i" class="input-group">';
-			HTML+='			<input class="form-control width100" ng-model="item.type">';
+			HTML+='			<input class="form-control width100" ng-model="item.attributeType">';
             HTML+='			<span class="input-group-btn">';
-            HTML+='				<button class="btn btn-default" ng-disabled="item.type===\'\'" ng-click="dropOPT.customInput=-1"><span class="fa fa-check"></span></button>';
+            HTML+='				<button class="btn btn-default" ng-disabled="item.attributeType===\'\'" ng-click="dropOPT.customInput=-1"><span class="fa fa-check"></span></button>';
             HTML+='			</span>';
             HTML+='		</div>';		    
 		    HTML+='    <ul class="dropdown-menu">';
@@ -651,7 +682,7 @@ angular.module('core')
 		controller:function($scope){	
 			var emptyOBJ;
 			if($scope.structure.inputType==='custom-dropdown'){				
-				emptyOBJ={attributeType:$scope.structure.dropdownObj, type:$scope.structure.dropdownItems[0], value:''}; 
+				emptyOBJ={addressType:$scope.structure.dropdownObj, attributeType:$scope.structure.dropdownItems[0], value:''}; 
 				$scope.dropOPT={dropItems:$scope.structure.dropdownItems, customInput:-1, structure:$scope.structure.fields};				
 				if(!$scope.data){
 					$scope.data=[angular.copy(emptyOBJ)];
@@ -666,7 +697,7 @@ angular.module('core')
 				$scope.dropOPT.customInput=i;
 			};
 			$scope.dropSelectItem=function(e, item){
-				e.type=item;
+				e.attributeType=item;
 			};
 			$scope.newDropMenu=function(){
 				$scope.data.push(angular.copy(emptyOBJ));
@@ -705,9 +736,9 @@ angular.module('core')
 		}	
 		if(structure.inputType==='custom-dropdown'){			
 			for(var i=0;i<data.length;i++){
-				if(data[i].attributeType===structure.dropdownObj){
+				if(data[i].addressType===structure.dropdownObj){
 					HTML+='<div class="pull-left margin-right-L">'
-					HTML+='<div class="atr-type">'+data[i].type+'</div>';
+					HTML+='<div class="atr-type">'+data[i].attributeType+'</div>';
 					HTML+=(data[i].msgType ? data[i].msgType : '');					
 					if(data[i].value){
 						if(structure.fields.map(function(e){return e.inputType;}).indexOf('mail')!==-1){

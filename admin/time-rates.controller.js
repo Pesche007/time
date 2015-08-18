@@ -6,14 +6,16 @@ angular.module('time')
 	$scope.ratesOPT={ratesLoaded:0, rates:[]};	
 	$scope.ratesStructure=[];
 	RatesService.list().then(function(result) {
-		$scope.ratesOPT.rates=result.data.ratesModel;
+		$scope.ratesOPT.rates=result.data.rateModel;
 		$scope.ratesStructure=[
 			{ name:'Name', field: 'title', inputType:'text'},
 			{ name:'Stundensatz', field: 'rate', inputType:'number' },
 			{ name:'Währung', field: 'currency', inputType:'select', dataSource: ['CHF', 'EUR', 'USD']},
 			{ name:'Beschreibung', field: 'description', inputType:'textarea'}
+			//{ name:'Typ', field: 'type', inputType:'select', dataSource: ['STANDARD_INTERNAL', 'STANDARD_EXTERNAL_ON_SITE', 'STANDARD_EXTERNAL_OFF_SITE', 'OVERTIME_INTERNAL', 'OVERTIME_EXTERNAL_ON_SITE', 'OVERTIME_EXTERNAL_OFF_SITE']}
 		];
-		$scope.ratesOPT.ratesLoaded=1;
+		$scope.ratesOPT.ratesLoaded=1;	
+
 	}, function(reason) {//error
 		alertsManager.addAlert('Could not get rate. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
 	}); 
@@ -33,7 +35,7 @@ angular.module('time')
 	//Save Rates -> New
 	var rateNewSave = function(param){
 		RatesService.post(param).then(function(result) {
-			$scope.ratesOPT.rates.push(result.data.ratesModel);			
+			$scope.ratesOPT.rates.push(result.data.rateModel);			
    		}, function(reason) {//error
    			alertsManager.addAlert('Could not create rate. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
 		});
@@ -42,7 +44,7 @@ angular.module('time')
 	var rateEditSave = function(param){
 		RatesService.put(param).then(function(result) {
 			var index = $scope.ratesOPT.rates.map(function(e) { return e.id;}).indexOf(param.id);
-			$scope.ratesOPT.rates[index] = result.data.ratesModel;				
+			$scope.ratesOPT.rates[index] = result.data.rateModel;				
    		}, function(reason) {//error
    			alertsManager.addAlert('Could not update rate. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
 		}); 		

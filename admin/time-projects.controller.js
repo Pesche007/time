@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('time')
-  .controller('TimeProjectCtrl', function ($scope, cfg, ResourcesService, alertsManager, $http) {
+  .controller('TimeProjectCtrl', function ($scope, $http, cfg, ResourcesService, alertsManager, sharedProperties) {
 	//Get Companies 
 	$scope.companyOPT={companyLoaded:0, companies:[], selectedCompany:[]};
 
@@ -20,8 +20,14 @@ angular.module('time')
 	$scope.projectsOPT={projectsLoaded:0, projects:[]};
 	var getProjects = function(companyid) {		
 		ResourcesService.listProjectsTree(companyid).then(function(result) {
-			var data = addTreeLevel(result.data.projectTreeNodeModel.projects);
-			$scope.projectsOPT.projects=data;
+			var data = result.data.projectTreeNodeModel;
+			if(data.projects){
+				var treeData = addTreeLevel(data.projects);
+			}
+			else{
+				var treeData = [];
+			}
+			$scope.projectsOPT.projects=treeData;
 			$scope.projectsOPT.projectsLoaded=1;
 			$scope.projectsStructure=[
 				{ name:'Name', field: 'title', inputType:'text'}
@@ -173,50 +179,7 @@ angular.module('time')
 		}
 		return data;
 	};	
-	
-	/**** DATA INIT *****/
-	
-	//Company + Projects + Sub-projects
-	/*
-	//var comp = {companyModel : {'title':'Test Projekt-Firma'}};
-	var comp = {companyModel : {'title':'Test Firma für Projekte'}};
-	$http.post('http://localhost:8080/opentdc-services-test/api/company', comp).success(function(result) {
-		console.log('create company', result)
-		for(var i=1; i<3;i++) {
-			var proj = {title:'Test-Projekt' + i};
-			ResourcesService.post(result.companyModel.id, '', proj).then(function(data) {
-				console.log('create project', data)
-				for(var j=1; j<3;j++) {
-					proj = {'title':'Test-Sub-Projekt' + j};
-					ResourcesService.post(result.companyModel.id, data.data.projectModel.id, proj).then(function(result) {
-						console.log('create sub-project', result)
-					})
-				}
-			})
-		}
-	})
-	
-	
-	//Adressbook + Contact
-	var adressbook = {addressbookModel : {'name':'Privates Adressbuch'}};
-	$http.post('http://localhost:8080/opentdc-services-test/api/addressbooks', adressbook).success(function(result) {	
-		console.log('create addressbok', result);	
-		for(var i=1; i<4;i++) {
-			var person = {contactModel:{firstName:'Vorname ' + i, lastName:'Nachname ' + i}};
-			$http.post('http://localhost:8080/opentdc-services-test/api/addressbooks/'+result.addressbookModel.id+'/contact', person).success(function(result) {
-				console.log('create person', result);				
-			})
-		}
-	})
-	
-	
-	
-	/*
-	//Test if AdressModel has a flaw
-	var address={addressModel:{"id":"92a6a114-b8d5-4f1e-917e-bc837f5ccdff","attributeType":"email","type":"Arbeit","value":"Test1234","createdAt":"2015-06-16T14:36:08.020+02:00","createdBy":"DUMMY_USER","modifiedAt":"2015-06-16T14:36:08.020+02:00","modifiedBy":"DUMMY_USER"}};
-	$http.put('http://localhost:8080/opentdc-services-test/api/addressbooks/e95af27d-18cf-4733-a7e0-a21b329084cd/contact/6b6f11d5-22b8-4455-abb3-a7850eeb239a/address/92a6a114-b8d5-4f1e-917e-bc837f5ccdff', address)
-	
-	/*
-	//$http.delete('http://localhost:8080/opentdc-services-test/api/company/de9fafb2-7399-476f-8326-413291e2476c')
-	*/
+
+	/** DEBUG **/
+	$scope.sharedProperties = sharedProperties.getProperties();
  });

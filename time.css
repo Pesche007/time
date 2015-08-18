@@ -22,7 +22,7 @@
 .grid-header-custom-icons{font-size:20px;line-height:60px;padding-right: 20px}
 .ui-grid-row .ui-grid-cell.ui-grid-row-header-cell {background-color: #FAFAFA;}
 .ui-grid-cell-contents{line-height:30px;font-size:16px;}
-.ui-grid-click:before{position:absolute;font-family: FontAwesome;content: "\f105";font-size:20px;margin-top:5px;right:10px;}
+.ui-grid-render-container-body .ui-grid-click:last-child:before{position:absolute;font-family: FontAwesome;content: "\f105";font-size:20px;margin-top:5px;right:10px;}
 .ui-grid-icon-cancel{display: none;}
 
 

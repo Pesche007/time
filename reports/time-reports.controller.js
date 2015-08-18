@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('time')
-  .controller('TimeReportCtrl', function ($scope, WorkrecordService) {
+  .controller('TimeReportCtrl', function ($scope, WorkrecordService, sharedProperties) {
   	$scope.reportsOPT={dataLoaded:0, chartAxis:[]};
   	$scope.chart = {data:[], xAxis:[], label:[]};
-  	WorkrecordService.list().then(function(result) {
+  	WorkrecordService.list().then(function(result) {  		
 		var i, d, curr_date, curr_month, curr_year, datumArr, datumFilter, spliceIndex, index, duration, data = result.data.workRecordModel;		
 		for(i=0;i<data.length;i++){
 			d=new Date(data[i].startAt);
@@ -14,16 +14,17 @@ angular.module('time')
 			datumArr = curr_year + '' + (curr_month.length===2 ? curr_month : '0'+curr_month) + '' + (curr_date.length===2 ? curr_date : '0'+curr_date);
 			datumFilter = (curr_date.length===2 ? curr_date : '0'+curr_date) + '.' + (curr_month.length===2 ? curr_month : '0'+curr_month) + '.' + curr_year;
 			spliceIndex=0;
-			if($scope.reportsOPT.chartAxis.indexOf(datumArr)===-1){
+			if($scope.reportsOPT.chartAxis.indexOf(datumArr)===-1){//Date not in Axis
 				$scope.reportsOPT.chartAxis.map(function(e, i){if(e < datumArr){spliceIndex=i+1;}});
 				$scope.reportsOPT.chartAxis.splice(spliceIndex, 0, datumArr);
 				$scope.chart.xAxis.splice(spliceIndex, 0, datumFilter);
+				$scope.chart.data.push([]);
+				$scope.chart.label.push([]);
 			}
-			index = $scope.chart.xAxis.indexOf(datumFilter);
-			if(!$scope.chart.data[index]){
-				$scope.chart.data.splice(index, 0, []);
-				$scope.chart.label.splice(index, 0, []);
-			}
+			data[i].datumTMP = datumArr;
+		}
+		for(i=0;i<data.length;i++){
+			index = $scope.reportsOPT.chartAxis.indexOf(data[i].datumTMP);
 			duration = Math.round((data[i].durationHours + data[i].durationMinutes / 60) * 10) / 10;
 			$scope.chart.data[index].push(duration);
 			$scope.chart.label[index].push('<strong>'+duration+'</strong><br>'+data[i].companyTitle + '<br>' + data[i].projectTitle);
@@ -33,4 +34,6 @@ angular.module('time')
 		alertsManager.addAlert('Could not get companies. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
 	});
 
+	/** DEBUG **/
+	$scope.sharedProperties = sharedProperties.getProperties();
   });

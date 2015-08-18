@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('time')
-  .controller('TimeGridinputCtrl', function ($scope, $filter, cfg, WorkrecordService, TimeService, alertsManager) {
+  .controller('TimeGridinputCtrl', function ($scope, $filter, cfg, WorkrecordService, TimeService, sharedProperties, alertsManager) {
 
   	$scope.gridOPT={projectInput:[], template:[], sumtime:[0, 0, 0, 0, 0, 0, 0], showDays:5};
 
@@ -198,6 +198,8 @@ angular.module('time')
 			current=$scope.gridOPT.projectInput[index];
 			current.project={id:data[i].projectId, title:data[i].projectTitle};
 			current.company={id:data[i].companyId, title:data[i].companyTitle};	
+			if(!current.sumtime){current.sumtime=0};//Update row time
+			current.sumtime += data[i].duration; 
 			currentdate = new Date(data[i].startAt);
 			currentday=currentdate.getDay() - 1;				
 			if(currentday===-1){
@@ -220,5 +222,7 @@ angular.module('time')
 		}//end for		
 	}, function(reason) {//error
 		alertsManager.addAlert('Could not get companies. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
-	});		
+	});	
+	/** DEBUG **/
+	$scope.sharedProperties = sharedProperties.getProperties();
   });

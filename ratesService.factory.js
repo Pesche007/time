@@ -17,7 +17,7 @@ angular.module('time')
 		},
 		// create
 		post: function(rate) {			
-			var data = {ratesModel:rate};
+			var data = {rateModel:rate};
 			return $http.post(cfg.rates.SVC_URI, data)
 			.success(function(data, status) {				
 			})
@@ -37,7 +37,7 @@ angular.module('time')
 		},
 		// update
 		put: function(rate) {						
-			var data = {ratesModel:rate};
+			var data = {rateModel:rate};
 			return $http.put(cfg.rates.SVC_URI + '/'+rate.id, data)
 			.success(function(data, status) {				
 			})

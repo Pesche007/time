@@ -5,10 +5,11 @@
  */
 angular.module('time')
 .factory('TimeService', function() {
-	var formatAddLeadingZero = function(input){
+	var mod = {};
+	mod.formatAddLeadingZero = function(input){
 		return (input<10?'0':'')+input;
 		};	
-	var calculateTime = function(from, to, hrs){
+	mod.calculateTime = function(from, to, hrs){
 		var output={from:0, to:0, duration:0, durationhours:0, durationminutes:0, hours:0, minutes:0}; //12.00-1330 => duration:1.5 dhours:1 dminutes:30 hours:12 minutes:00
 		if(!hrs){
 			if(from.length===2){from+='00'};
@@ -44,56 +45,70 @@ angular.module('time')
 			}			
 		return output;
 	};
-	return {
-		validateTime:function(t){
-			var result=false;
-			var partsM=t.split("-");
-			var partsS=t.split(" ");			
-			if(partsM[1]){
-				if(partsM[0].length===2 && partsM[1].length===2){//10-12
-					if(!(isNaN(partsM[0]) && isNaN(partsM[1])) && partsM[1]>partsM[0] && partsM[1]<=24){
-						result=calculateTime(partsM[0], partsM[1]);
-					}
+	mod.validateTime = function(t){
+		var result=false;
+		var partsM=t.split("-");
+		var partsS=t.split(" ");			
+		if(partsM[1]){
+			if(partsM[0].length===2 && partsM[1].length===2){//10-12
+				if(!(isNaN(partsM[0]) && isNaN(partsM[1])) && partsM[1]>partsM[0] && partsM[1]<=24){
+					result=mod.calculateTime(partsM[0], partsM[1]);
 				}
-				else if(partsM[0].length===4 && partsM[1].length===4){//1000-1200
-					if(partsM[1].substr(0,2) <=24 && !(isNaN(partsM[0]) && isNaN(partsM[1])) && (partsM[1].substr(0,2) > partsM[0].substr(0,2) || (partsM[1].substr(0,2) === partsM[0].substr(0,2) && partsM[1].substr(2,4) > partsM[0].substr(2,4)))) {
-						result=calculateTime(partsM[0], partsM[1]);
-					}
-				}					
-			}									
-			else if(partsS[1]){
-				if((partsS[0].length===2 || partsS[0].length===4)  && !(isNaN(partsS[1]) && isNaN(partsS[1]))) {//10 1.5 1000 1.5
-					result=calculateTime(partsS[0], 0, partsS[1]); 
+			}
+			else if(partsM[0].length===4 && partsM[1].length===4){//1000-1200
+				if(partsM[1].substr(0,2) <=24 && !(isNaN(partsM[0]) && isNaN(partsM[1])) && (partsM[1].substr(0,2) > partsM[0].substr(0,2) || (partsM[1].substr(0,2) === partsM[0].substr(0,2) && partsM[1].substr(2,4) > partsM[0].substr(2,4)))) {
+					result=mod.calculateTime(partsM[0], partsM[1]);
 				}
-			}			
-			return result;
-		},
-		addTimetoDate:function(datum, h, m){
-			var d = new Date(datum);
-			d.setHours(d.getHours() + h, d.getMinutes() + m);
-			return d;
-		},
-		getFromToStartDuration:function(datum, h, m){
-			var d=new Date(datum);
-			var from=formatAddLeadingZero(d.getHours()) + '' + formatAddLeadingZero(d.getMinutes());			
-			var to1=parseInt(from.substr(0,2)) + h;
-			var to2=parseInt(from.substr(2,2)) + m;
-			if(to2>=60){
-				to1=to1+1;
-				to2=to2-60;
+			}					
+		}									
+		else if(partsS[1]){
+			if((partsS[0].length===2 || partsS[0].length===4)  && !(isNaN(partsS[1]) && isNaN(partsS[1]))) {//10 1.5 1000 1.5
+				result=mod.calculateTime(partsS[0], 0, partsS[1]); 
 			}
-			var to=formatAddLeadingZero(to1)+''+formatAddLeadingZero(to2);
-			return {from:from, to:to};
-		},
-		getDurationHMStartEnd:function(start, end){
-			var diff=end-start;
-			var hours = Math.floor((diff % 86400000) / 3600000);
-			var minutes = Math.round(diff / (1000 * 60)) - (hours*60);	
-			if(minutes>=60) {
-				hours++;
-				minutes=minutes-60;
-			}
-			return {hours:hours, minutes:minutes};
+		}			
+		return result;
+	};
+	mod.addTimetoDate = function(datum, h, m){
+		var d = new Date(datum);
+		d.setHours(d.getHours() + h, d.getMinutes() + m);
+		return d;
+	};
+	mod.getFromToStartDuration = function(datum, h, m){
+		var d=new Date(datum);
+		var from=mod.formatAddLeadingZero(d.getHours()) + '' + mod.formatAddLeadingZero(d.getMinutes());			
+		var to1=parseInt(from.substr(0,2)) + h;
+		var to2=parseInt(from.substr(2,2)) + m;
+		if(to2>=60){
+			to1=to1+1;
+			to2=to2-60;
 		}
+		var to=mod.formatAddLeadingZero(to1)+''+mod.formatAddLeadingZero(to2);
+		return {from:from, to:to};
+	};
+	mod.getDurationHMStartEnd = function(start, end){
+		var diff=end-start;
+		var hours = Math.floor((diff % 86400000) / 3600000);
+		var minutes = Math.round(diff / (1000 * 60)) - (hours*60);	
+		if(minutes>=60) {
+			hours++;
+			minutes=minutes-60;
+		}
+		return {hours:hours, minutes:minutes};
+	};
+	mod.calculateFromTo = function(from, to){
+		var d1=new Date(from);
+		var timeFrom=mod.formatAddLeadingZero(d1.getHours()) + '' + mod.formatAddLeadingZero(d1.getMinutes());			
+		var d2=new Date(to);
+		var diff = d2 - d1;
+		var hours = Math.floor((diff % 86400000) / 3600000);
+		var minutes = Math.round(diff / (1000 * 60)) - (hours*60);	
+		if(minutes>=60) {
+			hours++;
+			minutes=minutes-60;
+		}			
+		var dtimeTo = mod.addTimetoDate(from, hours, minutes);
+		var timeTo=mod.formatAddLeadingZero(dtimeTo.getHours()) + '' + mod.formatAddLeadingZero(dtimeTo.getMinutes());
+		return {from:timeFrom, to:timeTo};			
 	}
+	return mod;
 });

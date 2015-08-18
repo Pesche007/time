@@ -22,8 +22,8 @@
         </div>
     </div>               
     <div class="col-md-6">
-        <pre>{{companyOPT.companies || json}}</pre>
-        <pre>{{companyOPT.selectedCompany || json}}</pre>        
-        <pre>{{projectsOPT.projects || json}}</pre> 
+        <pre ng-if="sharedProperties.debug">{{companyOPT.companies || json}}</pre>
+        <pre ng-if="sharedProperties.debug">{{companyOPT.selectedCompany || json}}</pre>        
+        <pre ng-if="sharedProperties.debug">{{projectsOPT.projects || json}}</pre> 
     </div>
 </div>  
