@@ -44,6 +44,7 @@ angular.module('time')
 								obj.projectId=$scope.gridOPT.projectInput[i].project.id;
 								obj.projectTitle=$scope.gridOPT.projectInput[i].project.title;
 								obj.resourceId='RESOURCE';
+								obj.resourceName='RESOURCE';
 								loopOBJ.save.push(obj);
 							}
 						}

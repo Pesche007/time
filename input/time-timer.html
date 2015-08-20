@@ -50,7 +50,10 @@
                                     </form>
                                 </td>
                                 <td>
-                                    <button type="button" modal-confirm title="Löschen" text="Zeiteintrag auf Projekt &quot;{{obj.projectTitle}}&quot; wirklich löschen?" function="itemRemove($index)" class="btn btn-default">
+                                    <button ng-click="timeTimerSave(obj)" type="button" ng-if="obj.state===3" class="btn btn-default">
+                                        <span class="fa fa-floppy-o"></span>
+                                    </button>                                
+                                    <button type="button" modal-confirm title="Löschen" text="Zeiteintrag auf Projekt &quot;{{obj.projectTitle}}&quot; wirklich löschen?" function="timeTimerRemove(obj)" class="btn btn-default">
                                         <span class="fa fa-trash-o"></span>
                                     </button>
                                 </td>                   

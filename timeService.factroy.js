@@ -18,13 +18,17 @@ angular.module('time')
 			output.to=to;
 			output.durationhours=to.substr(0,2) - from.substr(0,2);
 			output.durationminutes=to.substr(2,2) - from.substr(2,2);
-			output.duration=output.durationhours + (Math.round( (output.durationminutes / 60) * 10 ) / 10);
+			output.duration = Math.round((output.durationhours + (output.durationminutes / 60)) * 10) / 10;
+			if(output.duration===0){
+				output.duration=0.1;
+			}
+
 			if(output.durationminutes<0){
 				output.durationhours-=1;
 				output.durationminutes+=60;
 			}
 		}
-		else{
+		else{			
 			if(from.length===2){from+='00';}
 			output.from=from;
 			output.durationhours=Math.floor(hrs);
@@ -40,7 +44,7 @@ angular.module('time')
 		}
 		output.hours=output.from.substr(0,2);
 		output.minutes=output.from.substr(2,2);
-		if(output.duration<=0){
+		if(output.duration<0){
 			return false;
 			}			
 		return output;
@@ -54,9 +58,13 @@ angular.module('time')
 				if(!(isNaN(partsM[0]) && isNaN(partsM[1])) && partsM[1]>partsM[0] && partsM[1]<=24){
 					result=mod.calculateTime(partsM[0], partsM[1]);
 				}
-			}
-			else if(partsM[0].length===4 && partsM[1].length===4){//1000-1200
-				if(partsM[1].substr(0,2) <=24 && !(isNaN(partsM[0]) && isNaN(partsM[1])) && (partsM[1].substr(0,2) > partsM[0].substr(0,2) || (partsM[1].substr(0,2) === partsM[0].substr(0,2) && partsM[1].substr(2,4) > partsM[0].substr(2,4)))) {
+			}			
+			else if(partsM[0].length===4 && partsM[1].length===4){//1000-1200				
+				var hrsFrom = partsM[0].substr(0,2);
+				var minFrom = partsM[0].substr(2,4);
+				var hrsTo = partsM[1].substr(0,2);
+				var minTo = partsM[1].substr(2,4);
+				if(!(isNaN(partsM[0]) && isNaN(partsM[1])) && hrsTo <=24 && (hrsTo > hrsFrom || (hrsTo === hrsFrom && minTo > minFrom))) {
 					result=mod.calculateTime(partsM[0], partsM[1]);
 				}
 			}					
@@ -110,5 +118,14 @@ angular.module('time')
 		var timeTo=mod.formatAddLeadingZero(dtimeTo.getHours()) + '' + mod.formatAddLeadingZero(dtimeTo.getMinutes());
 		return {from:timeFrom, to:timeTo};			
 	}
+	mod.msToHourMinSec = function (s) {
+		var ms = s % 1000;
+		s = (s - ms) / 1000;
+		var secs = s % 60;
+		s = (s - secs) / 60;
+		var mins = s % 60;
+		var hrs = (s - mins) / 60;	
+		return new Array(hrs, mins, secs);		
+		};
 	return mod;
 });

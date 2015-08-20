@@ -37,10 +37,12 @@ angular.module('time')
 	$scope.events=[];
 	$scope.eventSource=[$scope.events];    
 	$scope.API.Addelements = function(month, year){
-	   	WorkrecordService.list().then(function(result) {
-	   		console.log('loaded', result)	   		   	
-	   		for(var i=0; i<result.data.workRecordModel.length;i++){
-	   			var current=result.data.workRecordModel[i];	  			   		
+	   	WorkrecordService.list().then(function(result) {   		   	
+	   		for(var i=0; i<result.data.workRecordModel.length;i++){	   			
+	   			var current=result.data.workRecordModel[i];	  		
+	   			if(current.isPause || current.isRunning){ //remove after query
+	   				continue;
+	   			}
 	   			current.start=new Date(current.startAt);
 	   			var d=new Date(current.startAt);
 	   			current.end = new Date(d.setHours(d.getHours()+current.durationHours, d.getMinutes()+current.durationMinutes));	
@@ -121,23 +123,9 @@ angular.module('time')
 			
 		}
 	};
-	//On event resize or event drop to new time
-	$scope.eventUpdate = function(calEvent){				
-		var res=TimeService.getDurationHMStartEnd(calEvent.start, calEvent.end);
-		var start = new Date(calEvent.start);
-		var offset = start.getTimezoneOffset(); //Drag&Resize calculates with internal UTC time, so need to set new Minutes
-		calEvent.durationHours=res.hours;
-		calEvent.durationMinutes=res.minutes;
-		calEvent.startAt = new Date(start.getTime() + offset*60000); // http://stackoverflow.com/questions/1197928/how-to-add-30-minutes-to-a-javascript-date-object
-		WorkrecordService.put(calEvent).then(function(result) {
-			updateEventEntry(result);
-   			}, function(reason) {//error
-   			alertsManager.addAlert('Could not update work record. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
-		}); 
-	};
 	//adds event	
    $scope.addEvent = function(datum, projectId, projectTitle, showdetails) {		
-		var workrecord={companyId:$scope.treeOPT.selectedComp.id, companyTitle:$scope.treeOPT.selectedComp.title, projectId:projectId, projectTitle:projectTitle, resourceId:'RESOURCE', durationHours:2, durationMinutes:0, comment:''};	
+		var workrecord={companyId:$scope.treeOPT.selectedComp.id, companyTitle:$scope.treeOPT.selectedComp.title, projectId:projectId, projectTitle:projectTitle, resourceId:'RESOURCE', resourceName:'RESOURCE', durationHours:2, durationMinutes:0, comment:''};	
 		var d = new Date(datum);
 		var offset = d.getTimezoneOffset();
 		d.setMinutes(offset);
@@ -214,19 +202,37 @@ angular.module('time')
 			var projectTitle = jsEvent.helper[0].dataset.title;			
 			$scope.addEvent(date, projectId, projectTitle, 1);
 			},
-		eventDragStop: function(calEvent){			
-			$scope.eventUpdate(calEvent);
-			},
+		eventDrop: function(calEvent, delta, revertFunc, jsEvent, ui, view){
+			$scope.calendarEventDrop(calEvent, delta)
+		},
         eventClick: function(calEvent) {	
 			$scope.eventdetailsset(calEvent);
 	    	},
-		eventResize: function(calEvent) {
-			$scope.eventUpdate(calEvent);
+		eventResize: function(calEvent, delta) {
+			$scope.calendarEventResize(calEvent, delta);
 			},
 		viewRender: function(view) {	
 			$scope.loadIntoView(new Date(view.start), new Date(view.end));
 			}
      	}
     };
-    $scope.test=function(){console.log(1)}
+  $scope.calendarEventDrop = function(calEvent, delta){
+  		var deltaTime = TimeService.msToHourMinSec(delta)
+		calEvent.startAt=TimeService.addTimetoDate(calEvent.startAt, deltaTime[0], deltaTime[1])
+		WorkrecordService.put(calEvent).then(function(result) {
+			updateEventEntry(result);
+   			}, function(reason) {//error
+   			alertsManager.addAlert('Could not update work record. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
+		}); 
+    };
+  $scope.calendarEventResize = function(calEvent, delta){
+  		var deltaTime = TimeService.msToHourMinSec(delta)
+  		calEvent.durationHours+=deltaTime[0];
+  		calEvent.durationMinutes+=deltaTime[1]; 
+		WorkrecordService.put(calEvent).then(function(result) {
+			updateEventEntry(result);
+   			}, function(reason) {//error
+   			alertsManager.addAlert('Could not update work record. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
+		});   		 		
+    };    
 });

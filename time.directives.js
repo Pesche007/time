@@ -101,7 +101,7 @@ angular.module('core')
 			timeChangeFn:'&',
 			timeChangeAttr:'=',
 			timeDelete:'@',
-			watch:'@'
+			watch:'@arbaloWatch'
 		},
 		template:function(e, attr){
 			var html='<div>';
@@ -134,7 +134,7 @@ angular.module('core')
 			$scope.obj={err:0}
 			$scope.rand=Math.random().toString(36).substring(7);
 			$scope.validate = function(t){
-				var res=TimeService.validateTime(t.time);				
+				var res=TimeService.validateTime(t.time);			
 				$scope.obj.err=1;
 				if(!res){					
 					return false;
@@ -155,7 +155,7 @@ angular.module('core')
 			if($scope.model.time && $scope.model.time!==''){
 				$scope.validate($scope.model)
 			};
-			if($scope.watch){//If watch is enabled directive watches for model changes and updates (e.g. Calendar click on differnet events that change time)
+			if($scope.watch==='true'){//If watch is enabled directive watches for model changes and updates (e.g. Calendar click on differnet events that change time)
 				$scope.$watch("model", function(newValue, oldValue){					
 					if(newValue && newValue.time){
 	    				$scope.validate(newValue);
