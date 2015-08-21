@@ -37,12 +37,9 @@ angular.module('time')
 	$scope.events=[];
 	$scope.eventSource=[$scope.events];    
 	$scope.API.Addelements = function(month, year){
-	   	WorkrecordService.list().then(function(result) {   		   	
+	   	WorkrecordService.list('closed').then(function(result) {   		   	
 	   		for(var i=0; i<result.data.workRecordModel.length;i++){	   			
 	   			var current=result.data.workRecordModel[i];	  		
-	   			if(current.isPause || current.isRunning){ //remove after query
-	   				continue;
-	   			}
 	   			current.start=new Date(current.startAt);
 	   			var d=new Date(current.startAt);
 	   			current.end = new Date(d.setHours(d.getHours()+current.durationHours, d.getMinutes()+current.durationMinutes));	

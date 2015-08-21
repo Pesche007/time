@@ -178,12 +178,12 @@ angular.module('time')
 	/************* GRID INIT ********************/
 	//INIT and load data
 	$scope.newGrid(); //new empty grid	
-	WorkrecordService.list().then(function(result) {
+	WorkrecordService.list('closed').then(function(result) {
 		var index, current, currentdate, currentday, currentInput, currentIndex, timeOBJ, merged, data = result.data.workRecordModel;
 		if(!data.length){
 			$scope.projectsAddRow();
 		}
-		for(var i=0;i<data.length;i++){
+		for(var i=0;i<data.length;i++){			
 			index=$scope.gridOPT.projectInput.map(function(e){return e.project.id}).indexOf(data[i].projectId); //Check if project already in list
 			if(index===-1){//push new line
 				$scope.projectsAddRow();

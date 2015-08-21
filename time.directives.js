@@ -106,26 +106,24 @@ angular.module('core')
 		template:function(e, attr){
 			var html='<div>';
 			html+='<form name="myform" class="form-inline">'; 
-			html+='<div class="form-group">' ;
-			html+='<div class="input-group">';
-			html+='<input type="text" class="form-control" name="time_field" ng-model="model.time" placeholder="Zeit" ng-change="validate(model)" ng-model-options="{ debounce: 500 }" ' + (attr.timeRequired ? 'required' : '') + '>';
-			html+='<div class="input-group-addon" ng-if="model.duration">{{model.duration}}</div>';
-		    html+='<span class="input-group-btn">';
-		    html+='<button class="btn btn-default" type="button" ng-click="obj.$$more=!obj.$$more"><i class="fa fa-ellipsis-v"></i></button>';
-		    html+='</span>';
-			html+='</div>';
-			html+='</div>';
-			html+='<div class="input-help" ng-if="obj.err"><strong>Format</strong><table><tr><td>Von-Bis</td><td>1000-1200 oder 10-12</td></tr><tr><td>Von Stunden</td><td>1000 2.5 oder 10 2.5</td></tr></table></div>';
-			html+='<div>';			
-			html+='<div ng-if="obj.$$more" class="position-relative">';
-			html+='<textarea class="form-control margin-top-S margin-bottom-S" ng-model="model.comment" placeholder="Kommentar"></textarea>';						
-			html+='<div arbalo-tags display="Tags" model="model.tagRef"></div>';			
-			html+='<input id="id_{{rand}}" type="checkbox" ng-model="model.isBillable"><label class="customCheckbox" for="id_{{rand}}">Verrechenbar</label>';
+			html+='	<div class="form-group">' ;
+			html+='		<div class="input-group">';
+			html+='			<input type="text" class="form-control" name="time_field" ng-model="model.time" placeholder="Zeit" ng-change="validate(model)" ng-model-options="{ debounce: 500 }" ' + (attr.timeRequired ? 'required' : '') + '>';
+			html+='			<div class="input-group-addon" ng-if="model.duration">{{model.duration}}</div>';
+		    html+='			<span class="input-group-btn">';
+		    html+='				<button class="btn btn-default" type="button" ng-click="obj.$$more=!obj.$$more"><i class="fa fa-ellipsis-v"></i></button>';
+		    html+='			</span>';
+			html+='		</div>';
+			html+='	</div>';
+			html+='	<div class="input-help" ng-if="obj.err"><strong>Format</strong><table><tr><td>Von-Bis</td><td>1000-1200 oder 10-12</td></tr><tr><td>Von Stunden</td><td>1000 2.5 oder 10 2.5</td></tr></table></div>';			
+			html+='	<div ng-if="obj.$$more" class="position-absolute background-white border padding-M margin-top-S">';
+			html+='		<textarea class="form-control margin-top-S margin-bottom-S" ng-model="model.comment" placeholder="Kommentar"></textarea>';						
+			html+='		<div arbalo-tags display="Tags" model="model.tagRef"></div>';			
+			html+='		<input id="id_{{rand}}" type="checkbox" ng-model="model.isBillable"><label class="customCheckbox" for="id_{{rand}}">Verrechenbar</label>';
 			if(attr.timeDelete==='true'){
 				html+='<a class="position-bottom-right-S" ng-click="setDeleted(model)"><i class="fa fa-trash-o"></i></a>';
 			}
-			html+='</div>';
-			html+='</div>';
+			html+='	</div>';
 			html+='</form>';
 			html+='</div>';
 			return html;

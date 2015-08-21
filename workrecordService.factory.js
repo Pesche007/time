@@ -6,9 +6,12 @@
 angular.module('time')
 .factory('WorkrecordService', function($log, $http, $q, cfg) {
 	return {
-		// list Companies
-		list: function() {		  
-			return $http.get(cfg.workrecord.SVC_URI)
+		// list Workrecords
+		list: function(type) {	
+			var query='';	  
+			if(type==='closed') {query='?query=isPaused().equalTo(false);isRunning().equalTo(false)';}
+			if(type==='open') {query='?query=isPaused().equalTo(true);isRunning().equalTo(true)';}
+			return $http.get(cfg.workrecord.SVC_URI + query)
 			.success(function (data, status) {
 				
 			})
