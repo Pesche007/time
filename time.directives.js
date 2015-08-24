@@ -348,10 +348,6 @@ angular.module('core')
 				});	
 			}	
 			$scope.toggleEdit=function(){
-				if($scope.isRowClick){//Disable Row Click in Edit Mode
-					$scope.gridOptions.enableRowSelection = $scope.editGrid;
-					$scope.gridApi.core.notifyDataChange( uiGridConstants.dataChange.OPTIONS);
-				}
 				$scope.editGrid = !$scope.editGrid;
 				var colIndex=$scope.colStructure.length - 1;
 			    $scope.colStructure[colIndex].visible = !($scope.colStructure[colIndex].visible || $scope.colStructure[colIndex].visible === undefined);
@@ -412,7 +408,12 @@ angular.module('core')
 				$scope.gridOptions.multiSelect = false;
 			}
 			$scope.rowClickTransmit=function(row){
-				$scope.fn({action:21, param:row, data:$scope.title});
+				if($scope.editGrid){
+					row.isSelected=false;
+				}
+				else {
+					$scope.fn({action:21, param:row, data:$scope.title});
+				}				
 			}
 			//Structure
 			var structure = $scope.structure
