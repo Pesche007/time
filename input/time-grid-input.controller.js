@@ -183,7 +183,10 @@ angular.module('time')
 		if(!data.length){
 			$scope.projectsAddRow();
 		}
-		for(var i=0;i<data.length;i++){			
+		for(var i=0;i<data.length;i++){		
+			if(data[i].isPaused || data[i].isRunning){//REMOVE AFTER DEMO
+				continue;
+			}
 			index=$scope.gridOPT.projectInput.map(function(e){return e.project.id}).indexOf(data[i].projectId); //Check if project already in list
 			if(index===-1){//push new line
 				$scope.projectsAddRow();

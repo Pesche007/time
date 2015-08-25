@@ -30,7 +30,7 @@
 .ui-grid-icon-plus-squared, .ui-grid-icon-minus-squared{cursor:pointer;}
 
 /*Grid folder icons*/
-.ui-grid-icon-minus-squared{font-family: FontAwesome !important;}
+/*.ui-grid-icon-minus-squared{font-family: FontAwesome !important;}
 .ui-grid-icon-minus-squared:before{content:"\f07c";}
 .ui-grid-icon-plus-squared{font-family: FontAwesome !important;}
 .ui-grid-icon-plus-squared:before{content:"\f07b";}

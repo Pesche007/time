@@ -118,7 +118,7 @@ angular.module('core')
 			html+='	<div class="input-help" ng-if="obj.err"><strong>Format</strong><table><tr><td>Von-Bis</td><td>1000-1200 oder 10-12</td></tr><tr><td>Von Stunden</td><td>1000 2.5 oder 10 2.5</td></tr></table></div>';			
 			html+='	<div ng-if="obj.$$more" class="position-absolute background-white border padding-M margin-top-S">';
 			html+='		<textarea class="form-control margin-top-S margin-bottom-S" ng-model="model.comment" placeholder="Kommentar"></textarea>';						
-			html+='		<div arbalo-tags display="Tags" model="model.tagRef"></div>';			
+			html+='		<div arbalo-tags display="Tags" model="model.tagIdList"></div>';			
 			html+='		<input id="id_{{rand}}" type="checkbox" ng-model="model.isBillable"><label class="customCheckbox" for="id_{{rand}}">Verrechenbar</label>';
 			if(attr.timeDelete==='true'){
 				html+='<a class="position-bottom-right-S" ng-click="setDeleted(model)"><i class="fa fa-trash-o"></i></a>';

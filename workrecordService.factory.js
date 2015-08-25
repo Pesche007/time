@@ -11,7 +11,7 @@ angular.module('time')
 			var query='';	  
 			if(type==='closed') {query='?query=isPaused().equalTo(false);isRunning().equalTo(false)';}
 			if(type==='open') {query='?query=isPaused().equalTo(true);isRunning().equalTo(true)';}
-			return $http.get(cfg.workrecord.SVC_URI + query)
+			return $http.get(cfg.workrecord.SVC_URI)
 			.success(function (data, status) {
 				
 			})
