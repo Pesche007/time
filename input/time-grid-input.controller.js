@@ -6,7 +6,7 @@ angular.module('time')
   	$scope.gridOPT={projectInput:[], template:[], sumtime:[0, 0, 0, 0, 0, 0, 0], showDays:5};
 
 	//Prepare Grid Object
-	$scope.newGrid = function(){	
+	var newGrid = function(){	
 		//Create new empty Object
 		$scope.gridOPT.projectInput=[];
 		var curr=angular.copy($scope.dt);
@@ -23,7 +23,7 @@ angular.module('time')
 		$scope.gridOPT.template=angular.copy(inputOBJ);
 	};
 	//save grid
-	$scope.saveGrid = function(newGrid){
+	$scope.saveGrid = function(createGrid){
 		var i, j, k, obj, loopIndex, loopOBJ={save:[], projecterr:0, timeerr:0, alert:0};
 		for(i=0;i<$scope.gridOPT.projectInput.length;i++){//row			
 			if($scope.gridOPT.projectInput[i].company ==='' || $scope.gridOPT.projectInput[i].project ===''){
@@ -71,6 +71,8 @@ angular.module('time')
 		if(loopOBJ.save.length){
 			WorkrecordService.savemulti(loopOBJ.save).then(function(result) {
 				alertsManager.addAlert('Einträge gespeichert.', 'success', 'fa-check', 1);
+				newGrid();
+				initGrid();
 		   	}, function(reason) {//error
 			    alertsManager.addAlert('Fehler beim Speichern.', 'error', 'fa-times', 1);
 		  	});	
@@ -78,8 +80,8 @@ angular.module('time')
 		else{
 			alertsManager.addAlert('Keine geänderten Einträge.', 'success', 'fa-check', 1);
 		}					
-		if(newGrid){
-			$scope.newGrid();
+		if(createGrid){
+			newGrid();
 		}		
 	};
 
@@ -176,57 +178,60 @@ angular.module('time')
 		obj.date = $filter('date')(obj.date, 'dd.MM.yyyy');
 	};
 	/************* GRID INIT ********************/
-	//INIT and load data
-	$scope.newGrid(); //new empty grid	
-	WorkrecordService.list('closed').then(function(result) {
-		var index, current, currentdate, currentday, currentInput, currentIndex, timeOBJ, merged, data = result.data.workRecordModel;
-		if(!data.length){
-			$scope.projectsAddRow();
-		}
-		for(var i=0;i<data.length;i++){		
-			if(data[i].isPaused || data[i].isRunning){//REMOVE AFTER DEMO
-				continue;
-			}
-			index=$scope.gridOPT.projectInput.map(function(e){return e.project.id}).indexOf(data[i].projectId); //Check if project already in list
-			if(index===-1){//push new line
+	var initGrid = function(){
+		WorkrecordService.list('closed').then(function(result) {
+			var index, current, currentdate, currentday, currentInput, currentIndex, timeOBJ, merged, data = result.data.workRecordModel;
+			if(!data.length){
 				$scope.projectsAddRow();
-				index=$scope.gridOPT.projectInput.length - 1;
 			}
-			//Add data properties
-			timeOBJ=TimeService.getFromToStartDuration(data[i].startAt, data[i].durationHours, data[i].durationMinutes);
-			data[i].time=timeOBJ.from+'-'+timeOBJ.to;
-			data[i].date=new Date(angular.copy(data[i].startAt));
-			data[i].date.setHours(0,0,0,0);
-			data[i].duration=Math.round((data[i].durationHours + data[i].durationMinutes / 60) * 10) / 10;
-			//Input in grid			
-			current=$scope.gridOPT.projectInput[index];
-			current.project={id:data[i].projectId, title:data[i].projectTitle};
-			current.company={id:data[i].companyId, title:data[i].companyTitle};	
-			if(!current.sumtime){current.sumtime=0};//Update row time
-			current.sumtime += data[i].duration; 
-			currentdate = new Date(data[i].startAt);
-			currentday=currentdate.getDay() - 1;				
-			if(currentday===-1){
-				currentday=6;
-			}			
-			currentInput=current.inputs[currentday];
-			currentIndex=0;					
-			currentInput.map(function(e, pos){
-				if(new Date(e.startAt) < new Date(data[i].startAt)){
-					currentIndex=pos+1;
-				};
-			});		
-			if(currentInput[0] && currentInput[0].time===''){
-				currentInput[0]=data[i];
-			}
-			else {
-				currentInput.splice(currentIndex, 0, data[i]);
-			}
-			$scope.gridOPT.sumtime[currentday]+=data[i].duration;		
-		}//end for		
-	}, function(reason) {//error
-		alertsManager.addAlert('Could not get companies. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
-	});	
+			for(var i=0;i<data.length;i++){		
+				if(data[i].isPaused || data[i].isRunning){//REMOVE AFTER DEMO
+					continue;
+				}
+				index=$scope.gridOPT.projectInput.map(function(e){return e.project.id}).indexOf(data[i].projectId); //Check if project already in list
+				if(index===-1){//push new line
+					$scope.projectsAddRow();
+					index=$scope.gridOPT.projectInput.length - 1;
+				}
+				//Add data properties
+				timeOBJ=TimeService.getFromToStartDuration(data[i].startAt, data[i].durationHours, data[i].durationMinutes);
+				data[i].time=timeOBJ.from+'-'+timeOBJ.to;
+				data[i].date=new Date(angular.copy(data[i].startAt));
+				data[i].date.setHours(0,0,0,0);
+				data[i].duration=Math.round((data[i].durationHours + data[i].durationMinutes / 60) * 10) / 10;
+				//Input in grid			
+				current=$scope.gridOPT.projectInput[index];
+				current.project={id:data[i].projectId, title:data[i].projectTitle};
+				current.company={id:data[i].companyId, title:data[i].companyTitle};	
+				if(!current.sumtime){current.sumtime=0};//Update row time
+				current.sumtime += data[i].duration; 
+				currentdate = new Date(data[i].startAt);
+				currentday=currentdate.getDay() - 1;				
+				if(currentday===-1){
+					currentday=6;
+				}			
+				currentInput=current.inputs[currentday];
+				currentIndex=0;					
+				currentInput.map(function(e, pos){
+					if(new Date(e.startAt) < new Date(data[i].startAt)){
+						currentIndex=pos+1;
+					};
+				});		
+				if(currentInput[0] && currentInput[0].time===''){
+					currentInput[0]=data[i];
+				}
+				else {
+					currentInput.splice(currentIndex, 0, data[i]);
+				}
+				$scope.gridOPT.sumtime[currentday]+=data[i].duration;		
+			}//end for		
+		}, function(reason) {//error
+			alertsManager.addAlert('Could not get companies. '+reason.status+': '+reason.statusText, 'danger', 'fa-times', 1);		
+		});	
+	}
+	//INIT and load data
+	newGrid(); //new empty grid		
+	initGrid(); //load data
 	/** DEBUG **/
 	$scope.sharedProperties = sharedProperties.getProperties();
   });

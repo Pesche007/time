@@ -49,9 +49,9 @@ angular.module('time')
 				}
 			}
 			return $q.all(postOBJ).then(function(data){
-				console.log('success', data);
+				return data;
 			  }, function(response) {
-			    console.log('fail', response);
+			    return response;
 			});
 
 		},
